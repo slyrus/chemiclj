@@ -1,0 +1,2494 @@
+<!-- Generated 15th July 2004 by Sam Adams. Data from OpenBabel elements.txt file, and IUPAC isotope data -->
+<!-- OpenBabel's covalent radii appear to be atomic radii, and the bond order radii are actually the covalent radii -->
+<!-- Webelements data added 28th July -->
+<elements>
+  <element atomicnumber="0" id="Xx">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">0.000</radius>
+      <radius type="bondorder" unit="angstrom">0.000</radius>
+      <radius type="vanderwaals" unit="angstrom">0.000</radius>
+    </radii>
+    <maxbondorder source="openbabel">0</maxbondorder>
+    <mass source="openbabel" unit="amu">0.000</mass>
+    <electronegativity source="openbabel">0.00</electronegativity>
+    <rgb red="0.07" green="0.50" blue="0.70"/>
+  </element>
+  <element atomicnumber="1" id="H" name="hydrogen" group="1" period="1">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">0.230</radius>
+      <radius type="bondorder" unit="angstrom">0.330</radius>
+      <radius type="vanderwaals" unit="angstrom">1.200</radius>
+    </radii>
+    <maxbondorder source="openbabel">1</maxbondorder>
+    <mass source="openbabel" unit="amu">1.00794</mass>
+    <electronegativity source="openbabel">2.10</electronegativity>
+    <rgb red="1.00" green="1.00" blue="1.00"/>
+    <isotopes source="IUPAC">
+      <isotope mass="1" abundanceerror="70" abundance="99.9885"/>
+      <isotope mass="2" abundanceerror="70" abundance="0.0115"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">1.00794</mass>
+    <electronicconfiguration source="webelements" type="groundstate">1s1</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">25</radius>
+      <radius type="atomic" context="calculated" unit="pm">53</radius>
+      <radius type="covalent" context="empirical" unit="pm">37</radius>
+      <radius type="vanderwaals" unit="pm">120</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.20</electronegativity>
+  </element>
+  <element atomicnumber="2" id="He" name="helium" group="18" period="1">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">0.930</radius>
+      <radius type="bondorder" unit="angstrom">0.700</radius>
+      <radius type="vanderwaals" unit="angstrom">1.400</radius>
+    </radii>
+    <maxbondorder source="openbabel">0</maxbondorder>
+    <mass source="openbabel" unit="amu">4.002602</mass>
+    <electronegativity source="openbabel">0.00</electronegativity>
+    <rgb red="0.85" green="1.00" blue="1.00"/>
+    <isotopes source="IUPAC">
+      <isotope mass="3" abundanceerror="3" abundance="0.000137"/>
+      <isotope mass="4" abundanceerror="3" abundance="99.999863"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">4.002602</mass>
+    <electronicconfiguration source="webelements" type="groundstate">1s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="calculated" unit="pm">31</radius>
+      <radius type="covalent" context="empirical" unit="pm">32</radius>
+      <radius type="vanderwaals" unit="pm">140</radius>
+    </radii>
+  </element>
+  <element atomicnumber="3" id="Li" name="lithium" group="1" period="2">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">0.680</radius>
+      <radius type="bondorder" unit="angstrom">1.230</radius>
+      <radius type="vanderwaals" unit="angstrom">1.820</radius>
+    </radii>
+    <maxbondorder source="openbabel">1</maxbondorder>
+    <mass source="openbabel" unit="amu">6.941</mass>
+    <electronegativity source="openbabel">0.98</electronegativity>
+    <rgb red="0.80" green="0.50" blue="1.00"/>
+    <isotopes source="IUPAC">
+      <isotope mass="6" abundanceerror="24" abundance="7.589"/>
+      <isotope mass="7" abundanceerror="24" abundance="92.411"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">6.941</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[He].2s1</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">145</radius>
+      <radius type="atomic" context="calculated" unit="pm">167</radius>
+      <radius type="covalent" context="empirical" unit="pm">134</radius>
+      <radius type="vanderwaals" unit="pm">182</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">0.98</electronegativity>
+  </element>
+  <element atomicnumber="4" id="Be" name="beryllium" group="2" period="2">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">0.350</radius>
+      <radius type="bondorder" unit="angstrom">0.900</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">2</maxbondorder>
+    <mass source="openbabel" unit="amu">9.012182</mass>
+    <electronegativity source="openbabel">1.57</electronegativity>
+    <rgb red="0.76" green="1.00" blue="0.00"/>
+    <isotopes source="IUPAC">
+      <isotope mass="9" abundance="100"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">9.012182</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[He].2s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">105</radius>
+      <radius type="atomic" context="calculated" unit="pm">112</radius>
+      <radius type="covalent" context="empirical" unit="pm">90</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.57</electronegativity>
+  </element>
+  <element atomicnumber="5" id="B" name="boron" group="13" period="2">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">0.830</radius>
+      <radius type="bondorder" unit="angstrom">0.820</radius>
+      <radius type="vanderwaals" unit="angstrom">2.080</radius>
+    </radii>
+    <maxbondorder source="openbabel">3</maxbondorder>
+    <mass source="openbabel" unit="amu">10.811</mass>
+    <electronegativity source="openbabel">2.04</electronegativity>
+    <rgb red="1.00" green="0.71" blue="0.71"/>
+    <isotopes source="IUPAC">
+      <isotope mass="10" abundanceerror="7" abundance="19.9"/>
+      <isotope mass="11" abundanceerror="7" abundance="80.1"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">10.811</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[He].2s2.2p1</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">85</radius>
+      <radius type="atomic" context="calculated" unit="pm">87</radius>
+      <radius type="covalent" context="empirical" unit="pm">82</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.04</electronegativity>
+  </element>
+  <element atomicnumber="6" id="C" name="carbon" group="14" period="2">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">0.680</radius>
+      <radius type="bondorder" unit="angstrom">0.770</radius>
+      <radius type="vanderwaals" unit="angstrom">1.950</radius>
+    </radii>
+    <maxbondorder source="openbabel">4</maxbondorder>
+    <mass source="openbabel" unit="amu">12.0107</mass>
+    <electronegativity source="openbabel">2.55</electronegativity>
+    <rgb red="0.50" green="0.50" blue="0.50"/>
+    <isotopes source="IUPAC">
+      <isotope mass="12" abundanceerror="8" abundance="98.93"/>
+      <isotope mass="13" abundanceerror="8" abundance="1.07"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">12.0107</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[He].2s2.2p2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">70</radius>
+      <radius type="atomic" context="calculated" unit="pm">67</radius>
+      <radius type="covalent" context="empirical" unit="pm">77</radius>
+      <radius type="vanderwaals" unit="pm">170</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.55</electronegativity>
+  </element>
+  <element atomicnumber="7" id="N" name="nitrogen" group="15" period="2">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">0.680</radius>
+      <radius type="bondorder" unit="angstrom">0.700</radius>
+      <radius type="vanderwaals" unit="angstrom">1.850</radius>
+    </radii>
+    <maxbondorder source="openbabel">4</maxbondorder>
+    <mass source="openbabel" unit="amu">14.0067</mass>
+    <electronegativity source="openbabel">3.04</electronegativity>
+    <rgb red="0.05" green="0.05" blue="1.00"/>
+    <isotopes source="IUPAC">
+      <isotope mass="14" abundanceerror="7" abundance="99.632"/>
+      <isotope mass="15" abundanceerror="7" abundance="0.368"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">14.0067</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[He].2s2.2p3</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">65</radius>
+      <radius type="atomic" context="calculated" unit="pm">56</radius>
+      <radius type="covalent" context="empirical" unit="pm">75</radius>
+      <radius type="vanderwaals" unit="pm">155</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">3.04</electronegativity>
+  </element>
+  <element atomicnumber="8" id="O" name="oxygen" group="16" period="2">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">0.680</radius>
+      <radius type="bondorder" unit="angstrom">0.660</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">2</maxbondorder>
+    <mass source="openbabel" unit="amu">15.9994</mass>
+    <electronegativity source="openbabel">3.44</electronegativity>
+    <rgb red="1.00" green="0.05" blue="0.05"/>
+    <isotopes source="IUPAC">
+      <isotope mass="16" abundanceerror="16" abundance="99.757"/>
+      <isotope mass="17" abundanceerror="1" abundance="0.038"/>
+      <isotope mass="18" abundanceerror="14" abundance="0.205"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">15.9994</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[He].2s2.2p4</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">60</radius>
+      <radius type="atomic" context="calculated" unit="pm">48</radius>
+      <radius type="covalent" context="empirical" unit="pm">73</radius>
+      <radius type="vanderwaals" unit="pm">152</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">3.44</electronegativity>
+  </element>
+  <element atomicnumber="9" id="F" name="fluorine" group="17" period="2">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">0.640</radius>
+      <radius type="bondorder" unit="angstrom">0.611</radius>
+      <radius type="vanderwaals" unit="angstrom">1.730</radius>
+    </radii>
+    <maxbondorder source="openbabel">1</maxbondorder>
+    <mass source="openbabel" unit="amu">18.9984032</mass>
+    <electronegativity source="openbabel">3.98</electronegativity>
+    <rgb red="0.70" green="1.00" blue="1.00"/>
+    <isotopes source="IUPAC">
+      <isotope mass="19" abundance="100"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">18.9984032</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[He].2s2.2p5</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">50</radius>
+      <radius type="atomic" context="calculated" unit="pm">42</radius>
+      <radius type="covalent" context="empirical" unit="pm">71</radius>
+      <radius type="vanderwaals" unit="pm">147</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">3.98</electronegativity>
+  </element>
+  <element atomicnumber="10" id="Ne" name="neon" group="18" period="2">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.120</radius>
+      <radius type="bondorder" unit="angstrom">0.700</radius>
+      <radius type="vanderwaals" unit="angstrom">1.540</radius>
+    </radii>
+    <maxbondorder source="openbabel">0</maxbondorder>
+    <mass source="openbabel" unit="amu">20.1797</mass>
+    <electronegativity source="openbabel">0.00</electronegativity>
+    <rgb red="0.70" green="0.89" blue="0.96"/>
+    <isotopes source="IUPAC">
+      <isotope mass="20" abundanceerror="3" abundance="90.48"/>
+      <isotope mass="21" abundanceerror="1" abundance="0.27"/>
+      <isotope mass="22" abundanceerror="3" abundance="9.25"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">20.1797</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[He].2s2.2p6</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="calculated" unit="pm">38</radius>
+      <radius type="covalent" context="empirical" unit="pm">69</radius>
+      <radius type="vanderwaals" unit="pm">154</radius>
+    </radii>
+  </element>
+  <element atomicnumber="11" id="Na" name="sodium" group="1" period="3">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">0.970</radius>
+      <radius type="bondorder" unit="angstrom">1.540</radius>
+      <radius type="vanderwaals" unit="angstrom">2.270</radius>
+    </radii>
+    <maxbondorder source="openbabel">1</maxbondorder>
+    <mass source="openbabel" unit="amu">22.989770</mass>
+    <electronegativity source="openbabel">0.93</electronegativity>
+    <rgb red="0.67" green="0.36" blue="0.95"/>
+    <isotopes source="IUPAC">
+      <isotope mass="23" abundance="100"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">22.989770</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ne].3s1</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">180</radius>
+      <radius type="atomic" context="calculated" unit="pm">190</radius>
+      <radius type="covalent" context="empirical" unit="pm">154</radius>
+      <radius type="vanderwaals" unit="pm">227</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">0.93</electronegativity>
+  </element>
+  <element atomicnumber="12" id="Mg" name="magnesium" group="2" period="3">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.100</radius>
+      <radius type="bondorder" unit="angstrom">1.360</radius>
+      <radius type="vanderwaals" unit="angstrom">1.730</radius>
+    </radii>
+    <maxbondorder source="openbabel">2</maxbondorder>
+    <mass source="openbabel" unit="amu">24.3050</mass>
+    <electronegativity source="openbabel">1.31</electronegativity>
+    <rgb red="0.54" green="1.00" blue="0.00"/>
+    <isotopes source="IUPAC">
+      <isotope mass="24" abundanceerror="4" abundance="78.99"/>
+      <isotope mass="25" abundanceerror="1" abundance="10.00"/>
+      <isotope mass="26" abundanceerror="3" abundance="11.01"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">24.3050</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ne].3s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">150</radius>
+      <radius type="atomic" context="calculated" unit="pm">145</radius>
+      <radius type="covalent" context="empirical" unit="pm">130</radius>
+      <radius type="vanderwaals" unit="pm">173</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.31</electronegativity>
+  </element>
+  <element atomicnumber="13" id="Al" name="aluminium" group="13" period="3">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.350</radius>
+      <radius type="bondorder" unit="angstrom">1.180</radius>
+      <radius type="vanderwaals" unit="angstrom">2.050</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">26.981538</mass>
+    <electronegativity source="openbabel">1.61</electronegativity>
+    <rgb red="0.75" green="0.65" blue="0.65"/>
+    <isotopes source="IUPAC">
+      <isotope mass="27" abundance="100"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">26.981538</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ne].3s2.3p1</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">125</radius>
+      <radius type="atomic" context="calculated" unit="pm">118</radius>
+      <radius type="covalent" context="empirical" unit="pm">118</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.61</electronegativity>
+  </element>
+  <element atomicnumber="14" id="Si" name="silicon" group="14" period="3">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.200</radius>
+      <radius type="bondorder" unit="angstrom">0.937</radius>
+      <radius type="vanderwaals" unit="angstrom">2.100</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">28.0855</mass>
+    <electronegativity source="openbabel">1.90</electronegativity>
+    <rgb red="0.50" green="0.60" blue="0.60"/>
+    <isotopes source="IUPAC">
+      <isotope mass="28" abundanceerror="7" abundance="92.2297"/>
+      <isotope mass="29" abundanceerror="5" abundance="4.6832"/>
+      <isotope mass="30" abundanceerror="5" abundance="3.0872"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">28.0855</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ne].3s2.3p2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">110</radius>
+      <radius type="atomic" context="calculated" unit="pm">111</radius>
+      <radius type="covalent" context="empirical" unit="pm">111</radius>
+      <radius type="vanderwaals" unit="pm">210</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.90</electronegativity>
+  </element>
+  <element atomicnumber="15" id="P" name="phosphorus" group="15" period="3">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.100</radius>
+      <radius type="bondorder" unit="angstrom">0.890</radius>
+      <radius type="vanderwaals" unit="angstrom">2.080</radius>
+    </radii>
+    <maxbondorder source="openbabel">5</maxbondorder>
+    <mass source="openbabel" unit="amu">30.973761</mass>
+    <electronegativity source="openbabel">2.19</electronegativity>
+    <rgb red="1.00" green="0.50" blue="0.00"/>
+    <isotopes source="IUPAC">
+      <isotope mass="31" abundance="100"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">30.973761</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ne].3s2.3p3</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">100</radius>
+      <radius type="atomic" context="calculated" unit="pm">98</radius>
+      <radius type="covalent" context="empirical" unit="pm">106</radius>
+      <radius type="vanderwaals" unit="pm">180</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.19</electronegativity>
+  </element>
+  <element atomicnumber="16" id="S" name="sulphur" group="16" period="3">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.020</radius>
+      <radius type="bondorder" unit="angstrom">1.040</radius>
+      <radius type="vanderwaals" unit="angstrom">2.000</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">32.065</mass>
+    <electronegativity source="openbabel">2.58</electronegativity>
+    <rgb red="1.00" green="1.00" blue="0.19"/>
+    <isotopes source="IUPAC">
+      <isotope mass="32" abundanceerror="31" abundance="94.93"/>
+      <isotope mass="33" abundanceerror="2" abundance="0.76"/>
+      <isotope mass="34" abundanceerror="28" abundance="4.29"/>
+      <isotope mass="36" abundanceerror="1" abundance="0.02"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">32.065</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ne].3s2.3p4</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">100</radius>
+      <radius type="atomic" context="calculated" unit="pm">88</radius>
+      <radius type="covalent" context="empirical" unit="pm">102</radius>
+      <radius type="vanderwaals" unit="pm">180</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.58</electronegativity>
+  </element>
+  <element atomicnumber="17" id="Cl" name="chlorine" group="17" period="3">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">0.990</radius>
+      <radius type="bondorder" unit="angstrom">0.997</radius>
+      <radius type="vanderwaals" unit="angstrom">1.970</radius>
+    </radii>
+    <maxbondorder source="openbabel">1</maxbondorder>
+    <mass source="openbabel" unit="amu">35.453</mass>
+    <electronegativity source="openbabel">3.16</electronegativity>
+    <rgb red="0.12" green="0.94" blue="0.12"/>
+    <isotopes source="IUPAC">
+      <isotope mass="35" abundanceerror="4" abundance="75.78"/>
+      <isotope mass="37" abundanceerror="4" abundance="24.22"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">35.453</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ne].3s2.3p5</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">100</radius>
+      <radius type="atomic" context="calculated" unit="pm">79</radius>
+      <radius type="covalent" context="empirical" unit="pm">99</radius>
+      <radius type="vanderwaals" unit="pm">175</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">3.16</electronegativity>
+  </element>
+  <element atomicnumber="18" id="Ar" name="argon" group="18" period="3">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.570</radius>
+      <radius type="bondorder" unit="angstrom">1.740</radius>
+      <radius type="vanderwaals" unit="angstrom">1.880</radius>
+    </radii>
+    <maxbondorder source="openbabel">0</maxbondorder>
+    <mass source="openbabel" unit="amu">39.948</mass>
+    <electronegativity source="openbabel">0.00</electronegativity>
+    <rgb red="0.50" green="0.82" blue="0.89"/>
+    <isotopes source="IUPAC">
+      <isotope mass="36" abundanceerror="30" abundance="0.3365"/>
+      <isotope mass="38" abundanceerror="5" abundance="0.0632"/>
+      <isotope mass="40" abundanceerror="30" abundance="99.6003"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">39.948</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ne].3s2.3p6</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="calculated" unit="pm">71</radius>
+      <radius type="covalent" context="empirical" unit="pm">97</radius>
+      <radius type="vanderwaals" unit="pm">188</radius>
+    </radii>
+  </element>
+  <element atomicnumber="19" id="K" name="potassium" group="1" period="4">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.330</radius>
+      <radius type="bondorder" unit="angstrom">2.030</radius>
+      <radius type="vanderwaals" unit="angstrom">2.750</radius>
+    </radii>
+    <maxbondorder source="openbabel">1</maxbondorder>
+    <mass source="openbabel" unit="amu">39.0983</mass>
+    <electronegativity source="openbabel">0.82</electronegativity>
+    <rgb red="0.56" green="0.25" blue="0.83"/>
+    <isotopes source="IUPAC">
+      <isotope mass="39" abundanceerror="44" abundance="93.2581"/>
+      <isotope mass="40" abundanceerror="1" abundance="0.0117"/>
+      <isotope mass="41" abundanceerror="44" abundance="6.7302"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">39.0983</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ar].4s1</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">220</radius>
+      <radius type="atomic" context="calculated" unit="pm">243</radius>
+      <radius type="covalent" context="empirical" unit="pm">196</radius>
+      <radius type="vanderwaals" unit="pm">275</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">0.82</electronegativity>
+  </element>
+  <element atomicnumber="20" id="Ca" name="calcium" group="2" period="4">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">0.990</radius>
+      <radius type="bondorder" unit="angstrom">1.740</radius>
+      <radius type="vanderwaals" unit="angstrom">1.973</radius>
+    </radii>
+    <maxbondorder source="openbabel">2</maxbondorder>
+    <mass source="openbabel" unit="amu">40.078</mass>
+    <electronegativity source="openbabel">1.00</electronegativity>
+    <rgb red="0.24" green="1.00" blue="0.00"/>
+    <isotopes source="IUPAC">
+      <isotope mass="40" abundanceerror="156" abundance="96.941"/>
+      <isotope mass="42" abundanceerror="23" abundance="0.647"/>
+      <isotope mass="43" abundanceerror="10" abundance="0.135"/>
+      <isotope mass="44" abundanceerror="110" abundance="2.086"/>
+      <isotope mass="46" abundanceerror="3" abundance="0.004"/>
+      <isotope mass="48" abundanceerror="21" abundance="0.187"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">40.078</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ar].4s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">180</radius>
+      <radius type="atomic" context="calculated" unit="pm">194</radius>
+      <radius type="covalent" context="empirical" unit="pm">174</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.00</electronegativity>
+  </element>
+  <element atomicnumber="21" id="Sc" name="scandium" group="3" period="4">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.440</radius>
+      <radius type="bondorder" unit="angstrom">1.440</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">44.955910</mass>
+    <electronegativity source="openbabel">1.36</electronegativity>
+    <rgb red="0.90" green="0.90" blue="0.90"/>
+    <mass source="webelements" unit="amu">44.955910</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ar].3d1.4s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">160</radius>
+      <radius type="atomic" context="calculated" unit="pm">184</radius>
+      <radius type="covalent" context="empirical" unit="pm">144</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.36</electronegativity>
+  </element>
+  <element atomicnumber="22" id="Ti" name="titanium" group="4" period="4">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.470</radius>
+      <radius type="bondorder" unit="angstrom">1.320</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">47.867</mass>
+    <electronegativity source="openbabel">1.54</electronegativity>
+    <rgb red="0.75" green="0.76" blue="0.78"/>
+    <isotopes source="IUPAC">
+      <isotope mass="46" abundanceerror="3" abundance="8.25"/>
+      <isotope mass="47" abundanceerror="2" abundance="7.44"/>
+      <isotope mass="48" abundanceerror="3" abundance="73.72"/>
+      <isotope mass="49" abundanceerror="2" abundance="5.41"/>
+      <isotope mass="50" abundanceerror="2" abundance="5.18"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">47.867</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ar].3d2.4s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">140</radius>
+      <radius type="atomic" context="calculated" unit="pm">176</radius>
+      <radius type="covalent" context="empirical" unit="pm">136</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.54</electronegativity>
+  </element>
+  <element atomicnumber="23" id="V" name="vanadium" group="5" period="4">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.330</radius>
+      <radius type="bondorder" unit="angstrom">1.220</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">50.9415</mass>
+    <electronegativity source="openbabel">1.63</electronegativity>
+    <rgb red="0.65" green="0.65" blue="0.67"/>
+    <isotopes source="IUPAC">
+      <isotope mass="50" abundanceerror="4" abundance="0.250"/>
+      <isotope mass="51" abundanceerror="4" abundance="99.750"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">50.9415</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ar].3d3.4s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">135</radius>
+      <radius type="atomic" context="calculated" unit="pm">171</radius>
+      <radius type="covalent" context="empirical" unit="pm">125</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.63</electronegativity>
+  </element>
+  <element atomicnumber="24" id="Cr" name="chromium" group="6" period="4">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.350</radius>
+      <radius type="bondorder" unit="angstrom">1.180</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">51.9961</mass>
+    <electronegativity source="openbabel">1.66</electronegativity>
+    <rgb red="0.54" green="0.60" blue="0.78"/>
+    <isotopes source="IUPAC">
+      <isotope mass="50" abundanceerror="13" abundance="4.345"/>
+      <isotope mass="52" abundanceerror="18" abundance="83.789"/>
+      <isotope mass="53" abundanceerror="17" abundance="9.501"/>
+      <isotope mass="54" abundanceerror="7" abundance="2.365"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">51.9961</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ar].3d5.4s1</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">140</radius>
+      <radius type="atomic" context="calculated" unit="pm">166</radius>
+      <radius type="covalent" context="empirical" unit="pm">127</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.66</electronegativity>
+  </element>
+  <element atomicnumber="25" id="Mn" name="manganese" group="7" period="4">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.350</radius>
+      <radius type="bondorder" unit="angstrom">1.170</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">8</maxbondorder>
+    <mass source="openbabel" unit="amu">54.938049</mass>
+    <electronegativity source="openbabel">1.55</electronegativity>
+    <rgb red="0.61" green="0.48" blue="0.78"/>
+    <isotopes source="IUPAC">
+      <isotope mass="55" abundance="100"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">54.938049</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ar].3d5.4s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">140</radius>
+      <radius type="atomic" context="calculated" unit="pm">161</radius>
+      <radius type="covalent" context="empirical" unit="pm">139</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.55</electronegativity>
+  </element>
+  <element atomicnumber="26" id="Fe" name="iron" group="8" period="4">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.340</radius>
+      <radius type="bondorder" unit="angstrom">1.170</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">55.845</mass>
+    <electronegativity source="openbabel">1.83</electronegativity>
+    <rgb red="0.50" green="0.48" blue="0.78"/>
+    <isotopes source="IUPAC">
+      <isotope mass="54" abundanceerror="35" abundance="5.845"/>
+      <isotope mass="56" abundanceerror="36" abundance="91.754"/>
+      <isotope mass="57" abundanceerror="10" abundance="2.119"/>
+      <isotope mass="58" abundanceerror="4" abundance="0.282"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">55.845</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ar].3d6.4s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">140</radius>
+      <radius type="atomic" context="calculated" unit="pm">156</radius>
+      <radius type="covalent" context="empirical" unit="pm">125</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.83</electronegativity>
+  </element>
+  <element atomicnumber="27" id="Co" name="cobalt" group="9" period="4">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.330</radius>
+      <radius type="bondorder" unit="angstrom">1.160</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">58.933200</mass>
+    <electronegativity source="openbabel">1.88</electronegativity>
+    <rgb red="0.44" green="0.48" blue="0.78"/>
+    <isotopes source="IUPAC">
+      <isotope mass="59" abundance="100"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">58.933200</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ar].3d7.4s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">135</radius>
+      <radius type="atomic" context="calculated" unit="pm">152</radius>
+      <radius type="covalent" context="empirical" unit="pm">126</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.88</electronegativity>
+  </element>
+  <element atomicnumber="28" id="Ni" name="nickel" group="10" period="4">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.500</radius>
+      <radius type="bondorder" unit="angstrom">1.150</radius>
+      <radius type="vanderwaals" unit="angstrom">1.630</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">58.6934</mass>
+    <electronegativity source="openbabel">1.91</electronegativity>
+    <rgb red="0.36" green="0.48" blue="0.76"/>
+    <isotopes source="IUPAC">
+      <isotope mass="58" abundanceerror="89" abundance="68.0769"/>
+      <isotope mass="60" abundanceerror="77" abundance="26.2231"/>
+      <isotope mass="61" abundanceerror="6" abundance="1.1399"/>
+      <isotope mass="62" abundanceerror="17" abundance="3.6345"/>
+      <isotope mass="64" abundanceerror="9" abundance="0.9256"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">58.6934</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ar].3d8.4s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">135</radius>
+      <radius type="atomic" context="calculated" unit="pm">149</radius>
+      <radius type="covalent" context="empirical" unit="pm">121</radius>
+      <radius type="vanderwaals" unit="pm">163</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.91</electronegativity>
+  </element>
+  <element atomicnumber="29" id="Cu" name="copper" group="11" period="4">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.520</radius>
+      <radius type="bondorder" unit="angstrom">1.170</radius>
+      <radius type="vanderwaals" unit="angstrom">1.400</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">63.546</mass>
+    <electronegativity source="openbabel">1.90</electronegativity>
+    <rgb red="1.00" green="0.48" blue="0.38"/>
+    <isotopes source="IUPAC">
+      <isotope mass="63" abundanceerror="3" abundance="69.17"/>
+      <isotope mass="65" abundanceerror="3" abundance="30.83"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">63.546</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ar].3d10.4s1</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">135</radius>
+      <radius type="atomic" context="calculated" unit="pm">145</radius>
+      <radius type="covalent" context="empirical" unit="pm">138</radius>
+      <radius type="vanderwaals" unit="pm">140</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.90</electronegativity>
+  </element>
+  <element atomicnumber="30" id="Zn" name="zinc" group="12" period="4">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.450</radius>
+      <radius type="bondorder" unit="angstrom">1.250</radius>
+      <radius type="vanderwaals" unit="angstrom">1.390</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">65.409</mass>
+    <electronegativity source="openbabel">1.65</electronegativity>
+    <rgb red="0.49" green="0.50" blue="0.69"/>
+    <isotopes source="IUPAC">
+      <isotope mass="64" abundanceerror="60" abundance="48.63"/>
+      <isotope mass="66" abundanceerror="27" abundance="27.90"/>
+      <isotope mass="67" abundanceerror="13" abundance="4.10"/>
+      <isotope mass="68" abundanceerror="51" abundance="18.75"/>
+      <isotope mass="70" abundanceerror="3" abundance="0.62"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">65.409</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ar].3d10.4s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">135</radius>
+      <radius type="atomic" context="calculated" unit="pm">142</radius>
+      <radius type="covalent" context="empirical" unit="pm">131</radius>
+      <radius type="vanderwaals" unit="pm">139</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.65</electronegativity>
+  </element>
+  <element atomicnumber="31" id="Ga" name="gallium" group="13" period="4">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.220</radius>
+      <radius type="bondorder" unit="angstrom">1.260</radius>
+      <radius type="vanderwaals" unit="angstrom">1.870</radius>
+    </radii>
+    <maxbondorder source="openbabel">3</maxbondorder>
+    <mass source="openbabel" unit="amu">69.723</mass>
+    <electronegativity source="openbabel">1.81</electronegativity>
+    <rgb red="0.76" green="0.56" blue="0.56"/>
+    <isotopes source="IUPAC">
+      <isotope mass="69" abundanceerror="9" abundance="60.108"/>
+      <isotope mass="71" abundanceerror="9" abundance="39.892"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">69.723</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ar].3d10.4s2.4p1</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">130</radius>
+      <radius type="atomic" context="calculated" unit="pm">136</radius>
+      <radius type="covalent" context="empirical" unit="pm">126</radius>
+      <radius type="vanderwaals" unit="pm">187</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.81</electronegativity>
+  </element>
+  <element atomicnumber="32" id="Ge" name="germanium" group="14" period="4">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.170</radius>
+      <radius type="bondorder" unit="angstrom">1.188</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">4</maxbondorder>
+    <mass source="openbabel" unit="amu">72.64</mass>
+    <electronegativity source="openbabel">2.01</electronegativity>
+    <rgb red="0.40" green="0.56" blue="0.56"/>
+    <isotopes source="IUPAC">
+      <isotope mass="70" abundanceerror="87" abundance="20.84"/>
+      <isotope mass="72" abundanceerror="34" abundance="27.54"/>
+      <isotope mass="73" abundanceerror="5" abundance="7.73"/>
+      <isotope mass="74" abundanceerror="73" abundance="36.28"/>
+      <isotope mass="76" abundanceerror="38" abundance="7.61"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">72.64</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ar].3d10.4s2.4p2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">125</radius>
+      <radius type="atomic" context="calculated" unit="pm">125</radius>
+      <radius type="covalent" context="empirical" unit="pm">122</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.01</electronegativity>
+  </element>
+  <element atomicnumber="33" id="As" name="arsenic" group="15" period="4">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.210</radius>
+      <radius type="bondorder" unit="angstrom">1.200</radius>
+      <radius type="vanderwaals" unit="angstrom">1.850</radius>
+    </radii>
+    <maxbondorder source="openbabel">3</maxbondorder>
+    <mass source="openbabel" unit="amu">74.92160</mass>
+    <electronegativity source="openbabel">2.18</electronegativity>
+    <rgb red="0.74" green="0.50" blue="0.89"/>
+    <isotopes source="IUPAC">
+      <isotope mass="75" abundance="100"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">74.92160</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ar].3d10.4s2.4p3</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">115</radius>
+      <radius type="atomic" context="calculated" unit="pm">114</radius>
+      <radius type="covalent" context="empirical" unit="pm">119</radius>
+      <radius type="vanderwaals" unit="pm">185</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.18</electronegativity>
+  </element>
+  <element atomicnumber="34" id="Se" name="selenium" group="16" period="4">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.220</radius>
+      <radius type="bondorder" unit="angstrom">1.170</radius>
+      <radius type="vanderwaals" unit="angstrom">1.900</radius>
+    </radii>
+    <maxbondorder source="openbabel">2</maxbondorder>
+    <mass source="openbabel" unit="amu">78.96</mass>
+    <electronegativity source="openbabel">2.55</electronegativity>
+    <rgb red="1.00" green="0.63" blue="0.00"/>
+    <isotopes source="IUPAC">
+      <isotope mass="74" abundanceerror="4" abundance="0.89"/>
+      <isotope mass="76" abundanceerror="29" abundance="9.37"/>
+      <isotope mass="77" abundanceerror="16" abundance="7.63"/>
+      <isotope mass="78" abundanceerror="28" abundance="23.77"/>
+      <isotope mass="80" abundanceerror="41" abundance="49.61"/>
+      <isotope mass="82" abundanceerror="22" abundance="8.73"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">78.96</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ar].3d10.4s2.4p4</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">115</radius>
+      <radius type="atomic" context="calculated" unit="pm">103</radius>
+      <radius type="covalent" context="empirical" unit="pm">116</radius>
+      <radius type="vanderwaals" unit="pm">190</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.55</electronegativity>
+  </element>
+  <element atomicnumber="35" id="Br" name="bromine" group="17" period="4">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.210</radius>
+      <radius type="bondorder" unit="angstrom">1.167</radius>
+      <radius type="vanderwaals" unit="angstrom">2.100</radius>
+    </radii>
+    <maxbondorder source="openbabel">1</maxbondorder>
+    <mass source="openbabel" unit="amu">79.904</mass>
+    <electronegativity source="openbabel">2.96</electronegativity>
+    <rgb red="0.65" green="0.16" blue="0.16"/>
+    <isotopes source="IUPAC">
+      <isotope mass="79" abundanceerror="7" abundance="50.69"/>
+      <isotope mass="81" abundanceerror="7" abundance="49.31"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">79.904</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ar].3d10.4s2.4p5</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">115</radius>
+      <radius type="atomic" context="calculated" unit="pm">94</radius>
+      <radius type="covalent" context="empirical" unit="pm">114</radius>
+      <radius type="vanderwaals" unit="pm">185</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.96</electronegativity>
+  </element>
+  <element atomicnumber="36" id="Kr" name="krypton" group="18" period="4">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.910</radius>
+      <radius type="bondorder" unit="angstrom">1.910</radius>
+      <radius type="vanderwaals" unit="angstrom">2.020</radius>
+    </radii>
+    <maxbondorder source="openbabel">0</maxbondorder>
+    <mass source="openbabel" unit="amu">83.798</mass>
+    <electronegativity source="openbabel">0.00</electronegativity>
+    <rgb red="0.36" green="0.72" blue="0.82"/>
+    <isotopes source="IUPAC">
+      <isotope mass="78" abundanceerror="1" abundance="0.35"/>
+      <isotope mass="80" abundanceerror="6" abundance="2.28"/>
+      <isotope mass="82" abundanceerror="14" abundance="11.58"/>
+      <isotope mass="83" abundanceerror="6" abundance="11.49"/>
+      <isotope mass="84" abundanceerror="4" abundance="57.00"/>
+      <isotope mass="86" abundanceerror="22" abundance="17.30"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">83.798</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Ar].3d10.4s2.4p6</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="calculated" unit="pm">88</radius>
+      <radius type="covalent" context="empirical" unit="pm">110</radius>
+      <radius type="vanderwaals" unit="pm">202</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">3.00</electronegativity>
+  </element>
+  <element atomicnumber="37" id="Rb" name="rubidium" group="1" period="5">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.470</radius>
+      <radius type="bondorder" unit="angstrom">2.160</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">1</maxbondorder>
+    <mass source="openbabel" unit="amu">85.4678</mass>
+    <electronegativity source="openbabel">0.82</electronegativity>
+    <rgb red="0.44" green="0.18" blue="0.69"/>
+    <isotopes source="IUPAC">
+      <isotope mass="85" abundanceerror="2" abundance="72.17"/>
+      <isotope mass="87" abundanceerror="2" abundance="27.83"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">85.4678</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Kr].5s1</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">235</radius>
+      <radius type="atomic" context="calculated" unit="pm">265</radius>
+      <radius type="covalent" context="empirical" unit="pm">211</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">0.82</electronegativity>
+  </element>
+  <element atomicnumber="38" id="Sr" name="strontium" group="2" period="5">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.120</radius>
+      <radius type="bondorder" unit="angstrom">1.910</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">2</maxbondorder>
+    <mass source="openbabel" unit="amu">87.62</mass>
+    <electronegativity source="openbabel">0.95</electronegativity>
+    <rgb red="0.00" green="1.00" blue="0.00"/>
+    <isotopes source="IUPAC">
+      <isotope mass="84" abundanceerror="1" abundance="0.56"/>
+      <isotope mass="86" abundanceerror="1" abundance="9.86"/>
+      <isotope mass="87" abundanceerror="1" abundance="7.00"/>
+      <isotope mass="88" abundanceerror="1" abundance="82.58"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">87.62</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Kr].5s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">200</radius>
+      <radius type="atomic" context="calculated" unit="pm">219</radius>
+      <radius type="covalent" context="empirical" unit="pm">192</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">0.95</electronegativity>
+  </element>
+  <element atomicnumber="39" id="Y" name="yttrium" group="3" period="5">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.780</radius>
+      <radius type="bondorder" unit="angstrom">1.620</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">88.90585</mass>
+    <electronegativity source="openbabel">1.22</electronegativity>
+    <rgb red="0.58" green="1.00" blue="1.00"/>
+    <isotopes source="IUPAC">
+      <isotope mass="89" abundance="100"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">88.90585</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Kr].4d1.5s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">180</radius>
+      <radius type="atomic" context="calculated" unit="pm">212</radius>
+      <radius type="covalent" context="empirical" unit="pm">162</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.22</electronegativity>
+  </element>
+  <element atomicnumber="40" id="Zr" name="zirconium" group="4" period="5">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.560</radius>
+      <radius type="bondorder" unit="angstrom">1.450</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">91.224</mass>
+    <electronegativity source="openbabel">1.33</electronegativity>
+    <rgb red="0.58" green="0.88" blue="0.88"/>
+    <isotopes source="IUPAC">
+      <isotope mass="90" abundanceerror="40" abundance="51.45"/>
+      <isotope mass="91" abundanceerror="5" abundance="11.22"/>
+      <isotope mass="92" abundanceerror="8" abundance="17.15"/>
+      <isotope mass="94" abundanceerror="28" abundance="17.38"/>
+      <isotope mass="96" abundanceerror="9" abundance="2.80"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">91.224</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Kr].4d2.5s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">155</radius>
+      <radius type="atomic" context="calculated" unit="pm">206</radius>
+      <radius type="covalent" context="empirical" unit="pm">148</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.33</electronegativity>
+  </element>
+  <element atomicnumber="41" id="Nb" name="niobium" group="5" period="5">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.480</radius>
+      <radius type="bondorder" unit="angstrom">1.340</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">92.90638</mass>
+    <electronegativity source="openbabel">1.6</electronegativity>
+    <rgb red="0.45" green="0.76" blue="0.79"/>
+    <isotopes source="IUPAC">
+      <isotope mass="93" abundance="100"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">92.90638</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Kr].4d4.5s1</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">145</radius>
+      <radius type="atomic" context="calculated" unit="pm">198</radius>
+      <radius type="covalent" context="empirical" unit="pm">137</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.6</electronegativity>
+  </element>
+  <element atomicnumber="42" id="Mo" name="molybdenum" group="6" period="5">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.470</radius>
+      <radius type="bondorder" unit="angstrom">1.300</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">95.94</mass>
+    <electronegativity source="openbabel">2.16</electronegativity>
+    <rgb red="0.33" green="0.71" blue="0.71"/>
+    <isotopes source="IUPAC">
+      <isotope mass="92" abundanceerror="35" abundance="14.84"/>
+      <isotope mass="94" abundanceerror="12" abundance="9.25"/>
+      <isotope mass="95" abundanceerror="13" abundance="15.92"/>
+      <isotope mass="96" abundanceerror="2" abundance="16.68"/>
+      <isotope mass="97" abundanceerror="8" abundance="9.55"/>
+      <isotope mass="98" abundanceerror="31" abundance="24.13"/>
+      <isotope mass="100" abundanceerror="23" abundance="9.63"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">95.94</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Kr].4d5.5s1</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">145</radius>
+      <radius type="atomic" context="calculated" unit="pm">190</radius>
+      <radius type="covalent" context="empirical" unit="pm">145</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.16</electronegativity>
+  </element>
+  <element atomicnumber="43" id="Tc" name="technetium" group="7" period="5">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.350</radius>
+      <radius type="bondorder" unit="angstrom">1.270</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">98</mass>
+    <electronegativity source="openbabel">1.9</electronegativity>
+    <rgb red="0.23" green="0.62" blue="0.62"/>
+    <mass source="webelements" unit="amu">98</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Kr].4d6.5s1</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">135</radius>
+      <radius type="atomic" context="calculated" unit="pm">183</radius>
+      <radius type="covalent" context="empirical" unit="pm">156</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.9</electronegativity>
+  </element>
+  <element atomicnumber="44" id="Ru" name="ruthenium" group="8" period="5">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.400</radius>
+      <radius type="bondorder" unit="angstrom">1.250</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">101.07</mass>
+    <electronegativity source="openbabel">2.2</electronegativity>
+    <rgb red="0.14" green="0.56" blue="0.56"/>
+    <isotopes source="IUPAC">
+      <isotope mass="96" abundanceerror="14" abundance="5.54"/>
+      <isotope mass="98" abundanceerror="3" abundance="1.87"/>
+      <isotope mass="99" abundanceerror="14" abundance="12.76"/>
+      <isotope mass="100" abundanceerror="7" abundance="12.60"/>
+      <isotope mass="101" abundanceerror="2" abundance="17.06"/>
+      <isotope mass="102" abundanceerror="14" abundance="31.55"/>
+      <isotope mass="104" abundanceerror="27" abundance="18.62"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">101.07</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Kr].4d75s1</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">130</radius>
+      <radius type="atomic" context="calculated" unit="pm">178</radius>
+      <radius type="covalent" context="empirical" unit="pm">126</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.2</electronegativity>
+  </element>
+  <element atomicnumber="45" id="Rh" name="rhodium" group="9" period="5">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.450</radius>
+      <radius type="bondorder" unit="angstrom">1.250</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">102.90550</mass>
+    <electronegativity source="openbabel">2.28</electronegativity>
+    <rgb red="0.04" green="0.49" blue="0.55"/>
+    <isotopes source="IUPAC">
+      <isotope mass="103" abundance="100"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">102.90550</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Kr].4d85s1</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">135</radius>
+      <radius type="atomic" context="calculated" unit="pm">173</radius>
+      <radius type="covalent" context="empirical" unit="pm">135</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.28</electronegativity>
+  </element>
+  <element atomicnumber="46" id="Pd" name="palladium" group="10" period="5">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.500</radius>
+      <radius type="bondorder" unit="angstrom">1.280</radius>
+      <radius type="vanderwaals" unit="angstrom">1.630</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">106.42</mass>
+    <electronegativity source="openbabel">2.20</electronegativity>
+    <rgb red="0.00" green="0.41" blue="0.52"/>
+    <isotopes source="IUPAC">
+      <isotope mass="102" abundanceerror="1" abundance="1.02"/>
+      <isotope mass="104" abundanceerror="8" abundance="11.14"/>
+      <isotope mass="105" abundanceerror="8" abundance="22.33"/>
+      <isotope mass="106" abundanceerror="3" abundance="27.33"/>
+      <isotope mass="108" abundanceerror="9" abundance="26.46"/>
+      <isotope mass="110" abundanceerror="9" abundance="11.72"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">106.42</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Kr].4d10</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">140</radius>
+      <radius type="atomic" context="calculated" unit="pm">169</radius>
+      <radius type="covalent" context="empirical" unit="pm">131</radius>
+      <radius type="vanderwaals" unit="pm">163</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.20</electronegativity>
+  </element>
+  <element atomicnumber="47" id="Ag" name="silver" group="11" period="5">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.590</radius>
+      <radius type="bondorder" unit="angstrom">1.340</radius>
+      <radius type="vanderwaals" unit="angstrom">1.720</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">107.8682</mass>
+    <electronegativity source="openbabel">1.93</electronegativity>
+    <rgb red="0.88" green="0.88" blue="1.00"/>
+    <isotopes source="IUPAC">
+      <isotope mass="107" abundanceerror="8" abundance="51.839"/>
+      <isotope mass="109" abundanceerror="8" abundance="48.161"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">107.8682</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Kr].4d10.5s1</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">160</radius>
+      <radius type="atomic" context="calculated" unit="pm">165</radius>
+      <radius type="covalent" context="empirical" unit="pm">153</radius>
+      <radius type="vanderwaals" unit="pm">172</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.93</electronegativity>
+  </element>
+  <element atomicnumber="48" id="Cd" name="cadmium" group="12" period="5">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.690</radius>
+      <radius type="bondorder" unit="angstrom">1.480</radius>
+      <radius type="vanderwaals" unit="angstrom">1.580</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">112.411</mass>
+    <electronegativity source="openbabel">1.69</electronegativity>
+    <rgb red="1.00" green="0.85" blue="0.56"/>
+    <isotopes source="IUPAC">
+      <isotope mass="106" abundanceerror="6" abundance="1.25"/>
+      <isotope mass="108" abundanceerror="3" abundance="0.89"/>
+      <isotope mass="110" abundanceerror="18" abundance="12.49"/>
+      <isotope mass="111" abundanceerror="12" abundance="12.80"/>
+      <isotope mass="112" abundanceerror="21" abundance="24.13"/>
+      <isotope mass="113" abundanceerror="12" abundance="12.22"/>
+      <isotope mass="114" abundanceerror="42" abundance="28.73"/>
+      <isotope mass="116" abundanceerror="18" abundance="7.49"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">112.411</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Kr].4d10.5s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">155</radius>
+      <radius type="atomic" context="calculated" unit="pm">161</radius>
+      <radius type="covalent" context="empirical" unit="pm">148</radius>
+      <radius type="vanderwaals" unit="pm">158</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.69</electronegativity>
+  </element>
+  <element atomicnumber="49" id="In" name="indium" group="13" period="5">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.630</radius>
+      <radius type="bondorder" unit="angstrom">1.440</radius>
+      <radius type="vanderwaals" unit="angstrom">1.930</radius>
+    </radii>
+    <maxbondorder source="openbabel">3</maxbondorder>
+    <mass source="openbabel" unit="amu">114.818</mass>
+    <electronegativity source="openbabel">1.78</electronegativity>
+    <rgb red="0.65" green="0.46" blue="0.45"/>
+    <isotopes source="IUPAC">
+      <isotope mass="113" abundanceerror="5" abundance="4.29"/>
+      <isotope mass="115" abundanceerror="5" abundance="95.71"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">114.818</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Kr].4d10.5s2.5p1</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">155</radius>
+      <radius type="atomic" context="calculated" unit="pm">156</radius>
+      <radius type="covalent" context="empirical" unit="pm">144</radius>
+      <radius type="vanderwaals" unit="pm">193</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.78</electronegativity>
+  </element>
+  <element atomicnumber="50" id="Sn" name="tin" group="14" period="5">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.460</radius>
+      <radius type="bondorder" unit="angstrom">1.385</radius>
+      <radius type="vanderwaals" unit="angstrom">2.170</radius>
+    </radii>
+    <maxbondorder source="openbabel">4</maxbondorder>
+    <mass source="openbabel" unit="amu">118.710</mass>
+    <electronegativity source="openbabel">1.96</electronegativity>
+    <rgb red="0.40" green="0.50" blue="0.50"/>
+    <isotopes source="IUPAC">
+      <isotope mass="112" abundanceerror="1" abundance="0.97"/>
+      <isotope mass="114" abundanceerror="1" abundance="0.66"/>
+      <isotope mass="115" abundanceerror="1" abundance="0.34"/>
+      <isotope mass="116" abundanceerror="9" abundance="14.54"/>
+      <isotope mass="117" abundanceerror="7" abundance="7.68"/>
+      <isotope mass="118" abundanceerror="9" abundance="24.22"/>
+      <isotope mass="119" abundanceerror="4" abundance="8.59"/>
+      <isotope mass="120" abundanceerror="9" abundance="32.58"/>
+      <isotope mass="122" abundanceerror="3" abundance="4.63"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">118.710</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Kr].4d10.5s2.5p2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">145</radius>
+      <radius type="atomic" context="calculated" unit="pm">145</radius>
+      <radius type="covalent" context="empirical" unit="pm">141</radius>
+      <radius type="vanderwaals" unit="pm">217</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.96</electronegativity>
+  </element>
+  <element atomicnumber="51" id="Sb" name="antimony" group="15" period="5">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.460</radius>
+      <radius type="bondorder" unit="angstrom">1.400</radius>
+      <radius type="vanderwaals" unit="angstrom">2.200</radius>
+    </radii>
+    <maxbondorder source="openbabel">3</maxbondorder>
+    <mass source="openbabel" unit="amu">121.760</mass>
+    <electronegativity source="openbabel">2.05</electronegativity>
+    <rgb red="0.62" green="0.39" blue="0.71"/>
+    <isotopes source="IUPAC">
+      <isotope mass="121" abundanceerror="5" abundance="57.21"/>
+      <isotope mass="123" abundanceerror="5" abundance="42.79"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">121.760</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Kr].4d10.5s2.5p3</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">145</radius>
+      <radius type="atomic" context="calculated" unit="pm">133</radius>
+      <radius type="covalent" context="empirical" unit="pm">138</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.05</electronegativity>
+  </element>
+  <element atomicnumber="52" id="Te" name="tellurium" group="16" period="5">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.470</radius>
+      <radius type="bondorder" unit="angstrom">1.378</radius>
+      <radius type="vanderwaals" unit="angstrom">2.060</radius>
+    </radii>
+    <maxbondorder source="openbabel">2</maxbondorder>
+    <mass source="openbabel" unit="amu">127.60</mass>
+    <electronegativity source="openbabel">2.1</electronegativity>
+    <rgb red="0.83" green="0.48" blue="0.00"/>
+    <isotopes source="IUPAC">
+      <isotope mass="120" abundanceerror="1" abundance="0.09"/>
+      <isotope mass="122" abundanceerror="12" abundance="2.55"/>
+      <isotope mass="123" abundanceerror="3" abundance="0.89"/>
+      <isotope mass="124" abundanceerror="14" abundance="4.74"/>
+      <isotope mass="125" abundanceerror="15" abundance="7.07"/>
+      <isotope mass="126" abundanceerror="25" abundance="18.84"/>
+      <isotope mass="128" abundanceerror="8" abundance="31.74"/>
+      <isotope mass="130" abundanceerror="62" abundance="34.08"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">127.60</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Kr].4d10.5s2.5p4</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">140</radius>
+      <radius type="atomic" context="calculated" unit="pm">123</radius>
+      <radius type="covalent" context="empirical" unit="pm">135</radius>
+      <radius type="vanderwaals" unit="pm">206</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.1</electronegativity>
+  </element>
+  <element atomicnumber="53" id="I" name="iodine" group="17" period="5">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.400</radius>
+      <radius type="bondorder" unit="angstrom">1.387</radius>
+      <radius type="vanderwaals" unit="angstrom">2.150</radius>
+    </radii>
+    <maxbondorder source="openbabel">1</maxbondorder>
+    <mass source="openbabel" unit="amu">126.90447</mass>
+    <electronegativity source="openbabel">2.66</electronegativity>
+    <rgb red="0.58" green="0.00" blue="0.58"/>
+    <isotopes source="IUPAC">
+      <isotope mass="127" abundance="100"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">126.90447</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Kr].4d10.5s2.5p5</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">140</radius>
+      <radius type="atomic" context="calculated" unit="pm">115</radius>
+      <radius type="covalent" context="empirical" unit="pm">133</radius>
+      <radius type="vanderwaals" unit="pm">198</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.66</electronegativity>
+  </element>
+  <element atomicnumber="54" id="Xe" name="xenon" group="18" period="5">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.980</radius>
+      <radius type="bondorder" unit="angstrom">1.980</radius>
+      <radius type="vanderwaals" unit="angstrom">2.160</radius>
+    </radii>
+    <maxbondorder source="openbabel">0</maxbondorder>
+    <mass source="openbabel" unit="amu">131.293</mass>
+    <electronegativity source="openbabel">2.6</electronegativity>
+    <rgb red="0.26" green="0.62" blue="0.69"/>
+    <isotopes source="IUPAC">
+      <isotope mass="124" abundanceerror="1" abundance="0.09"/>
+      <isotope mass="126" abundanceerror="1" abundance="0.09"/>
+      <isotope mass="128" abundanceerror="3" abundance="1.92"/>
+      <isotope mass="129" abundanceerror="24" abundance="26.44"/>
+      <isotope mass="130" abundanceerror="2" abundance="4.08"/>
+      <isotope mass="131" abundanceerror="3" abundance="21.18"/>
+      <isotope mass="132" abundanceerror="6" abundance="26.89"/>
+      <isotope mass="134" abundanceerror="10" abundance="10.44"/>
+      <isotope mass="136" abundanceerror="16" abundance="8.87"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">131.293</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Kr].4d10.5s2.5p6</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="calculated" unit="pm">108</radius>
+      <radius type="covalent" context="empirical" unit="pm">130</radius>
+      <radius type="vanderwaals" unit="pm">216</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.6</electronegativity>
+  </element>
+  <element atomicnumber="55" id="Cs" name="caesium" group="1" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.670</radius>
+      <radius type="bondorder" unit="angstrom">2.350</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">1</maxbondorder>
+    <mass source="openbabel" unit="amu">132.90545</mass>
+    <electronegativity source="openbabel">0.79</electronegativity>
+    <rgb red="0.34" green="0.09" blue="0.56"/>
+    <isotopes source="IUPAC">
+      <isotope mass="133" abundance="100"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">132.90545</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].6s1</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">260</radius>
+      <radius type="atomic" context="calculated" unit="pm">298</radius>
+      <radius type="covalent" context="empirical" unit="pm">225</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">0.79</electronegativity>
+  </element>
+  <element atomicnumber="56" id="Ba" name="barium" group="2" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.340</radius>
+      <radius type="bondorder" unit="angstrom">1.980</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">2</maxbondorder>
+    <mass source="openbabel" unit="amu">137.327</mass>
+    <electronegativity source="openbabel">0.89</electronegativity>
+    <rgb red="0.00" green="0.79" blue="0.00"/>
+    <isotopes source="IUPAC">
+      <isotope mass="130" abundanceerror="1" abundance="0.106"/>
+      <isotope mass="132" abundanceerror="1" abundance="0.101"/>
+      <isotope mass="134" abundanceerror="18" abundance="2.417"/>
+      <isotope mass="135" abundanceerror="12" abundance="6.592"/>
+      <isotope mass="136" abundanceerror="24" abundance="7.854"/>
+      <isotope mass="137" abundanceerror="24" abundance="11.232"/>
+      <isotope mass="138" abundanceerror="42" abundance="71.698"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">137.327</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">215</radius>
+      <radius type="atomic" context="calculated" unit="pm">253</radius>
+      <radius type="covalent" context="empirical" unit="pm">198</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">0.89</electronegativity>
+  </element>
+  <element atomicnumber="57" id="La" name="lanthanum" group="0" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.870</radius>
+      <radius type="bondorder" unit="angstrom">1.690</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">12</maxbondorder>
+    <mass source="openbabel" unit="amu">138.9055</mass>
+    <electronegativity source="openbabel">1.10</electronegativity>
+    <rgb red="0.44" green="0.83" blue="1.00"/>
+    <isotopes source="IUPAC">
+      <isotope mass="138" abundanceerror="1" abundance="0.090"/>
+      <isotope mass="139" abundanceerror="1" abundance="99.910"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">138.9055</mass>
+    <mass source="webelements" unit="amu">138.9055</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].5d1.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">195</radius>
+      <radius type="covalent" context="empirical" unit="pm">169</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.10</electronegativity>
+  </element>
+  <element atomicnumber="58" id="Ce" name="cerium" group="0" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.830</radius>
+      <radius type="bondorder" unit="angstrom">1.830</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">140.116</mass>
+    <electronegativity source="openbabel">1.12</electronegativity>
+    <rgb red="1.00" green="1.00" blue="0.78"/>
+    <isotopes source="IUPAC">
+      <isotope mass="136" abundanceerror="2" abundance="0.185"/>
+      <isotope mass="138" abundanceerror="2" abundance="0.251"/>
+      <isotope mass="140" abundanceerror="51" abundance="88.450"/>
+      <isotope mass="142" abundanceerror="51" abundance="11.114"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">140.116</mass>
+    <mass source="webelements" unit="amu">140.116</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f1.5d1.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">185</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.12</electronegativity>
+  </element>
+  <element atomicnumber="59" id="Pr" name="praseodymium" group="0" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.820</radius>
+      <radius type="bondorder" unit="angstrom">1.820</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">140.90765</mass>
+    <electronegativity source="openbabel">1.13</electronegativity>
+    <rgb red="0.85" green="1.00" blue="0.78"/>
+    <isotopes source="IUPAC">
+      <isotope mass="141" abundance="100"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">140.90765</mass>
+    <mass source="webelements" unit="amu">140.90765</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f3.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">185</radius>
+      <radius type="atomic" context="calculated" unit="pm">247</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.13</electronegativity>
+  </element>
+  <element atomicnumber="60" id="Nd" name="neodymium" group="0" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.810</radius>
+      <radius type="bondorder" unit="angstrom">1.810</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">144.24</mass>
+    <electronegativity source="openbabel">1.14</electronegativity>
+    <rgb red="0.78" green="1.00" blue="0.78"/>
+    <isotopes source="IUPAC">
+      <isotope mass="142" abundanceerror="5" abundance="27.2"/>
+      <isotope mass="143" abundanceerror="2" abundance="12.2"/>
+      <isotope mass="144" abundanceerror="3" abundance="23.8"/>
+      <isotope mass="145" abundanceerror="1" abundance="8.3"/>
+      <isotope mass="146" abundanceerror="3" abundance="17.2"/>
+      <isotope mass="148" abundanceerror="1" abundance="5.7"/>
+      <isotope mass="150" abundanceerror="2" abundance="5.6"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">144.24</mass>
+    <mass source="webelements" unit="amu">144.24</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f4.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">185</radius>
+      <radius type="atomic" context="calculated" unit="pm">206</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.14</electronegativity>
+  </element>
+  <element atomicnumber="61" id="Pm" name="promethium" group="0" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.800</radius>
+      <radius type="bondorder" unit="angstrom">1.800</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">145</mass>
+    <electronegativity source="openbabel">1.13</electronegativity>
+    <rgb red="0.64" green="1.00" blue="0.78"/>
+    <mass source="webelements" unit="amu">145</mass>
+    <mass source="webelements" unit="amu">145</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f5.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">185</radius>
+      <radius type="atomic" context="calculated" unit="pm">205</radius>
+    </radii>
+  </element>
+  <element atomicnumber="62" id="Sm" name="samarium" group="0" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.800</radius>
+      <radius type="bondorder" unit="angstrom">1.800</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">150.36</mass>
+    <electronegativity source="openbabel">1.17</electronegativity>
+    <rgb red="0.56" green="1.00" blue="0.78"/>
+    <isotopes source="IUPAC">
+      <isotope mass="144" abundanceerror="7" abundance="3.07"/>
+      <isotope mass="147" abundanceerror="18" abundance="14.99"/>
+      <isotope mass="148" abundanceerror="10" abundance="11.24"/>
+      <isotope mass="149" abundanceerror="7" abundance="13.82"/>
+      <isotope mass="150" abundanceerror="1" abundance="7.38"/>
+      <isotope mass="152" abundanceerror="16" abundance="26.75"/>
+      <isotope mass="154" abundanceerror="29" abundance="22.75"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">150.36</mass>
+    <mass source="webelements" unit="amu">150.36</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f6.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">185</radius>
+      <radius type="atomic" context="calculated" unit="pm">238</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.17</electronegativity>
+  </element>
+  <element atomicnumber="63" id="Eu" name="europium" group="0" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.990</radius>
+      <radius type="bondorder" unit="angstrom">1.990</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">151.964</mass>
+    <electronegativity source="openbabel">1.2</electronegativity>
+    <rgb red="0.38" green="1.00" blue="0.78"/>
+    <isotopes source="IUPAC">
+      <isotope mass="151" abundanceerror="3" abundance="47.81"/>
+      <isotope mass="153" abundanceerror="3" abundance="52.19"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">151.964</mass>
+    <mass source="webelements" unit="amu">151.964</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f7.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">185</radius>
+      <radius type="atomic" context="calculated" unit="pm">231</radius>
+    </radii>
+  </element>
+  <element atomicnumber="64" id="Gd" name="gadolinium" group="0" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.790</radius>
+      <radius type="bondorder" unit="angstrom">1.790</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">157.25</mass>
+    <electronegativity source="openbabel">1.20</electronegativity>
+    <rgb red="0.27" green="1.00" blue="0.78"/>
+    <isotopes source="IUPAC">
+      <isotope mass="152" abundanceerror="1" abundance="0.20"/>
+      <isotope mass="154" abundanceerror="3" abundance="2.18"/>
+      <isotope mass="155" abundanceerror="12" abundance="14.80"/>
+      <isotope mass="156" abundanceerror="9" abundance="20.47"/>
+      <isotope mass="157" abundanceerror="2" abundance="15.65"/>
+      <isotope mass="158" abundanceerror="7" abundance="24.84"/>
+      <isotope mass="160" abundanceerror="19" abundance="21.86"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">157.25</mass>
+    <mass source="webelements" unit="amu">157.25</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f7.5d1.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">180</radius>
+      <radius type="atomic" context="calculated" unit="pm">233</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.20</electronegativity>
+  </element>
+  <element atomicnumber="65" id="Tb" name="terbium" group="0" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.760</radius>
+      <radius type="bondorder" unit="angstrom">1.760</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">158.92534</mass>
+    <electronegativity source="openbabel">1.1</electronegativity>
+    <rgb red="0.19" green="1.00" blue="0.78"/>
+    <isotopes source="IUPAC">
+      <isotope mass="159" abundance="100"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">158.92534</mass>
+    <mass source="webelements" unit="amu">158.92534</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f9.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">175</radius>
+      <radius type="atomic" context="calculated" unit="pm">225</radius>
+    </radii>
+  </element>
+  <element atomicnumber="66" id="Dy" name="dysprosium" group="0" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.750</radius>
+      <radius type="bondorder" unit="angstrom">1.750</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">162.500</mass>
+    <electronegativity source="openbabel">1.22</electronegativity>
+    <rgb red="0.12" green="1.00" blue="0.78"/>
+    <isotopes source="IUPAC">
+      <isotope mass="156" abundanceerror="1" abundance="0.06"/>
+      <isotope mass="158" abundanceerror="1" abundance="0.10"/>
+      <isotope mass="160" abundanceerror="8" abundance="2.34"/>
+      <isotope mass="161" abundanceerror="24" abundance="18.91"/>
+      <isotope mass="162" abundanceerror="26" abundance="25.51"/>
+      <isotope mass="163" abundanceerror="16" abundance="24.90"/>
+      <isotope mass="164" abundanceerror="37" abundance="28.18"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">162.500</mass>
+    <mass source="webelements" unit="amu">162.500</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f10.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">175</radius>
+      <radius type="atomic" context="calculated" unit="pm">228</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.22</electronegativity>
+  </element>
+  <element atomicnumber="67" id="Ho" name="holmium" group="0" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.740</radius>
+      <radius type="bondorder" unit="angstrom">1.740</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">164.93032</mass>
+    <electronegativity source="openbabel">1.23</electronegativity>
+    <rgb red="0.00" green="1.00" blue="0.61"/>
+    <isotopes source="IUPAC">
+      <isotope mass="165" abundance="100"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">164.93032</mass>
+    <mass source="webelements" unit="amu">164.93032</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f11.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">175</radius>
+      <radius type="atomic" context="calculated" unit="pm">226</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.23</electronegativity>
+  </element>
+  <element atomicnumber="68" id="Er" name="erbium" group="0" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.730</radius>
+      <radius type="bondorder" unit="angstrom">1.730</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">167.259</mass>
+    <electronegativity source="openbabel">1.24</electronegativity>
+    <rgb red="0.00" green="0.90" blue="0.46"/>
+    <isotopes source="IUPAC">
+      <isotope mass="162" abundanceerror="1" abundance="0.14"/>
+      <isotope mass="164" abundanceerror="3" abundance="1.61"/>
+      <isotope mass="166" abundanceerror="35" abundance="33.61"/>
+      <isotope mass="167" abundanceerror="17" abundance="22.93"/>
+      <isotope mass="168" abundanceerror="26" abundance="26.78"/>
+      <isotope mass="170" abundanceerror="27" abundance="14.93"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">167.259</mass>
+    <mass source="webelements" unit="amu">167.259</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f12.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">175</radius>
+      <radius type="atomic" context="calculated" unit="pm">226</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.24</electronegativity>
+  </element>
+  <element atomicnumber="69" id="Tm" name="thulium" group="0" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.720</radius>
+      <radius type="bondorder" unit="angstrom">1.720</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">168.93421</mass>
+    <electronegativity source="openbabel">1.25</electronegativity>
+    <rgb red="0.00" green="0.83" blue="0.32"/>
+    <isotopes source="IUPAC">
+      <isotope mass="169" abundance="100"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">168.93421</mass>
+    <mass source="webelements" unit="amu">168.93421</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f13.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">175</radius>
+      <radius type="atomic" context="calculated" unit="pm">222</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.25</electronegativity>
+  </element>
+  <element atomicnumber="70" id="Yb" name="ytterbium" group="0" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.940</radius>
+      <radius type="bondorder" unit="angstrom">1.940</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">173.04</mass>
+    <electronegativity source="openbabel">1.1</electronegativity>
+    <rgb red="0.00" green="0.75" blue="0.22"/>
+    <isotopes source="IUPAC">
+      <isotope mass="168" abundanceerror="1" abundance="0.13"/>
+      <isotope mass="170" abundanceerror="15" abundance="3.04"/>
+      <isotope mass="171" abundanceerror="57" abundance="14.28"/>
+      <isotope mass="172" abundanceerror="67" abundance="21.83"/>
+      <isotope mass="173" abundanceerror="27" abundance="16.13"/>
+      <isotope mass="174" abundanceerror="92" abundance="31.83"/>
+      <isotope mass="176" abundanceerror="41" abundance="12.76"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">173.04</mass>
+    <mass source="webelements" unit="amu">173.04</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f14.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">175</radius>
+      <radius type="atomic" context="calculated" unit="pm">222</radius>
+    </radii>
+  </element>
+  <element atomicnumber="71" id="Lu" name="lutetium" group="3" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.720</radius>
+      <radius type="bondorder" unit="angstrom">1.720</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">174.967</mass>
+    <electronegativity source="openbabel">1.27</electronegativity>
+    <rgb red="0.00" green="0.67" blue="0.14"/>
+    <isotopes source="IUPAC">
+      <isotope mass="175" abundanceerror="2" abundance="97.41"/>
+      <isotope mass="176" abundanceerror="2" abundance="2.59"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">174.967</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f14.5d1.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">175</radius>
+      <radius type="atomic" context="calculated" unit="pm">217</radius>
+      <radius type="covalent" context="empirical" unit="pm">160</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.27</electronegativity>
+  </element>
+  <element atomicnumber="72" id="Hf" name="hafnium" group="4" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.570</radius>
+      <radius type="bondorder" unit="angstrom">1.440</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">178.49</mass>
+    <electronegativity source="openbabel">1.3</electronegativity>
+    <rgb red="0.30" green="0.76" blue="1.00"/>
+    <isotopes source="IUPAC">
+      <isotope mass="174" abundanceerror="1" abundance="0.16"/>
+      <isotope mass="176" abundanceerror="7" abundance="5.26"/>
+      <isotope mass="177" abundanceerror="9" abundance="18.60"/>
+      <isotope mass="178" abundanceerror="7" abundance="27.28"/>
+      <isotope mass="179" abundanceerror="2" abundance="13.62"/>
+      <isotope mass="180" abundanceerror="16" abundance="35.08"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">178.49</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f14.5d2.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">155</radius>
+      <radius type="atomic" context="calculated" unit="pm">208</radius>
+      <radius type="covalent" context="empirical" unit="pm">150</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.3</electronegativity>
+  </element>
+  <element atomicnumber="73" id="Ta" name="tantalum" group="5" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.430</radius>
+      <radius type="bondorder" unit="angstrom">1.340</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">180.9479</mass>
+    <electronegativity source="openbabel">1.5</electronegativity>
+    <rgb red="0.30" green="0.65" blue="1.00"/>
+    <isotopes source="IUPAC">
+      <isotope mass="180" abundanceerror="2" abundance="0.012"/>
+      <isotope mass="181" abundanceerror="2" abundance="99.988"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">180.9479</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f14.5d3.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">145</radius>
+      <radius type="atomic" context="calculated" unit="pm">200</radius>
+      <radius type="covalent" context="empirical" unit="pm">138</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.5</electronegativity>
+  </element>
+  <element atomicnumber="74" id="W" name="tungsten" group="6" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.370</radius>
+      <radius type="bondorder" unit="angstrom">1.300</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">183.84</mass>
+    <electronegativity source="openbabel">2.36</electronegativity>
+    <rgb red="0.13" green="0.58" blue="0.84"/>
+    <isotopes source="IUPAC">
+      <isotope mass="180" abundanceerror="1" abundance="0.12"/>
+      <isotope mass="182" abundanceerror="16" abundance="26.50"/>
+      <isotope mass="183" abundanceerror="4" abundance="14.31"/>
+      <isotope mass="184" abundanceerror="2" abundance="30.64"/>
+      <isotope mass="186" abundanceerror="19" abundance="28.43"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">183.84</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f14.5d4.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">135</radius>
+      <radius type="atomic" context="calculated" unit="pm">193</radius>
+      <radius type="covalent" context="empirical" unit="pm">146</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.36</electronegativity>
+  </element>
+  <element atomicnumber="75" id="Re" name="rhenium" group="7" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.350</radius>
+      <radius type="bondorder" unit="angstrom">1.280</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">186.207</mass>
+    <electronegativity source="openbabel">1.9</electronegativity>
+    <rgb red="0.15" green="0.49" blue="0.67"/>
+    <isotopes source="IUPAC">
+      <isotope mass="185" abundanceerror="2" abundance="37.40"/>
+      <isotope mass="187" abundanceerror="2" abundance="62.60"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">186.207</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f14.5d5.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">135</radius>
+      <radius type="atomic" context="calculated" unit="pm">188</radius>
+      <radius type="covalent" context="empirical" unit="pm">159</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.9</electronegativity>
+  </element>
+  <element atomicnumber="76" id="Os" name="osmium" group="8" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.370</radius>
+      <radius type="bondorder" unit="angstrom">1.260</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">190.23</mass>
+    <electronegativity source="openbabel">2.2</electronegativity>
+    <rgb red="0.15" green="0.40" blue="0.59"/>
+    <isotopes source="IUPAC">
+      <isotope mass="184" abundanceerror="1" abundance="0.02"/>
+      <isotope mass="186" abundanceerror="3" abundance="1.59"/>
+      <isotope mass="187" abundanceerror="2" abundance="1.96"/>
+      <isotope mass="188" abundanceerror="8" abundance="13.24"/>
+      <isotope mass="190" abundanceerror="2" abundance="26.26"/>
+      <isotope mass="192" abundanceerror="19" abundance="40.78"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">190.23</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f14.5d6.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">130</radius>
+      <radius type="atomic" context="calculated" unit="pm">185</radius>
+      <radius type="covalent" context="empirical" unit="pm">128</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.2</electronegativity>
+  </element>
+  <element atomicnumber="77" id="Ir" name="iridium" group="9" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.320</radius>
+      <radius type="bondorder" unit="angstrom">1.270</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">192.217</mass>
+    <electronegativity source="openbabel">2.20</electronegativity>
+    <rgb red="0.09" green="0.33" blue="0.53"/>
+    <isotopes source="IUPAC">
+      <isotope mass="191" abundanceerror="2" abundance="37.3"/>
+      <isotope mass="193" abundanceerror="2" abundance="62.7"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">192.217</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f14.5d7.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">135</radius>
+      <radius type="atomic" context="calculated" unit="pm">180</radius>
+      <radius type="covalent" context="empirical" unit="pm">137</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.20</electronegativity>
+  </element>
+  <element atomicnumber="78" id="Pt" name="platinum" group="10" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.500</radius>
+      <radius type="bondorder" unit="angstrom">1.300</radius>
+      <radius type="vanderwaals" unit="angstrom">1.720</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">195.078</mass>
+    <electronegativity source="openbabel">2.28</electronegativity>
+    <rgb red="0.96" green="0.93" blue="0.82"/>
+    <isotopes source="IUPAC">
+      <isotope mass="190" abundanceerror="1" abundance="0.014"/>
+      <isotope mass="192" abundanceerror="7" abundance="0.782"/>
+      <isotope mass="194" abundanceerror="99" abundance="32.967"/>
+      <isotope mass="195" abundanceerror="10" abundance="33.832"/>
+      <isotope mass="196" abundanceerror="41" abundance="25.242"/>
+      <isotope mass="198" abundanceerror="55" abundance="7.163"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">195.078</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f14.5d9.6s1</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">135</radius>
+      <radius type="atomic" context="calculated" unit="pm">177</radius>
+      <radius type="covalent" context="empirical" unit="pm">128</radius>
+      <radius type="vanderwaals" unit="pm">175</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.28</electronegativity>
+  </element>
+  <element atomicnumber="79" id="Au" name="gold" group="11" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.500</radius>
+      <radius type="bondorder" unit="angstrom">1.340</radius>
+      <radius type="vanderwaals" unit="angstrom">1.660</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">196.96655</mass>
+    <electronegativity source="openbabel">2.54</electronegativity>
+    <rgb red="0.80" green="0.82" blue="0.12"/>
+    <isotopes source="IUPAC">
+      <isotope mass="197" abundance="100"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">196.96655</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f14.5d10.6s1</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">135</radius>
+      <radius type="atomic" context="calculated" unit="pm">174</radius>
+      <radius type="covalent" context="empirical" unit="pm">144</radius>
+      <radius type="vanderwaals" unit="pm">166</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.54</electronegativity>
+  </element>
+  <element atomicnumber="80" id="Hg" name="mercury" group="12" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.700</radius>
+      <radius type="bondorder" unit="angstrom">1.490</radius>
+      <radius type="vanderwaals" unit="angstrom">1.550</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">200.59</mass>
+    <electronegativity source="openbabel">2.00</electronegativity>
+    <rgb red="0.71" green="0.71" blue="0.76"/>
+    <isotopes source="IUPAC">
+      <isotope mass="196" abundanceerror="1" abundance="0.15"/>
+      <isotope mass="198" abundanceerror="20" abundance="9.97"/>
+      <isotope mass="199" abundanceerror="22" abundance="16.87"/>
+      <isotope mass="200" abundanceerror="19" abundance="23.10"/>
+      <isotope mass="201" abundanceerror="9" abundance="13.18"/>
+      <isotope mass="202" abundanceerror="26" abundance="29.86"/>
+      <isotope mass="204" abundanceerror="15" abundance="6.87"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">200.59</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f14.5d10.6s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">150</radius>
+      <radius type="atomic" context="calculated" unit="pm">171</radius>
+      <radius type="covalent" context="empirical" unit="pm">149</radius>
+      <radius type="vanderwaals" unit="pm">155</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.00</electronegativity>
+  </element>
+  <element atomicnumber="81" id="Tl" name="thallium" group="13" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.550</radius>
+      <radius type="bondorder" unit="angstrom">1.480</radius>
+      <radius type="vanderwaals" unit="angstrom">1.960</radius>
+    </radii>
+    <maxbondorder source="openbabel">3</maxbondorder>
+    <mass source="openbabel" unit="amu">204.3833</mass>
+    <electronegativity source="openbabel">2.04</electronegativity>
+    <rgb red="0.65" green="0.33" blue="0.30"/>
+    <isotopes source="IUPAC">
+      <isotope mass="203" abundanceerror="14" abundance="29.524"/>
+      <isotope mass="205" abundanceerror="14" abundance="70.476"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">204.3833</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f14.5d10.6s2.6p1</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">190</radius>
+      <radius type="atomic" context="calculated" unit="pm">156</radius>
+      <radius type="covalent" context="empirical" unit="pm">148</radius>
+      <radius type="vanderwaals" unit="pm">196</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.62</electronegativity>
+  </element>
+  <element atomicnumber="82" id="Pb" name="lead" group="14" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.540</radius>
+      <radius type="bondorder" unit="angstrom">1.480</radius>
+      <radius type="vanderwaals" unit="angstrom">2.020</radius>
+    </radii>
+    <maxbondorder source="openbabel">4</maxbondorder>
+    <mass source="openbabel" unit="amu">207.2</mass>
+    <electronegativity source="openbabel">2.33</electronegativity>
+    <rgb red="0.34" green="0.35" blue="0.38"/>
+    <isotopes source="IUPAC">
+      <isotope mass="204" abundanceerror="1" abundance="1.4"/>
+      <isotope mass="206" abundanceerror="1" abundance="24.1"/>
+      <isotope mass="207" abundanceerror="1" abundance="22.1"/>
+      <isotope mass="208" abundanceerror="1" abundance="52.4"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">207.2</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f14.5d10.6s2.6p2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">180</radius>
+      <radius type="atomic" context="calculated" unit="pm">154</radius>
+      <radius type="covalent" context="empirical" unit="pm">147</radius>
+      <radius type="vanderwaals" unit="pm">202</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.33</electronegativity>
+  </element>
+  <element atomicnumber="83" id="Bi" name="bismuth" group="15" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.540</radius>
+      <radius type="bondorder" unit="angstrom">1.450</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">3</maxbondorder>
+    <mass source="openbabel" unit="amu">208.98038</mass>
+    <electronegativity source="openbabel">2.02</electronegativity>
+    <rgb red="0.62" green="0.31" blue="0.71"/>
+    <isotopes source="IUPAC">
+      <isotope mass="209" abundance="100"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">208.98038</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f14.5d10.6s2.6p3</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">160</radius>
+      <radius type="atomic" context="calculated" unit="pm">143</radius>
+      <radius type="covalent" context="empirical" unit="pm">146</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.02</electronegativity>
+  </element>
+  <element atomicnumber="84" id="Po" name="polonium" group="16" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.680</radius>
+      <radius type="bondorder" unit="angstrom">1.460</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">2</maxbondorder>
+    <mass source="openbabel" unit="amu">209</mass>
+    <electronegativity source="openbabel">2.0</electronegativity>
+    <rgb red="0.67" green="0.36" blue="0.00"/>
+    <mass source="webelements" unit="amu">209</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f14.5d10.6s2.6p4</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">190</radius>
+      <radius type="atomic" context="calculated" unit="pm">135</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.0</electronegativity>
+  </element>
+  <element atomicnumber="85" id="At" name="astatine" group="17" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.700</radius>
+      <radius type="bondorder" unit="angstrom">1.450</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">1</maxbondorder>
+    <mass source="openbabel" unit="amu">210</mass>
+    <electronegativity source="openbabel">2.2</electronegativity>
+    <rgb red="0.46" green="0.31" blue="0.27"/>
+    <mass source="webelements" unit="amu">210</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f14.5d10.6s2.6p5</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="calculated" unit="pm">127</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">2.2</electronegativity>
+  </element>
+  <element atomicnumber="86" id="Rn" name="radon" group="18" period="6">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">2.400</radius>
+      <radius type="bondorder" unit="angstrom">2.400</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">0</maxbondorder>
+    <mass source="openbabel" unit="amu">222</mass>
+    <electronegativity source="openbabel">0.0</electronegativity>
+    <rgb red="0.26" green="0.51" blue="0.59"/>
+    <mass source="webelements" unit="amu">222</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Xe].4f14.5d10.6s2.6p6</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="calculated" unit="pm">120</radius>
+      <radius type="covalent" context="empirical" unit="pm">145</radius>
+    </radii>
+  </element>
+  <element atomicnumber="87" id="Fr" name="francium" group="1" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">2.000</radius>
+      <radius type="bondorder" unit="angstrom">2.000</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">1</maxbondorder>
+    <mass source="openbabel" unit="amu">223</mass>
+    <electronegativity source="openbabel">0.7</electronegativity>
+    <rgb red="0.26" green="0.00" blue="0.40"/>
+    <mass source="webelements" unit="amu">223</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].7s1</electronicconfiguration>    <electronegativity source="webelements" type="pauling" unit="pauling">0.7</electronegativity>
+  </element>
+  <element atomicnumber="88" id="Ra" name="radium" group="2" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.900</radius>
+      <radius type="bondorder" unit="angstrom">1.900</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">2</maxbondorder>
+    <mass source="openbabel" unit="amu">226</mass>
+    <electronegativity source="openbabel">0.89</electronegativity>
+    <rgb red="0.00" green="0.49" blue="0.00"/>
+    <mass source="webelements" unit="amu">226</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].7s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">215</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">0.9</electronegativity>
+  </element>
+  <element atomicnumber="89" id="Ac" name="actinium" group="0" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.880</radius>
+      <radius type="bondorder" unit="angstrom">1.880</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">227</mass>
+    <electronegativity source="openbabel">1.1</electronegativity>
+    <rgb red="0.44" green="0.67" blue="0.98"/>
+    <mass source="webelements" unit="amu">227</mass>
+    <mass source="webelements" unit="amu">227</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].6d1.7s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">195</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.1</electronegativity>
+  </element>
+  <element atomicnumber="90" id="Th" name="thorium" group="0" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.790</radius>
+      <radius type="bondorder" unit="angstrom">1.790</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">232.0381</mass>
+    <electronegativity source="openbabel">1.3</electronegativity>
+    <rgb red="0.00" green="0.73" blue="1.00"/>
+    <isotopes source="IUPAC">
+      <isotope mass="232" abundance="100"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">232.0381</mass>
+    <mass source="webelements" unit="amu">232.0381</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].6d2.7s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">180</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.3</electronegativity>
+  </element>
+  <element atomicnumber="91" id="Pa" name="protactinium" group="0" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.610</radius>
+      <radius type="bondorder" unit="angstrom">1.610</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">231.03588</mass>
+    <electronegativity source="openbabel">1.5</electronegativity>
+    <rgb red="0.00" green="0.63" blue="1.00"/>
+    <isotopes source="IUPAC">
+      <isotope mass="231" abundance="100"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">231.03588</mass>
+    <mass source="webelements" unit="amu">231.03588</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f2.6d1.7s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">180</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.5</electronegativity>
+  </element>
+  <element atomicnumber="92" id="U" name="uranium" group="0" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.580</radius>
+      <radius type="bondorder" unit="angstrom">1.580</radius>
+      <radius type="vanderwaals" unit="angstrom">1.860</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">238.02891</mass>
+    <electronegativity source="openbabel">1.38</electronegativity>
+    <rgb red="0.00" green="0.56" blue="1.00"/>
+    <isotopes source="IUPAC">
+      <isotope mass="234" abundanceerror="2" abundance="0.00548"/>
+      <isotope mass="235" abundanceerror="1" abundance="0.7200"/>
+      <isotope mass="238" abundanceerror="10" abundance="99.2745"/>
+    </isotopes>
+    <mass source="webelements" unit="amu">238.02891</mass>
+    <mass source="webelements" unit="amu">238.02891</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f3.6d1.7s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">175</radius>
+      <radius type="vanderwaals" unit="pm">186</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.38</electronegativity>
+  </element>
+  <element atomicnumber="93" id="Np" name="neptunium" group="0" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.550</radius>
+      <radius type="bondorder" unit="angstrom">1.550</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">237</mass>
+    <electronegativity source="openbabel">1.36</electronegativity>
+    <rgb red="0.00" green="0.50" blue="1.00"/>
+    <mass source="webelements" unit="amu">237</mass>
+    <mass source="webelements" unit="amu">237</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f4.6d1.7s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">175</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.36</electronegativity>
+  </element>
+  <element atomicnumber="94" id="Pu" name="plutonium" group="0" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.530</radius>
+      <radius type="bondorder" unit="angstrom">1.530</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">244</mass>
+    <electronegativity source="openbabel">1.28</electronegativity>
+    <rgb red="0.00" green="0.42" blue="1.00"/>
+    <mass source="webelements" unit="amu">244</mass>
+    <mass source="webelements" unit="amu">244</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f6.7s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">175</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.28</electronegativity>
+  </element>
+  <element atomicnumber="95" id="Am" name="americium" group="0" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.510</radius>
+      <radius type="bondorder" unit="angstrom">1.070</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">243</mass>
+    <electronegativity source="openbabel">1.3</electronegativity>
+    <rgb red="0.33" green="0.36" blue="0.95"/>
+    <mass source="webelements" unit="amu">243</mass>
+    <mass source="webelements" unit="amu">243</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f7.7s2</electronicconfiguration>
+    <radii source="webelements">
+      <radius type="atomic" context="empirical" unit="pm">175</radius>
+    </radii>
+    <electronegativity source="webelements" type="pauling" unit="pauling">1.3</electronegativity>
+  </element>
+  <element atomicnumber="96" id="Cm" name="curium" group="0" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.500</radius>
+      <radius type="bondorder" unit="angstrom">0.000</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">247</mass>
+    <electronegativity source="openbabel">1.3</electronegativity>
+    <rgb red="0.47" green="0.36" blue="0.89"/>
+    <mass source="webelements" unit="amu">247</mass>
+    <mass source="webelements" unit="amu">247</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f7.6d1.7s2</electronicconfiguration>    <electronegativity source="webelements" type="pauling" unit="pauling">1.3</electronegativity>
+  </element>
+  <element atomicnumber="97" id="Bk" name="berkelium" group="0" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.500</radius>
+      <radius type="bondorder" unit="angstrom">0.000</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">247</mass>
+    <electronegativity source="openbabel">1.3</electronegativity>
+    <rgb red="0.54" green="0.31" blue="0.89"/>
+    <mass source="webelements" unit="amu">247</mass>
+    <mass source="webelements" unit="amu">247</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f9.7s2</electronicconfiguration>    <electronegativity source="webelements" type="pauling" unit="pauling">1.3</electronegativity>
+  </element>
+  <element atomicnumber="98" id="Cf" name="californium" group="0" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.500</radius>
+      <radius type="bondorder" unit="angstrom">0.000</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">251</mass>
+    <electronegativity source="openbabel">1.3</electronegativity>
+    <rgb red="0.63" green="0.21" blue="0.83"/>
+    <mass source="webelements" unit="amu">251</mass>
+    <mass source="webelements" unit="amu">251</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f10.7s2</electronicconfiguration>    <electronegativity source="webelements" type="pauling" unit="pauling">1.3</electronegativity>
+  </element>
+  <element atomicnumber="99" id="Es" name="einsteinium" group="0" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.500</radius>
+      <radius type="bondorder" unit="angstrom">0.000</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">252</mass>
+    <electronegativity source="openbabel">1.3</electronegativity>
+    <rgb red="0.70" green="0.12" blue="0.83"/>
+    <mass source="webelements" unit="amu">252</mass>
+    <mass source="webelements" unit="amu">252</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f11.7s2</electronicconfiguration>    <electronegativity source="webelements" type="pauling" unit="pauling">1.3</electronegativity>
+  </element>
+  <element atomicnumber="100" id="Fm" name="fermium" group="0" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.500</radius>
+      <radius type="bondorder" unit="angstrom">0.000</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">257</mass>
+    <electronegativity source="openbabel">1.3</electronegativity>
+    <rgb red="0.70" green="0.12" blue="0.73"/>
+    <mass source="webelements" unit="amu">257</mass>
+    <mass source="webelements" unit="amu">257</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f12.7s2</electronicconfiguration>    <electronegativity source="webelements" type="pauling" unit="pauling">1.3</electronegativity>
+  </element>
+  <element atomicnumber="101" id="Md" name="mendelevium" group="0" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.500</radius>
+      <radius type="bondorder" unit="angstrom">0.000</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">258</mass>
+    <electronegativity source="openbabel">1.3</electronegativity>
+    <rgb red="0.70" green="0.05" blue="0.65"/>
+    <mass source="webelements" unit="amu">258</mass>
+    <mass source="webelements" unit="amu">258</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f13.7s2</electronicconfiguration>    <electronegativity source="webelements" type="pauling" unit="pauling">1.3</electronegativity>
+  </element>
+  <element atomicnumber="102" id="No" name="nobelium" group="0" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.500</radius>
+      <radius type="bondorder" unit="angstrom">0.000</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">259</mass>
+    <electronegativity source="openbabel">1.3</electronegativity>
+    <rgb red="0.74" green="0.05" blue="0.53"/>
+    <mass source="webelements" unit="amu">259</mass>
+    <mass source="webelements" unit="amu">259</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f14.7s2</electronicconfiguration>    <electronegativity source="webelements" type="pauling" unit="pauling">1.3</electronegativity>
+  </element>
+  <element atomicnumber="103" id="Lr" name="lawrencium" group="3" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.500</radius>
+      <radius type="bondorder" unit="angstrom">0.000</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">262</mass>
+    <electronegativity source="openbabel">1.3</electronegativity>
+    <rgb red="0.78" green="0.00" blue="0.40"/>
+    <mass source="webelements" unit="amu">262</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f14.7s2.7p1</electronicconfiguration>
+  </element>
+  <element atomicnumber="104" id="Rf" name="rutherfordium" group="4" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.600</radius>
+      <radius type="bondorder" unit="angstrom">0.000</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">261</mass>
+    <electronegativity source="openbabel">0.0</electronegativity>
+    <rgb red="0.80" green="0.00" blue="0.35"/>
+    <mass source="webelements" unit="amu">261</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f14.6d2.7s2</electronicconfiguration>
+  </element>
+  <element atomicnumber="105" id="Db" name="dubnium" group="5" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.600</radius>
+      <radius type="bondorder" unit="angstrom">0.000</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">262</mass>
+    <electronegativity source="openbabel">0.0</electronegativity>
+    <rgb red="0.82" green="0.00" blue="0.31"/>
+    <mass source="webelements" unit="amu">262</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f14.6d3.7s2</electronicconfiguration>
+  </element>
+  <element atomicnumber="106" id="Sg" name="seaborgium" group="6" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.600</radius>
+      <radius type="bondorder" unit="angstrom">0.000</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">263</mass>
+    <electronegativity source="openbabel">0.0</electronegativity>
+    <rgb red="0.85" green="0.00" blue="0.27"/>
+    <mass source="webelements" unit="amu">266</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f14.6d4.7s2</electronicconfiguration>
+  </element>
+  <element atomicnumber="107" id="Bh" name="bohrium" group="7" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.600</radius>
+      <radius type="bondorder" unit="angstrom">0.000</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">264</mass>
+    <electronegativity source="openbabel">0.0</electronegativity>
+    <rgb red="0.88" green="0.00" blue="0.22"/>
+    <mass source="webelements" unit="amu">264</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f14.6d5.7s2</electronicconfiguration>
+  </element>
+  <element atomicnumber="108" id="Hs" name="hassium" group="8" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.600</radius>
+      <radius type="bondorder" unit="angstrom">0.000</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">265</mass>
+    <electronegativity source="openbabel">0.0</electronegativity>
+    <rgb red="0.90" green="0.00" blue="0.18"/>
+    <mass source="webelements" unit="amu">269</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f14.6d6.7s2</electronicconfiguration>
+  </element>
+  <element atomicnumber="109" id="Mt" name="meitnerium" group="9" period="7">
+    <radii source="openbabel">
+      <radius type="covalent" unit="angstrom">1.600</radius>
+      <radius type="bondorder" unit="angstrom">0.000</radius>
+      <radius type="vanderwaals" unit="angstrom">1.700</radius>
+    </radii>
+    <maxbondorder source="openbabel">6</maxbondorder>
+    <mass source="openbabel" unit="amu">268</mass>
+    <electronegativity source="openbabel">0.0</electronegativity>
+    <rgb red="0.92" green="0.00" blue="0.15"/>
+    <mass source="webelements" unit="amu">268</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f14.6d7.7s2</electronicconfiguration>
+  </element>
+  <element atomicnumber="110" id="Ds" name="darmstadtium" group="10" period="7">
+    <mass source="webelements" unit="amu">271</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f14.6d9.7s1</electronicconfiguration>
+  </element>
+  <element atomicnumber="111" id="Rg" name="roentgenium" group="11" period="7">
+    <mass source="webelements" unit="amu">272</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f14.6d10.7s1</electronicconfiguration>
+  </element>
+  <element atomicnumber="112" id="Uub" name="ununbium" group="12" period="7">
+    <mass source="webelements" unit="amu">285</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f14.6d10.7s2</electronicconfiguration>
+  </element>
+  <element atomicnumber="113" id="Uut" name="ununtrium" group="13" period="7">
+    <mass source="webelements" unit="amu">284</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f14.6d10.7s2.7p1</electronicconfiguration>
+  </element>
+  <element atomicnumber="114" id="Uuq" name="ununquadium" group="14" period="7">
+    <mass source="webelements" unit="amu">289</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f14.6d10.7s2.7p2</electronicconfiguration>
+  </element>
+  <element atomicnumber="115" id="Uup" name="ununpentium" group="15" period="7">
+    <mass source="webelements" unit="amu">288</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f14.6d10.7s2.7p3</electronicconfiguration>
+  </element>
+  <element atomicnumber="116" id="Uuh" name="ununhexium" group="16" period="7">
+    <mass source="webelements" unit="amu">292</mass>
+    <electronicconfiguration source="webelements" type="groundstate">[Rn].5f14.6d10.7s2.7p4</electronicconfiguration>
+  </element>
+</elements>
