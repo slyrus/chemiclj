@@ -1,64 +1,65 @@
+
 (ns ugraph)
 
+(defprotocol NodeSet
+  (nodes [graph]))
+
 (defprotocol Graph
-  (nodes [this])
-  (edges [this] [this node])
-  (edge? [this node1 node2])
-  (neighbors [this node]))
+  (add-node [graph node])
+  (add-edge [graph node1 node2]
+            [graph node1 node2 object])
+  (edges [graph]
+         [graph node])
+  (edge? [graph node1 node2])
+  (neighbors [graph node]))
 
 (defprotocol Edge
-  (nodes [this])
-  (contains [this y])
-  (other-node [this y]))
+  (contains [edge y])
+  (other-node [edge y]))
 
 (defrecord UndirectedEdge [node1 node2]
+  NodeSet
+  (nodes [edge] (vector node1 node2))
   Edge
-  (nodes [this] (vector node1 node2))
-  (contains [this node] (or (= node node1) (= node node2)))
-  (other-node [this node] (cond
+  (contains [edge node] (or (= node node1) (= node node2)))
+  (other-node [edge node] (cond
                            (= node node1) node2
                            (= node node2) node1)))
 
-(defrecord UndirectedGraph [nodes edges]
+(defrecord UndirectedGraph [node-set edge-map]
+  NodeSet
+  (nodes [g] (:node-set g))
   Graph
+  (add-node [g n]
+            (make-ugraph (conj (:node-set g) n) (:edge-map g)))
   (edges [g]
-         (distinct (apply concat (map vals (vals (:edges g))))))
+         (distinct (apply concat (map vals (vals (:edge-map g))))))
   (edges [g node]
-         (vals (get (:edges g) node)))
+         (vals (get (:edge-map g) node)))
   (edge? [g n1 n2]
-         (some #(contains % n2) (vals (get (:edges g) n1))))
+         (some #(when (contains % n2) %)
+               (vals (get (:edge-map g) n1))))
+  (add-edge [g n1 n2]
+            (add-edge g n1 n2 (UndirectedEdge. n1 n2)))
+  (add-edge [g n1 n2 obj]
+            (letfn [(add-1-edge [e n1 n2 obj]
+                                (assoc e n1 (assoc (or (get e n1) {}) n2 obj)))]
+              (if (some #(contains % n2) (edges g n1))
+                g
+                (make-ugraph (:node-set g)
+                             (add-1-edge
+                              (add-1-edge (:edge-map g) n2 n1 obj)
+                              n1 n2 obj)))))
   (neighbors [g node]
-             (map #(other-node % node) (vals (get (:edges g) node)))))
+             (map #(other-node % node) (vals (get (:edge-map g) node)))))
 
 (defn make-ugraph
   ([] (UndirectedGraph. #{} {}))
   ([nodes] (UndirectedGraph. nodes {}))
   ([nodes edges] (UndirectedGraph. nodes edges)))
 
-(defn add-node [g n]
-  (make-ugraph (conj (:nodes g) n) (:edges g)))
+;;; scratch
 
-(letfn [(add-1-edge [e n1 n2 obj]
-                    (assoc e n1 (assoc (or (get e n1) {}) n2 obj)))]
-  (defn add-edge
-    ([g n1 n2]
-       (add-edge g n1 n2 (UndirectedEdge. n1 n2)))
-    ([g n1 n2 obj]
-       (let [e (:edges g)]
-         (if (some #(contains % n2) (edges g n1))
-           g
-           (make-ugraph (:nodes g)
-                        (add-1-edge
-                         (add-1-edge e n2 n1 obj)
-                         n1 n2 obj)))))))
+(def q (make-ugraph #{1 2 3 4} {}))
+(def q2 (add-edge (add-edge q 3 1) 1 4))
 
-
-(comment (defn bfs
-           ([g start ] (bfs g start #{}))
-            ([g start visited]
-               (letfn
-                   [(bfs-visit
-                     [nodes-to-visit]
-                     (map (fn [node])
-                          nodes-to-visit))]
-                 (bfs-visit (list start))))))
