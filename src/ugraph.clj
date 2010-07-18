@@ -26,6 +26,10 @@
                            (= node node1) node2
                            (= node node2) node1)))
 
+;;; forward declaration for make-ugraph which we can't defn until we
+;;; defrecord UndirectedGraph
+(declare make-ugraph)
+
 (defrecord UndirectedGraph [node-set edge-map]
   NodeSet
   (nodes [g] (:node-set g))
@@ -58,8 +62,42 @@
   ([nodes] (UndirectedGraph. nodes {}))
   ([nodes edges] (UndirectedGraph. nodes edges)))
 
+(defn add-edges [g edge-vec]
+  (reduce (fn [g [n1 n2]] (add-edge g n1 n2)) g edge-vec))
+
+(defn add-nodes [g & node-vec]
+  (reduce (fn [g node] (add-node g node)) g node-vec))
+
+(defn breadth-first-traversal
+  ([g start]
+     (breadth-first-traversal g [start] #{}))
+  ([g queue visited]
+     (lazy-seq
+      (if (seq queue)
+        (let [node (first queue)
+              next (remove visited (neighbors g node))]
+          (cons node (breadth-first-traversal g (into (subvec queue 1) next)
+                                              (into (conj visited node) next))))))))
+
+(defn depth-first-traversal
+  ([g start]
+     (depth-first-traversal g (list start) [[] #{}]))
+  ([g queue [path visited]]
+     (lazy-seq
+      (if (seq queue)
+        (let [node (first queue)
+              next (remove visited (neighbors g node))]
+          (depth-first-traversal g (into (rest queue) next)
+                                 [(conj path node)
+                                  (into (conj visited node) next)]))
+        path))))
+
+
 ;;; scratch
 
 (def q (make-ugraph #{1 2 3 4} {}))
 (def q2 (add-edge (add-edge q 3 1) 1 4))
-
+(def q3 (add-edges q [[1 2] [1 3] [3 4]]))
+(def q4 (add-edges (add-nodes q3 5 6) [[4 5] [1 5] [4 6]]))
+(def q5 (add-edges (make-ugraph #{1 2 3 4 5 6})
+                   [[1 2] [2 3] [3 4] [4 5] [5 6] [6 1]]))
