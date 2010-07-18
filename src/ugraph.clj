@@ -76,21 +76,21 @@
       (if (seq queue)
         (let [node (first queue)
               next (remove visited (neighbors g node))]
-          (cons node (breadth-first-traversal g (into (subvec queue 1) next)
-                                              (into (conj visited node) next))))))))
+          (cons node
+                (breadth-first-traversal g (into (subvec queue 1) next)
+                                         (into (conj visited node) next))))))))
 
 (defn depth-first-traversal
   ([g start]
-     (depth-first-traversal g (list start) [[] #{}]))
-  ([g queue [path visited]]
+     (depth-first-traversal g (list start) #{}))
+  ([g queue visited]
      (lazy-seq
       (if (seq queue)
         (let [node (first queue)
               next (remove visited (neighbors g node))]
-          (depth-first-traversal g (into (rest queue) next)
-                                 [(conj path node)
-                                  (into (conj visited node) next)]))
-        path))))
+          (cons node
+                (depth-first-traversal g (into (rest queue) next)
+                                       (into (conj visited node) next))))))))
 
 
 ;;; scratch
