@@ -2,7 +2,8 @@
 (ns ugraph)
 
 (defprotocol NodeSet
-  (nodes [graph]))
+  (nodes [graph])
+  (node? [graph node]))
 
 (defprotocol Graph
   (add-node [graph node])
@@ -14,14 +15,14 @@
   (neighbors [graph node]))
 
 (defprotocol Edge
-  (contains [edge y])
   (other-node [edge y]))
 
 (defrecord UndirectedEdge [node1 node2]
   NodeSet
   (nodes [edge] (vector node1 node2))
+  (node? [edge node] (or (= node node1) (= node node2)))
+
   Edge
-  (contains [edge node] (or (= node node1) (= node node2)))
   (other-node [edge node] (cond
                            (= node node1) node2
                            (= node node2) node1)))
@@ -33,6 +34,7 @@
 (defrecord UndirectedGraph [node-set edge-map]
   NodeSet
   (nodes [g] (:node-set g))
+  (node? [g node] (get (nodes g) node))
   Graph
   (add-node [g n]
             (make-ugraph (conj (:node-set g) n) (:edge-map g)))
@@ -41,14 +43,14 @@
   (edges [g node]
          (vals (get (:edge-map g) node)))
   (edge? [g n1 n2]
-         (some #(when (contains % n2) %)
+         (some #(when (node? % n2) %)
                (vals (get (:edge-map g) n1))))
   (add-edge [g n1 n2]
             (add-edge g n1 n2 (UndirectedEdge. n1 n2)))
   (add-edge [g n1 n2 obj]
             (letfn [(add-1-edge [e n1 n2 obj]
                                 (assoc e n1 (assoc (or (get e n1) {}) n2 obj)))]
-              (if (some #(contains % n2) (edges g n1))
+              (if (some #(node? % n2) (edges g n1))
                 g
                 (make-ugraph (:node-set g)
                              (add-1-edge
@@ -70,7 +72,8 @@
 
 (defn breadth-first-traversal
   ([g start]
-     (breadth-first-traversal g [start] #{}))
+     (when (node? g start)
+       (breadth-first-traversal g [start] #{})))
   ([g queue visited]
      (lazy-seq
       (if (seq queue)
@@ -82,7 +85,8 @@
 
 (defn depth-first-traversal
   ([g start]
-     (depth-first-traversal g (list start) #{}))
+     (when (node? g start)
+       (depth-first-traversal g (list start) #{})))
   ([g queue visited]
      (lazy-seq
       (if (seq queue)
@@ -101,3 +105,21 @@
 (def q4 (add-edges (add-nodes q3 5 6) [[4 5] [1 5] [4 6]]))
 (def q5 (add-edges (make-ugraph #{1 2 3 4 5 6})
                    [[1 2] [2 3] [3 4] [4 5] [5 6] [6 1]]))
+
+(def q6 (reduce #(add-node %1 %2) (make-ugraph) (range 1000)))
+(def q7 (reduce (fn [g [n1 n2]] (add-edge g n1 n2))
+                q6
+                (take 10000 (repeatedly #(vector (rand-int 1000)
+                                                 (rand-int 1000))))))
+(neighbors q7 1)
+(take-while (complement #{2}) (breadth-first-traversal q7 1))
+
+(def q8 (reduce #(add-node %1 (str "node" %2)) (make-ugraph) (range 1000)))
+
+
+(def q9 (reduce (fn [g [n1 n2]] (add-edge g
+                                          (str "node" n1)
+                                          (str "node" n2)))
+                q8
+                (take 10000 (repeatedly #(vector (rand-int 1000)
+                                                 (rand-int 1000))))))
