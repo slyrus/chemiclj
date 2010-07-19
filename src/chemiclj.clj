@@ -56,11 +56,6 @@
           (vec (repeat (apply max (map key alist)) nil))
           alist))
 
-(comment
-  (reduce (fn [v x] (assoc v (:number x) x))
-          (hash-map)
-          (:isotopes (nth elements-vec 33))))
-
 (def elements-list (zf/xml->
                     (zip/xml-zip
                      (xml/parse "/Users/sly/projects/chemiclj/data/elementdata.xml"))
@@ -123,10 +118,11 @@
                ("F" 1)
                ("Cl" 1)
                ("Br" 1)
-               ("I" ))))
+               ("I" 1))))
 
 (defmulti get-normal-valences class)
 
 (defmethod get-normal-valences Number [id] (get *element-normal-valences* (get-element id)))
 (defmethod get-normal-valences String [id] (get *element-normal-valences* (get-element id)))
 (defmethod get-normal-valences Element [element] (get *element-normal-valences* element))
+
