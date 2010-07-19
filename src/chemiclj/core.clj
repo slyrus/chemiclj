@@ -6,7 +6,9 @@
   (:require [clojure.string :as string]
             [clojure.xml :as xml]
             [clojure.zip :as zip]
-            [clojure.contrib.zip-filter.xml :as zf]))
+            [clojure.contrib.zip-filter.xml :as zf])
+
+  (:import shortcut.graph.Graph))
 
 (defrecord Element [atomic-number id name group period mass
                     electronegativity max-bond-order isotopes])
@@ -14,6 +16,14 @@
 (defrecord Isotope [element number id exact-mass relative-abundance])
 
 (defrecord Atom [name element charge isotope hybridization])
+
+(defn make-atom
+  ([element name]
+     (Atom. name (get-element element)
+            nil
+            (reverse (sort-by #(:relative-abundance (val %))
+                        (:isotopes (get-element "C"))))
+            nil)))
 
 (defn get-scalar-text [node dict-ref]
   (zf/xml1->
@@ -125,4 +135,25 @@
 (defmethod get-normal-valences Number [id] (get *element-normal-valences* (get-element id)))
 (defmethod get-normal-valences String [id] (get *element-normal-valences* (get-element id)))
 (defmethod get-normal-valences Element [element] (get *element-normal-valences* element))
+
+(defprotocol Molecule
+  (mass [mol])
+  (exact-mass [mol]))
+
+(defn element-abundnant-isotopes [element]
+  (map second (reverse (sort-by #(:relative-abundance (val %))
+                                (:isotopes element)))))
+
+(defn atom-exact-mass [atom]
+  (if (:isotope atom)
+    (:exact-mass (:isotope atom))
+    (:exact-mass (first (element-abundnant-isotopes (:element atom))))))
+
+(extend-protocol Molecule
+  Graph
+  (mass [mol]
+                  (reduce + (map #(-> % :element :mass) (nodes mol))))
+  (exact-mass [mol]
+              (reduce + (map atom-exact-mass (nodes mol)))))
+
 
