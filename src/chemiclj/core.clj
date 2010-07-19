@@ -1,7 +1,7 @@
 
-(ns chemiclj
+(ns chemiclj.core
   (:use clojure.java.io)
-  (:use clojure.contrib.graph)
+  (:use shortcut.graph)
 
   (:require [clojure.xml :as xml]
             [clojure.zip :as zip]

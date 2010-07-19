@@ -8,7 +8,8 @@
                  [org.freehep/freehep-graphicsio-svg "2.1.1"]
                  [cdk "1.3.5"]
                  [jchempaint "3.1.2"]
-                 [hiccup "0.2.6"]]
+                 [hiccup "0.2.6"]
+                 [shortcut "0.0.0"]]
   :dev-dependencies [[swank-clojure "1.3.0-SNAPSHOT"]]
   :repositories {"freehep" "http://java.freehep.org/maven2"})
 
