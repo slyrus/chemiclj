@@ -2,12 +2,9 @@
 (ns chemiclj-test
   (:use chemiclj.core)
   (:use shortcut.graph)
-
+  
   (:import chemiclj.core.Atom)
   (:import shortcut.graph.Graph))
-
-(defn make-atom [element name]
-  (Atom. name (get-element element) nil nil nil))
 
 (def c1 (make-atom :c "C1"))
 (def h1 (make-atom :h "H1"))
