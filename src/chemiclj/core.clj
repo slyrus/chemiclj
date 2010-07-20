@@ -17,13 +17,20 @@
 
 (defrecord Atom [name element charge isotope hybridization])
 
-(defn make-atom
-  ([element name]
-     (Atom. name (get-element element)
-            nil
-            (reverse (sort-by #(:relative-abundance (val %))
-                        (:isotopes (get-element "C"))))
-            nil)))
+(defprotocol BondOps
+  (atom-count [bond]))
+
+(defrecord Bond [nodes type order direction]
+  NodeSet
+  (nodes [bond] nodes)
+  (node? [bond node] (some #{node} nodes))
+  (neighbors [bond node] (remove #{node} nodes))
+
+  clojure.lang.Indexed
+  (nth [bond i] (nth nodes i))
+
+  BondOps
+  (atom-count [bond] (count nodes)))
 
 (defn get-scalar-text [node dict-ref]
   (zf/xml1->
@@ -152,8 +159,22 @@
 (extend-protocol Molecule
   Graph
   (mass [mol]
-                  (reduce + (map #(-> % :element :mass) (nodes mol))))
+        (reduce + (map #(-> % :element :mass) (nodes mol))))
   (exact-mass [mol]
               (reduce + (map atom-exact-mass (nodes mol)))))
 
 
+(defn make-atom
+  ([element name]
+     (Atom. name (get-element element)
+            nil
+            (reverse (sort-by #(:relative-abundance (val %))
+                        (:isotopes (get-element "C"))))
+            nil)))
+
+(defn make-bond [atom1 atom2 & {:keys [type order direction],
+                                :or {type :single order 1}}]
+  (Bond. [atom1 atom2] type order direction))
+
+(defn make-molecule [atoms bond-vec]
+  (Graph. atoms (vec (map (fn [[a b]] (make-bond a b)) bond-vec))))
