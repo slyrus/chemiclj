@@ -156,20 +156,17 @@
     (:exact-mass (:isotope atom))
     (:exact-mass (first (element-abundnant-isotopes (:element atom))))))
 
-(extend-protocol Molecule
-  Graph
-  (mass [mol]
-        (reduce + (map #(-> % :element :mass) (nodes mol))))
-  (exact-mass [mol]
-              (reduce + (map atom-exact-mass (nodes mol)))))
+(defn mass [mol]
+  (reduce + (map #(-> % :element :mass) (nodes mol))))
 
+(defn exact-mass [mol]
+  (reduce + (map atom-exact-mass (nodes mol))))
 
 (defn make-atom
   ([element name]
      (Atom. name (get-element element)
             nil
-            (reverse (sort-by #(:relative-abundance (val %))
-                        (:isotopes (get-element "C"))))
+            nil
             nil)))
 
 (defn make-bond [atom1 atom2 & {:keys [type order direction],
@@ -177,4 +174,4 @@
   (Bond. [atom1 atom2] type order direction))
 
 (defn make-molecule [atoms bond-vec]
-  (Graph. atoms (vec (map (fn [[a b]] (make-bond a b)) bond-vec))))
+  (make-graph atoms (vec (map (fn [[a b]] (make-bond a b)) bond-vec))))
