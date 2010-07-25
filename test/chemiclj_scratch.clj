@@ -1,5 +1,5 @@
 
-(ns chemiclj-test
+(ns chemiclj-scratch
   (:use chemiclj.core)
   (:use chemiclj.element)
 
