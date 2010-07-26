@@ -28,8 +28,6 @@
 ;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 (ns chemiclj.element
-  (:use clojure.java.io)
-
   (:require [clojure.string :as string]
             [clojure.xml :as xml]
             [clojure.zip :as zip]
