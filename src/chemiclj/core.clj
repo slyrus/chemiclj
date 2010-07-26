@@ -28,10 +28,15 @@
 ;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 (ns chemiclj.core
-  (:use chemiclj.element)
-
-  (:use shortcut.graph)
-
+  (:use [chemiclj.element :as element]
+        [shortcut.graph
+         :only (NodeSet
+                make-graph
+                nodes add-node add-nodes
+                edges add-edge add-edges
+                neighbors
+                connected-components connected-component partition-graph)
+         :as graph])
   (:require [clojure.string :as string]))
 
 (defprotocol PMass
@@ -71,7 +76,7 @@
 
 (defn make-atom
   ([element name]
-     (Atom. name (get-element element) nil nil nil)))
+     (Atom. name (element/get-element element) nil nil nil)))
 
 (defn make-bond [atom1 atom2 & {:keys [type order direction],
                                 :or {type :single order 1}}]
