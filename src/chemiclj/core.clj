@@ -34,12 +34,17 @@
 
   (:require [clojure.string :as string]))
 
-(defrecord Atom [name element charge isotope hybridization])
+(defprotocol PMass
+  (mass [mol])
+  (exact-mass [mol]))
 
-(defn atom-exact-mass [atom]
-  (if (:isotope atom)
-    (:exact-mass (:isotope atom))
-    (:exact-mass (first (element-abundnant-isotopes (:element atom))))))
+(defrecord Atom [name element charge isotope hybridization]
+  PMass
+  (mass [atm] (-> atm :element :mass))
+  (exact-mass [atm]
+              (if (:isotope atm)
+                (:exact-mass (:isotope atm))
+                (:exact-mass (first (element-abundnant-isotopes (:element atm)))))))
 
 (defrecord Bond [nodes type order direction]
   NodeSet
@@ -52,18 +57,17 @@
 
 (defprotocol PMolecule
   (atoms [mol])
-  (bonds [mol])
-  (mass [mol])
-  (exact-mass [mol]))
+  (bonds [mol]))
 
 (defrecord Molecule [_graph _name]
+
   PMolecule
   (atoms [mol] (nodes _graph))
   (bonds [mol] (edges _graph))
-  (mass [mol]
-        (reduce + (map #(-> % :element :mass) (atoms mol))))
-  (exact-mass [mol]
-              (reduce + (map atom-exact-mass (atoms mol)))))
+
+  PMass
+  (mass [mol] (reduce + (map mass (atoms mol))))
+  (exact-mass [mol] (reduce + (map exact-mass (atoms mol)))))
 
 (defn make-atom
   ([element name]
