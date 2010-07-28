@@ -1,9 +1,9 @@
 
 (ns chemiclj-scratch
-  (:use chemiclj.core)
-  (:use chemiclj.element)
+  (:use [chemiclj.core]
+        [chemiclj.element])
 
-  (:use shortcut.graph))
+  (:require [shortcut.graph :as graph]))
 
 (def c1 (make-atom :c "C1"))
 (def h1 (make-atom :h "H1"))
@@ -22,3 +22,5 @@
                             [c2 h4]
                             [c2 h5]
                             [c2 h6]]))
+(mass ethane)
+(exact-mass ethane)
