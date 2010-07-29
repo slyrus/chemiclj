@@ -24,3 +24,8 @@
                             [c2 h6]]))
 (mass ethane)
 (exact-mass ethane)
+
+(add-bond (reduce add-atom (make-molecule) [c1 c2])
+          (make-bond c1 c2))
+
+(add-bond (reduce add-atom (make-molecule) [c1 c2]) c1 c2)
