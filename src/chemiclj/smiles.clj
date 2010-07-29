@@ -2,9 +2,15 @@
 (ns chemiclj.smiles
   (:use [chemiclj.core])
   (:require [chemiclj.element :as element]
-            [shortcut.graph :as graph])
+            [shortcut.graph :as graph]
+            [clojure.contrib.error-kit :as err])
   
   (:import chemiclj.core.Atom))
+
+
+(err/deferror *smiles-parser-error* [] [str]
+  {:msg (str "Smiles Parser Error: " str)
+   :unhandled (err/throw-msg IllegalArgumentException)})
 
 (defn collect-while [pred s]
   "similar to take-while, except that predicate takes no arguments and
