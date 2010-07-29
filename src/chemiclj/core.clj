@@ -30,7 +30,7 @@
 (ns chemiclj.core
   (:use [chemiclj.element :as element]
         [shortcut.graph
-         :only (NodeSet
+         :only (NodeSet Edge
                 make-graph
                 nodes add-node add-nodes
                 edges add-edge add-edges
@@ -51,14 +51,15 @@
                 (:exact-mass (:isotope atm))
                 (:exact-mass (first (element-abundnant-isotopes (:element atm)))))))
 
-(defrecord Bond [nodes type order direction]
+(defrecord Bond [_nodes _type _order _direction]
   NodeSet
-  (nodes [bond] nodes)
-  (node? [bond node] (some #{node} nodes))
-  (neighbors [bond node] (remove #{node} nodes))
+  (nodes [bond] _nodes)
+  (node? [bond node] (some #{node} _nodes))
+  (neighbors [bond node] (remove #{node} _nodes))
 
-  clojure.lang.Indexed
-  (nth [bond i] (nth nodes i)))
+  Edge
+  (left [bond] (first _nodes))
+  (right [bond] (second _nodes)))
 
 (defprotocol PMolecule
   (atoms [mol])
@@ -82,9 +83,31 @@
                                 :or {type :single order 1}}]
   (Bond. [atom1 atom2] type order direction))
 
-(defn make-molecule [atoms atom-pairs-vec & name]
-  (reduce
-  (fn [g [atom1 atom2]]
-     (add-edge g atom1 atom2 (make-bond atom1 atom2)))
-  (Molecule. (make-graph atoms) name)
-  atom-pairs-vec))
+(defn make-molecule
+  ([]
+     (Molecule. (make-graph) nil))
+  ;;; this is broken!!!
+  ([atoms atom-pairs-vec]
+     (reduce
+      (fn [mol [atom1 atom2]]
+        (assoc mol :_graph (add-edge (:_graph mol) atom1 atom2 (make-bond atom1 atom2))))
+      (Molecule. (make-graph atoms) nil)
+      atom-pairs-vec))
+  ([atoms atom-pairs-vec name]
+     (assoc (make-molecule atoms atom-pairs-vec) :name name)))
+
+(defn add-atom [mol atom]
+  (assoc mol :_graph (add-node (:_graph mol) atom)))
+
+(defn add-bond
+  ([mol bond]
+     (assoc mol :_graph (add-edge (:_graph mol) bond)))
+  ([mol atom1 atom2 & args]
+     (assoc mol :_graph (add-edge (:_graph mol)
+                                  (apply make-bond atom1 atom2 args)))))
+
+(defn add-atom* [mol element name & [attached-to]]
+  (let [atm (make-atom element name)]
+    (if attached-to
+      (add-bond (add-atom mol atm) (make-bond atm attached-to))
+      (add-atom mol atm))))
