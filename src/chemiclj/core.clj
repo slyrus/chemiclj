@@ -51,7 +51,7 @@
                 (:exact-mass (:isotope atm))
                 (:exact-mass (first (element-abundnant-isotopes (:element atm)))))))
 
-(defrecord Bond [_nodes _type _order _direction]
+(defrecord Bond [_nodes type order direction]
   NodeSet
   (nodes [bond] _nodes)
   (node? [bond node] (some #{node} _nodes))
@@ -99,12 +99,24 @@
 (defn add-atom [mol atom]
   (assoc mol :_graph (add-node (:_graph mol) atom)))
 
+(defn get-atom [mol name]
+  (get (atoms mol) name))
+
 (defn add-bond
   ([mol bond]
      (assoc mol :_graph (add-edge (:_graph mol) bond)))
   ([mol atom1 atom2 & args]
      (assoc mol :_graph (add-edge (:_graph mol)
                                   (apply make-bond atom1 atom2 args)))))
+
+(defn add-double-bond [mol atom1 atom2]
+  (add-bond mol (make-bond atom1 atom2 :type :double :order 2)))
+
+(defn add-triple-bond [mol atom1 atom2]
+  (add-bond mol (make-bond atom1 atom2 :type :triple :order 2)))
+
+(defn add-aromatic-bond [mol atom1 atom2]
+  (add-bond mol (make-bond atom1 atom2 :type :aromatic :order 1.5)))
 
 (defn add-atom* [mol element name & [attached-to]]
   (let [atm (make-atom element name)]
