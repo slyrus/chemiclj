@@ -34,9 +34,22 @@ the returned sequence isn't lazy."
                                       (str (:id (element/get-element element)) ind))]
                        [(let [last-atom (:last-atom state)]
                           (if last-atom
-                            (add-bond (chemiclj.core/add-atom mol atom) last-atom atom)
+                            (let [bond-type (:next-bond state)]
+                              (cond
+                               (= bond-type :double)
+                               (add-double-bond (chemiclj.core/add-atom mol atom) last-atom atom)
+
+                               (= bond-type :triple)
+                               (add-triple-bond (chemiclj.core/add-atom mol atom) last-atom atom)
+                               
+                               (= bond-type :aromatic)
+                               (add-aromatic-bond (chemiclj.core/add-atom mol atom) last-atom atom)
+
+                               true
+                               (add-bond (chemiclj.core/add-atom mol atom) last-atom atom)))
                             (chemiclj.core/add-atom mol atom)))
-                        (assoc state :last-atom atom)])))
+                        (dissoc (assoc state :last-atom atom)
+                                :next-bond)])))
          (read-number []
                       (let [num (collect-while
                                  #(let [c (peek-char)]
@@ -61,10 +74,10 @@ the returned sequence isn't lazy."
                                  (= c \() (read-branch mol state)
                                  (= c \)) (list :end-branch state)
 
-                                 (= c \-) (list :bond :single)
-                                 (= c \=) (list :bond :double)
-                                 (= c \#) (list :bond :triple)
-                                 (= c \:) (list :bond :aromatic)
+                                 (= c \-) [mol (assoc state :next-bond :single)]
+                                 (= c \=) [mol (assoc state :next-bond :double)]
+                                 (= c \#) [mol (assoc state :next-bond :triple)]
+                                 (= c \:) [mol (assoc state :next-bond :aromatic)]
                                  (= c \/) (list :bond :up)
                                  (= c \\) (list :bond :down)
 
