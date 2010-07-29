@@ -32,14 +32,14 @@ the returned sequence isn't lazy."
                          (swap! pos inc)
                          c))
          (skip [n] (swap! pos + n))
-         (add-atom [mol element last]
+         (add-atom [mol element state]
                    (let [ind (inc (or (get @counts element) 0))]
                      (swap! counts assoc element ind)
                      (let [atom
                            (make-atom element
                                       (str (:id (element/get-element element)) ind))]
-                       [(if last
-                          (add-bond (chemiclj.core/add-atom mol atom) last atom)
+                       [(if state
+                          (add-bond (chemiclj.core/add-atom mol atom) state atom)
                           (chemiclj.core/add-atom mol atom))
                         atom])))
          (read-number []
@@ -49,17 +49,17 @@ the returned sequence isn't lazy."
                                  (repeatedly #(Character/digit (read-char) 10)))]
                         (when (seq num)
                           (Integer/parseInt (apply str num)))))
-         (read-bracket-expression [mol last])
-         (read-branch [mol last]
-                      (let [mol (read-smiles-tokens mol last)]
-                        [mol last]))
-         (read-smiles-token [mol last]
+         (read-bracket-expression [mol state])
+         (read-branch [mol state]
+                      (let [mol (read-smiles-tokens mol state)]
+                        [mol state]))
+         (read-smiles-token [mol state]
                             (when (peek-char)
                               (let [c (read-char)]
                                 (cond
-                                 (= c \[) (read-bracket-expression mol last)
+                                 (= c \[) (read-bracket-expression mol state)
 
-                                 (= c \() (read-branch mol last)
+                                 (= c \() (read-branch mol state)
                                  (= c \)) nil
 
                                  (= c \-) (list :bond :single)
@@ -77,30 +77,30 @@ the returned sequence isn't lazy."
                                  (= c \B)
                                  (if (= (peek-char) \r)
                                    (do (read-char)
-                                       (add-atom mol "Br" last))
-                                   (add-atom mol "B" last))
+                                       (add-atom mol "Br" state))
+                                   (add-atom mol "B" state))
                                
                                  (= c \C)
                                  (if (= (peek-char) \l)
                                    (do (read-char)
-                                       (add-atom mol "Cl" last))
-                                   (add-atom mol "C" last))
+                                       (add-atom mol "Cl" state))
+                                   (add-atom mol "C" state))
 
-                                 (= c \N) (add-atom mol "N" last)
-                                 (= c \O) (add-atom mol "O" last)
-                                 (= c \P) (add-atom mol "P" last)
-                                 (= c \S) (add-atom mol "S" last)
-                                 (= c \F) (add-atom mol "F" last)
-                                 (= c \I) (add-atom mol "I" last)))))
-         (read-smiles-tokens [mol last]
-                             (let [v (read-smiles-token mol last)]
+                                 (= c \N) (add-atom mol "N" state)
+                                 (= c \O) (add-atom mol "O" state)
+                                 (= c \P) (add-atom mol "P" state)
+                                 (= c \S) (add-atom mol "S" state)
+                                 (= c \F) (add-atom mol "F" state)
+                                 (= c \I) (add-atom mol "I" state)))))
+         (read-smiles-tokens [mol state]
+                             (let [v (read-smiles-token mol state)]
                                (if v
-                                 (let [[mol new-last] v]
-                                   (recur mol (or new-last last)))
+                                 (let [[mol new-state] v]
+                                   (recur mol (or new-state state)))
                                  mol)))]
       (loop [mol (apply make-molecule (when name (list name)))
-             last nil]
-        (read-smiles-tokens mol last)))))
+             state nil]
+        (read-smiles-tokens mol state)))))
 
 
 (defn foo [string]
