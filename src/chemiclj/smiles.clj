@@ -29,7 +29,9 @@ the returned sequence isn't lazy."
          (add-atom [mol element last]
                    (let [ind (inc (or (get @counts element) 0))]
                      (swap! counts assoc element ind)
-                     (let [atom (make-atom element (str (:id (element/get-element element)) ind))]
+                     (let [atom
+                           (make-atom element
+                                      (str (:id (element/get-element element)) ind))]
                        [(if last
                           (add-bond (chemiclj.core/add-atom mol atom) last atom)
                           (chemiclj.core/add-atom mol atom))
@@ -42,13 +44,17 @@ the returned sequence isn't lazy."
                         (when (seq num)
                           (Integer/parseInt (apply str num)))))
          (read-bracket-expression [mol last])
-         (read-branch [mol last])
+         (read-branch [mol last]
+                      (let [mol (read-smiles-tokens mol last)]
+                        [mol last]))
          (read-smiles-token [mol last]
                             (when (peek-char)
                               (let [c (read-char)]
                                 (cond
                                  (= c \[) (read-bracket-expression mol last)
+
                                  (= c \() (read-branch mol last)
+                                 (= c \)) nil
 
                                  (= c \-) (list :bond :single)
                                  (= c \=) (list :bond :double)
@@ -79,14 +85,16 @@ the returned sequence isn't lazy."
                                  (= c \P) (add-atom mol "P" last)
                                  (= c \S) (add-atom mol "S" last)
                                  (= c \F) (add-atom mol "F" last)
-                                 (= c \I) (add-atom mol "I" last)))))]
+                                 (= c \I) (add-atom mol "I" last)))))
+         (read-smiles-tokens [mol last]
+                             (let [v (read-smiles-token mol last)]
+                               (if v
+                                 (let [[mol new-last] v]
+                                   (recur mol (or new-last last)))
+                                 mol)))]
       (loop [mol (apply make-molecule (when name (list name)))
              last nil]
-        (let [v (read-smiles-token mol last)]
-          (if v
-            (let [[mol new-last] v]
-              (recur mol (or new-last last)))
-            mol))))))
+        (read-smiles-tokens mol last)))))
 
 
 (defn foo [string]
