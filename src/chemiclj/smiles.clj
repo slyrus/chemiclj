@@ -2,15 +2,9 @@
 (ns chemiclj.smiles
   (:use [chemiclj.core])
   (:require [chemiclj.element :as element]
-            [shortcut.graph :as graph]
-            [clojure.contrib.error-kit :as err])
+            [shortcut.graph :as graph])
   
   (:import chemiclj.core.Atom))
-
-
-(err/deferror *smiles-parser-error* [] [str]
-  {:msg (str "Smiles Parser Error: " str)
-   :unhandled (err/throw-msg IllegalArgumentException)})
 
 (defn collect-while [pred s]
   "similar to take-while, except that predicate takes no arguments and
@@ -38,10 +32,11 @@ the returned sequence isn't lazy."
                      (let [atom
                            (make-atom element
                                       (str (:id (element/get-element element)) ind))]
-                       [(if state
-                          (add-bond (chemiclj.core/add-atom mol atom) state atom)
-                          (chemiclj.core/add-atom mol atom))
-                        atom])))
+                       [(let [last-atom (:last-atom state)]
+                          (if last-atom
+                            (add-bond (chemiclj.core/add-atom mol atom) last-atom atom)
+                            (chemiclj.core/add-atom mol atom)))
+                        (assoc state :last-atom atom)])))
          (read-number []
                       (let [num (collect-while
                                  #(let [c (peek-char)]
@@ -51,8 +46,12 @@ the returned sequence isn't lazy."
                           (Integer/parseInt (apply str num)))))
          (read-bracket-expression [mol state])
          (read-branch [mol state]
-                      (let [mol (read-smiles-tokens mol state)]
-                        [mol state]))
+                      (let [[mol new-state]
+                            (read-smiles-tokens mol state)]
+                        ;; restore last atom before the branch as the
+                        ;; last-atom in state so next atom is
+                        ;; connected properly
+                        [mol (assoc new-state :last-atom (:last-atom state))]))
          (read-smiles-token [mol state]
                             (when (peek-char)
                               (let [c (read-char)]
@@ -60,7 +59,7 @@ the returned sequence isn't lazy."
                                  (= c \[) (read-bracket-expression mol state)
 
                                  (= c \() (read-branch mol state)
-                                 (= c \)) nil
+                                 (= c \)) (list :end-branch state)
 
                                  (= c \-) (list :bond :single)
                                  (= c \=) (list :bond :double)
@@ -94,10 +93,15 @@ the returned sequence isn't lazy."
                                  (= c \I) (add-atom mol "I" state)))))
          (read-smiles-tokens [mol state]
                              (let [v (read-smiles-token mol state)]
-                               (if v
-                                 (let [[mol new-state] v]
-                                   (recur mol (or new-state state)))
-                                 mol)))]
+                               (cond
+                                (nil? v) mol
+
+                                (= (first v) :end-branch)
+                                [mol (second v)]
+
+                                true
+                                (let [[mol new-state] v]
+                                       (recur mol (or new-state state))))))]
       (loop [mol (apply make-molecule (when name (list name)))
              state nil]
         (read-smiles-tokens mol state)))))
