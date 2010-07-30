@@ -6,7 +6,7 @@
             [clojure.contrib [except :as except]])
   (:refer-clojure :exclude #{read-string}))
 
-(defrecord BracketAtomContext
+(defrecord BracketAtom
   [isotope symbol chirality hydrogen-count charge class])
 
 (defn str* [objects]
@@ -43,32 +43,39 @@
 (h/defrule <isotope>
   (h/label "an isotope" <decimal-natural-number>))
 
+(h/defrule <hydrogen-count>
+  (h/hook (fn [[_ hydrogen-count]]
+            {:hydrogens (or hydrogen-count 1)})
+          (h/cat (h/lit \H) (h/opt <decimal-natural-number>))))
+
+(h/defrule <chirality>
+  (h/hook (fn [l] {:chirality (str* (concat l))})
+                    (h/+ (h/cat (h/lit \@)) (h/lit \@)
+                         (h/lit \@))))
+
+(h/defrule <charge>
+  (h/+
+   (h/hook (fn [[_ c]] {:charge c})
+           (h/cat (h/lit \+)
+                  (h/+ (h/hook (fn [_] 2) (h/lit \+))
+                       (h/hook (fn [x] (or x 1))
+                               (h/opt <decimal-natural-number>)))))
+   (h/hook (fn [[_ c]] {:charge c})
+           (h/cat (h/lit \-)
+                  (h/+ (h/hook (fn [_] -2) (h/lit \-))
+                       (h/hook (fn [x] (- (or x 1)))
+                               (h/opt <decimal-natural-number>)))))))
 (h/defrule <bracket-mods>
-  (h/hook (fn [x] (when (seq x)
-                    (apply into {} (vector x))))
+  (h/hook (fn [x] (when (seq x) (apply into {} (vector x))))
           (h/rep*
            (h/+
-            (h/hook (fn [[_ hydrogen-count]]
-                      {:hydrogens (or hydrogen-count 1)})
-                    (h/cat (h/lit \H) (h/opt <decimal-natural-number>)))
-            (h/hook (fn [l] {:chirality (str* (concat l))})
-                    (h/+ (h/cat (h/lit \@)) (h/lit \@)
-                         (h/lit \@)))
-            (h/+
-             (h/hook (fn [[_ c]] {:charge c})
-                     (h/cat (h/lit \+)
-                            (h/+ (h/hook (fn [_] 2) (h/lit \+))
-                                 (h/hook (fn [x] (or x 1))
-                                         (h/opt <decimal-natural-number>)))))
-             (h/hook (fn [[_ c]] {:charge c})
-                     (h/cat (h/lit \-)
-                            (h/+ (h/hook (fn [_] -2) (h/lit \-))
-                                 (h/hook (fn [x] (- (or x 1)))
-                                         (h/opt <decimal-natural-number>))))))))))
+            <hydrogen-count>
+            <chirality>
+            <charge>))))
 
 (h/defrule <bracket-expr>
   (h/hook (fn [[isotope symbol {:keys #{hydrogens chirality charge}} class]]
-            (chemiclj.smiles2.BracketAtomContext.
+            (chemiclj.smiles2.BracketAtom.
              isotope symbol chirality hydrogens charge class))
           (h/label "a bracket expression"
                    (h/prefix <left-bracket>
