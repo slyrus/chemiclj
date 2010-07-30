@@ -43,7 +43,8 @@
   (mass [mol])
   (exact-mass [mol]))
 
-(defrecord Atom [name element charge isotope hybridization]
+(defrecord Atom [name element isotope chirality
+                 charge hybridization explicit-hydrogen-count]
   PMass
   (mass [atm] (-> atm :element :mass))
   (exact-mass [atm]
@@ -77,7 +78,10 @@
 
 (defn make-atom
   ([element name]
-     (Atom. name (element/get-element element) nil nil nil)))
+     (Atom. name (element/get-element element) nil nil nil nil nil))
+  ([element name isotope chirality charge hybridization explicit-hydrogen-count]
+     (Atom. name (element/get-element element)
+            isotope chirality charge hybridization explicit-hydrogen-count)))
 
 (defn make-bond [atom1 atom2 & {:keys [type order direction],
                                 :or {type :single order 1}}]
