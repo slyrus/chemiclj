@@ -39,20 +39,29 @@
          :as graph])
   (:require [clojure.string :as string]))
 
+(defprotocol PHasAtoms
+  (atoms [obj]))
+
 (defprotocol PMass
   (mass [mol])
   (exact-mass [mol]))
 
-(defrecord Atom [name element isotope chirality
+(defrecord Atom [_name element isotope chirality
                  charge hybridization explicit-hydrogen-count]
   PMass
   (mass [atm] (-> atm :element :mass))
   (exact-mass [atm]
               (if (:isotope atm)
                 (:exact-mass (:isotope atm))
-                (:exact-mass (first (element-abundnant-isotopes (:element atm)))))))
+                (:exact-mass (first (element-abundnant-isotopes (:element atm))))))
+
+  clojure.lang.Named
+  (getName [atm] _name))
 
 (defrecord Bond [_nodes type order direction]
+  PHasAtoms
+  (atoms [bond] _nodes)
+
   NodeSet
   (nodes [bond] _nodes)
   (node? [bond node] (some #{node} _nodes))
@@ -63,18 +72,21 @@
   (right [bond] (second _nodes)))
 
 (defprotocol PMolecule
-  (atoms [mol])
   (bonds [mol]))
 
 (defrecord Molecule [_graph _name]
+  PHasAtoms
+  (atoms [mol] (nodes _graph))
 
   PMolecule
-  (atoms [mol] (nodes _graph))
   (bonds [mol] (edges _graph))
 
   PMass
   (mass [mol] (reduce + (map mass (atoms mol))))
-  (exact-mass [mol] (reduce + (map exact-mass (atoms mol)))))
+  (exact-mass [mol] (reduce + (map exact-mass (atoms mol))))
+
+  clojure.lang.Named
+  (getName [mol] _name))
 
 (defn make-atom
   ([element name]
