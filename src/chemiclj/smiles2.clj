@@ -201,14 +201,18 @@
 (declare <chain>)
 
 (h/defrule <branch>
-  (let [context (h/<fetch-context>)
-        branch-attachment (:last-atom context)]
-    (h/cat
-     (h/circumfix (h/lit \()
-                  (h/cat
-                   (h/opt (h/+ <bond> <dot>))
-                   <chain>)
-                  (h/lit \))))))
+  (h/for [{:keys [last-atom]} h/<fetch-context>
+          branch (h/cat
+                  (h/circumfix (h/lit \()
+                               (h/cat
+                                (h/opt (h/+ <bond> <dot>))
+                                <chain>)
+                               (h/lit \))))
+          _ (h/alter-context
+             (fn [context]
+               (print last-atom)
+               (assoc context :last-atom last-atom)))]
+         branch))
 
 (h/defrule <chain>
   (h/rep
