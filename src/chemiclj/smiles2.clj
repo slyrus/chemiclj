@@ -30,16 +30,16 @@
        (h/hook str (h/lit \p))
        (h/hook str (h/lit \s))))
 
-(h/defrule <chlorine> (h/lex (h/cat (h/lit \C) (h/lit \l))))
-(h/defrule <bromine> (h/lex (h/cat (h/lit \B) (h/lit \r))))
-(h/defrule <boron> (h/lex (h/cat (h/lit \B))))
-(h/defrule <carbon> (h/lex (h/cat (h/lit \C))))
-(h/defrule <nitrogen> (h/lex (h/cat (h/lit \N))))
-(h/defrule <oxygen> (h/lex (h/cat (h/lit \O))))
-(h/defrule <sulfur> (h/lex (h/cat (h/lit \S))))
-(h/defrule <phosphorus> (h/lex (h/cat (h/lit \P))))
-(h/defrule <fluorine> (h/lex (h/cat (h/lit \F))))
-(h/defrule <iodine> (h/lex (h/cat (h/lit \I))))
+(h/defrule <chlorine> (h/cat (h/lex (h/lit \C)) (h/lit \l)))
+(h/defrule <bromine> (h/cat (h/lex (h/lit \B)) (h/lit \r)))
+(h/defrule <boron> (h/lit \B))
+(h/defrule <carbon> (h/lit \C))
+(h/defrule <nitrogen> (h/lit \N))
+(h/defrule <oxygen> (h/lit \O))
+(h/defrule <sulfur> (h/lit \S))
+(h/defrule <phosphorus> (h/lit \P))
+(h/defrule <fluorine> (h/lit \F))
+(h/defrule <iodine> (h/lit \I))
 
 (h/defrule <organic-subset-atom>
   (h/+ <chlorine> <bromine> <boron> <carbon> <nitrogen> <oxygen> <sulfur>
@@ -48,9 +48,6 @@
 (h/defrule <element-symbol>
   (h/label "an element symbol"
            (h/+ <aliphatic-element-symbol> <aromatic-element-symbol>)))
-
-(h/defrule <atom>
-  (h/+ <organic-subset-atom> <bracket-expr>))
 
 (h/defrule <bond>
   (h/+
@@ -110,16 +107,18 @@
             (chemiclj.smiles2.BracketAtom.
              isotope symbol chirality hydrogens charge class))
           (h/label "a bracket expression"
-                   (h/prefix <left-bracket>
-                             (h/suffix
-                              (h/cat
-                               (h/opt <isotope>)
-                               <element-symbol>
-                               <bracket-mods>
-                               (h/opt
-                                (h/prefix (h/lit \:)
-                                          <decimal-natural-number>)))
-                              <right-bracket>)))))
+                   (h/circumfix <left-bracket>
+                                (h/cat
+                                 (h/opt <isotope>)
+                                 <element-symbol>
+                                 <bracket-mods>
+                                 (h/opt
+                                  (h/prefix (h/lit \:)
+                                            <decimal-natural-number>)))
+                                <right-bracket>))))
+
+(h/defrule <atom>
+  (h/+  <organic-subset-atom> <bracket-expr>))
 
 (h/defrule <ws?>
   "Consumes optional, ignored whitespace."
@@ -131,7 +130,7 @@
 (defn read-string [input]
   (h/match
    (h/make-state input)
-   (h/cat <chain> <ws?>)
+   <chain>
    :success-fn (fn [product position]
                  product)
    :failure-fn (fn [error]
