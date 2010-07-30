@@ -3,6 +3,7 @@
   (:use [chemiclj.core])
   (:require [shortcut.graph :as graph]
             [edu.arizona.fnparse [hound :as h] [core :as c]]
+            [clojure.string :as str]
             [clojure.contrib [except :as except]])
   (:refer-clojure :exclude #{read-string}))
 
@@ -86,7 +87,13 @@
        <aromatic-phosphorus>))
 
 (h/defrule <organic-subset-atom>
-  (h/+ <aliphatic-organic> <aromatic-organic>))
+  (h/for [context h/<fetch-context>
+          atom (h/hook
+                (fn [symbol]
+                  (make-atom symbol
+                             (str symbol (inc (get-atom-count context (str/upper-case symbol))))))
+                (h/+ <aliphatic-organic> <aromatic-organic>))]
+         atom))
 
 (h/defrule <bond>
   (h/+
@@ -150,7 +157,7 @@
                                 (h/circumfix <left-bracket>
                                              (h/cat
                                               (h/opt <isotope>)
-                                              <element-symbol>
+                                              <bracket-element-symbol>
                                               <bracket-mods>
                                               (h/opt
                                                (h/prefix (h/lit \:)
@@ -161,9 +168,12 @@
 (h/defrule <atom>
   (h/for "an atom"
          [atom (h/+ <organic-subset-atom> <bracket-expr>)
-          _ (h/alter-context inc-atom-count (-> atom :element :id))]
-         (do (print atom)
-             atom)))
+          _ (h/alter-context
+             (fn [context atom]
+               (assoc (inc-atom-count context (-> atom :element :id))
+                 :molecule (add-atom (:molecule context) atom)))
+             atom)]
+         atom))
 
 (h/defrule <ws?>
   "Consumes optional, ignored whitespace."
