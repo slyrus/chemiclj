@@ -44,7 +44,8 @@
   (h/label "an isotope" <decimal-natural-number>))
 
 (h/defrule <bracket-mods>
-  (h/hook (fn [x] (when (seq x) (apply conj x)))
+  (h/hook (fn [x] (when (seq x)
+                    (apply into {} (vector x))))
           (h/rep*
            (h/+
             (h/hook (fn [[_ hydrogen-count]]
@@ -53,10 +54,17 @@
             (h/hook (fn [l] {:chirality (str* (concat l))})
                     (h/+ (h/cat (h/lit \@)) (h/lit \@)
                          (h/lit \@)))
-            (h/hook (fn [[sgn num]]
-                      {:charge ((if (= sgn \+) + -) num)})
-                    (h/+ (h/cat (h/lit \+) (h/opt <decimal-natural-number>))
-                         (h/cat (h/lit \-) (h/opt <decimal-natural-number>))))))))
+            (h/+
+             (h/hook (fn [[_ c]] {:charge c})
+                     (h/cat (h/lit \+)
+                            (h/+ (h/hook (fn [_] 2) (h/lit \+))
+                                 (h/hook (fn [x] (or x 1))
+                                         (h/opt <decimal-natural-number>)))))
+             (h/hook (fn [[_ c]] {:charge c})
+                     (h/cat (h/lit \-)
+                            (h/+ (h/hook (fn [_] -2) (h/lit \-))
+                                 (h/hook (fn [x] (- (or x 1)))
+                                         (h/opt <decimal-natural-number>))))))))))
 
 (h/defrule <bracket-expr>
   (h/hook (fn [[isotope symbol {:keys #{hydrogens chirality charge}} class]]
