@@ -52,6 +52,20 @@
 (h/defrule <atom>
   (h/+ <organic-subset-atom> <bracket-expr>))
 
+(h/defrule <bond>
+  (h/+
+   (h/lit \-)
+   (h/lit \=)
+   (h/lit \#)
+   (h/lit \$)
+   (h/lit \:)
+   (h/lit \/)
+   (h/lit \\)))
+
+(h/defrule <dot> (h/lit \.))
+
+(h/defrule <decimal-digit> (h/radix-digit 10))
+
 (h/defmaker radix-natural-number [core]
   (h/hooked-rep #(+ (* core %1) %2) 0 (h/radix-digit core)))
 
@@ -107,10 +121,17 @@
                                           <decimal-natural-number>)))
                               <right-bracket>)))))
 
+(h/defrule <ws?>
+  "Consumes optional, ignored whitespace."
+  (h/rep* (h/set-term "whitespace" " \t\n\r")))
+
+(h/defrule <chain>
+  (h/rep* <atom>))
+
 (defn read-string [input]
-  (c/matches-seq
+  (h/match
    (h/make-state input)
-   <atom>
+   (h/cat <chain> <ws?>)
    :success-fn (fn [product position]
                  product)
    :failure-fn (fn [error]
