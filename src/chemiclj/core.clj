@@ -78,7 +78,7 @@
 
 (defn make-atom
   ([element name]
-     (Atom. name (element/get-element element) nil nil nil nil nil))
+     (Atom. name (element/get-element element) nil nil 0 nil nil))
   ([element name isotope chirality charge hybridization explicit-hydrogen-count]
      (Atom. name (element/get-element element)
             isotope chirality charge hybridization explicit-hydrogen-count)))
