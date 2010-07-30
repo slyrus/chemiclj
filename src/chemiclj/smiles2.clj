@@ -124,11 +124,38 @@
   "Consumes optional, ignored whitespace."
   (h/rep* (h/set-term "whitespace" " \t\n\r")))
 
+(h/defrule <ringbond>
+  (h/+
+   (h/lex
+    (h/cat
+     (h/opt <bond>) (h/lit \%) <decimal-digit> <decimal-digit>))
+   (h/cat
+    (h/opt <bond>) <decimal-digit>)))
+
+(declare <branch>)
+
+(h/defrule <branched-atom>
+  (h/cat <atom>
+         (h/rep* <ringbond>)
+         (h/rep* <branch>)))
+
+(declare <chain>)
+
+(h/defrule <branch>
+  (h/cat
+   (h/circumfix (h/lit \()
+                (h/cat
+                 (h/opt (h/+ <bond> <dot>))
+                 <chain>)
+                (h/lit \)))))
+
 (h/defrule <chain>
-  (h/rep* <atom>))
+  (h/rep
+   (h/cat (h/opt (h/+ <bond> <dot>))
+          <branched-atom>)))
 
 (defn read-string [input]
-  (h/match
+  (c/matches-seq
    (h/make-state input)
    <chain>
    :success-fn (fn [product position]
