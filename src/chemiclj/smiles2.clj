@@ -44,23 +44,35 @@
   (h/label "an isotope" <decimal-natural-number>))
 
 (h/defrule <bracket-mods>
-  (h/rep*
-   (h/+
-    (h/cat (h/lit \H) (h/opt <decimal-natural-number>))
-    (h/+ (h/cat (h/lit \@)) (h/lit \@)
-         (h/lit \@))
-    (h/+ (h/cat (h/lit \+) (h/opt <decimal-natural-number>))
-         (h/cat (h/lit \-) (h/opt <decimal-natural-number>))))))
+  (h/hook (fn [x] (when (seq x) (apply conj x)))
+          (h/rep*
+           (h/+
+            (h/hook (fn [[_ hydrogen-count]]
+                      {:hydrogens (or hydrogen-count 1)})
+                    (h/cat (h/lit \H) (h/opt <decimal-natural-number>)))
+            (h/hook (fn [l] {:chirality (str* (concat l))})
+                    (h/+ (h/cat (h/lit \@)) (h/lit \@)
+                         (h/lit \@)))
+            (h/hook (fn [[sgn num]]
+                      {:charge ((if (= sgn \+) + -) num)})
+                    (h/+ (h/cat (h/lit \+) (h/opt <decimal-natural-number>))
+                         (h/cat (h/lit \-) (h/opt <decimal-natural-number>))))))))
 
 (h/defrule <bracket-expr>
-  (h/label "a bracket expression"
-           (h/prefix <left-bracket>
-                     (h/suffix
-                      (h/cat
-                       (h/opt <isotope>)
-                       <element-symbol>
-                       <bracket-mods>)
-                      <right-bracket>))))
+  (h/hook (fn [[isotope symbol {:keys #{hydrogens chirality charge}} class]]
+            (chemiclj.smiles2.BracketAtomContext.
+             isotope symbol chirality hydrogens charge class))
+          (h/label "a bracket expression"
+                   (h/prefix <left-bracket>
+                             (h/suffix
+                              (h/cat
+                               (h/opt <isotope>)
+                               <element-symbol>
+                               <bracket-mods>
+                               (h/opt
+                                (h/prefix (h/lit \:)
+                                          <decimal-natural-number>)))
+                              <right-bracket>)))))
 
 (defn read-string [input]
   (c/matches-seq
