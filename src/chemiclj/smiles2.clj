@@ -210,7 +210,6 @@
                                (h/lit \))))
           _ (h/alter-context
              (fn [context]
-               (print last-atom)
                (assoc context :last-atom last-atom)))]
          branch))
 
