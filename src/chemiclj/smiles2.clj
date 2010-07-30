@@ -169,9 +169,13 @@
   (h/for "an atom"
          [atom (h/+ <organic-subset-atom> <bracket-expr>)
           _ (h/alter-context
-             (fn [context atom]
+             (fn [{:keys [last-atom] :as context} atom]
                (assoc (inc-atom-count context (-> atom :element :id))
-                 :molecule (add-atom (:molecule context) atom)))
+                 :molecule (if last-atom
+                             (add-bond (add-atom (:molecule context) atom)
+                                       atom last-atom)
+                             (add-atom (:molecule context) atom))
+                 :last-atom atom))
              atom)]
          atom))
 
