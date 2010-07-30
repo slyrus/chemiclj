@@ -97,13 +97,22 @@ the returned sequence isn't lazy."
                                    (do (read-char)
                                        (add-atom mol "Cl" state))
                                    (add-atom mol "C" state))
-
+                                 
                                  (= c \N) (add-atom mol "N" state)
                                  (= c \O) (add-atom mol "O" state)
                                  (= c \P) (add-atom mol "P" state)
                                  (= c \S) (add-atom mol "S" state)
                                  (= c \F) (add-atom mol "F" state)
-                                 (= c \I) (add-atom mol "I" state)))))
+                                 (= c \I) (add-atom mol "I" state)
+
+                                 (= c \c) (add-atom mol "C" (assoc state :next-bond :aromatic))
+                                 (= c \n) (add-atom mol "N" (assoc state :next-bond :aromatic))
+                                 (= c \o) (add-atom mol "O" (assoc state :next-bond :aromatic))
+                                 (= c \p) (add-atom mol "P" (assoc state :next-bond :aromatic))
+                                 (= c \s) (add-atom mol "S" (assoc state :next-bond :aromatic))
+                                 
+
+                                 ))))
          (read-smiles-tokens [mol state]
                              (let [v (read-smiles-token mol state)]
                                (cond
