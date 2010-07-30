@@ -30,16 +30,18 @@
        (h/hook str (h/lit \p))
        (h/hook str (h/lit \s))))
 
-(h/defrule <chlorine> (h/cat (h/lex (h/lit \C)) (h/lit \l)))
-(h/defrule <bromine> (h/cat (h/lex (h/lit \B)) (h/lit \r)))
-(h/defrule <boron> (h/lit \B))
-(h/defrule <carbon> (h/lit \C))
-(h/defrule <nitrogen> (h/lit \N))
-(h/defrule <oxygen> (h/lit \O))
-(h/defrule <sulfur> (h/lit \S))
-(h/defrule <phosphorus> (h/lit \P))
-(h/defrule <fluorine> (h/lit \F))
-(h/defrule <iodine> (h/lit \I))
+(h/defrule <chlorine> (h/hook (comp str* concat)
+                              (h/cat (h/lex (h/lit \C)) (h/lit \l))))
+(h/defrule <bromine> (h/hook (comp str* concat)
+                             (h/cat (h/lex (h/lit \B)) (h/lit \r))))
+(h/defrule <boron> (h/hook str (h/lit \B)))
+(h/defrule <carbon> (h/hook str (h/lit \C)))
+(h/defrule <nitrogen> (h/hook str (h/lit \N)))
+(h/defrule <oxygen> (h/hook str (h/lit \O)))
+(h/defrule <sulfur> (h/hook str (h/lit \S)))
+(h/defrule <phosphorus> (h/hook str (h/lit \P)))
+(h/defrule <fluorine> (h/hook str (h/lit \F)))
+(h/defrule <iodine> (h/hook str (h/lit \I)))
 
 (h/defrule <organic-subset-atom>
   (h/+ <chlorine> <bromine> <boron> <carbon> <nitrogen> <oxygen> <sulfur>
@@ -118,7 +120,7 @@
                                 <right-bracket>))))
 
 (h/defrule <atom>
-  (h/+  <organic-subset-atom> <bracket-expr>))
+  (h/+ <organic-subset-atom> <bracket-expr>))
 
 (h/defrule <ws?>
   "Consumes optional, ignored whitespace."
