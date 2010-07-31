@@ -33,8 +33,17 @@
             [clojure.zip :as zip]
             [clojure.contrib.zip-filter.xml :as zf]))
 
+(defprotocol HasIsotopes
+  (isotopes [obj]))
+
 (defrecord Element [atomic-number id name group period mass
-                    electronegativity max-bond-order isotopes])
+                    electronegativity max-bond-order]
+  HasIsotopes
+  (isotopes [element]
+            (reduce (fn [v x] (assoc v (:number x) x))
+                    (hash-map)
+                    (filter (fn [x] (= (:element x) id))
+                            isotope-list))))
 
 (defrecord Isotope [element number id exact-mass relative-abundance])
 
@@ -107,10 +116,7 @@
                                     (Float/parseFloat electronegativity))
                                   (when maxbondorder
                                     (Integer/parseInt maxbondorder))
-                                  (reduce (fn [v x] (assoc v (:number x) x))
-                                          (hash-map)
-                                          (filter (fn [x] (= (:element x) id))
-                                                  isotope-list)))))))
+                                  )))))
 
 (def elements-vec (convert-alist elements-list :atomic-number))
 
