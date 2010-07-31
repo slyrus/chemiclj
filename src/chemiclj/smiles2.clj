@@ -212,6 +212,9 @@
                  :molecule
                  (if last-atom
                    (cond
+                    (= arity 1) (add-single-bond
+                                 (add-atom (:molecule context) atom)
+                                 atom last-atom)
                     (= arity 2) (add-double-bond
                                  (add-atom (:molecule context) atom)
                                  atom last-atom)
