@@ -226,7 +226,7 @@
   (h/label "a chain"
            (h/rep <branched-atom>)))
 
-(defn read-string [input]
+(defn read-smiles-string [input]
   (h/match
    (h/make-state input
                  :context (SMILESContext. (make-molecule) nil nil))
