@@ -184,24 +184,33 @@
   (h/rep* (h/set-term "whitespace" " \t\n\r")))
 
 (h/defrule <ringbond>
-  (h/+
-   (h/lex
-    (h/cat
-     (h/opt <bond>) (h/lit \%) <decimal-digit> <decimal-digit>))
-   (h/cat
-    (h/opt <bond>) <decimal-digit>)))
+  (h/label "a ringbond"
+           (h/+
+            (h/cat
+             (h/lex (h/opt <bond>)) (h/lit \%) <decimal-digit> <decimal-digit>)
+            (h/cat
+             (h/lex (h/opt <bond>)) <decimal-digit>))))
 
 (declare <branch>)
+(declare <chain>)
+
+(h/defrule <bond-or-dot>
+  (h/label "a bond or a dot"
+           (h/+ <bond> <dot>)))
 
 (h/defrule <branched-atom>
-  (h/cat <atom>
-         (h/rep* <ringbond>)
-         (h/rep* <branch>)))
+  (h/label "a branched-atom"
+           (h/cat <atom>
+                  (h/rep* <ringbond>)
+                  (h/rep* <branch>)
+                  (h/opt <bond-or-dot>)
+                  (h/opt <chain>))))
 
 (declare <chain>)
 
 (h/defrule <branch>
-  (h/for [{:keys [last-atom]} h/<fetch-context>
+  (h/for "a branch"
+         [{:keys [last-atom]} h/<fetch-context>
           branch (h/cat
                   (h/circumfix (h/lit \()
                                (h/cat
@@ -214,9 +223,8 @@
          branch))
 
 (h/defrule <chain>
-  (h/rep
-   (h/cat (h/opt (h/+ <bond> <dot>))
-          <branched-atom>)))
+  (h/label "a chain"
+           (h/rep <branched-atom>)))
 
 (defn read-string [input]
   (h/match
