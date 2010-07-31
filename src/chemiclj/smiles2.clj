@@ -4,11 +4,10 @@
   (:require [shortcut.graph :as graph]
             [edu.arizona.fnparse [hound :as h] [core :as c]]
             [clojure.string :as str]
-            [clojure.contrib [except :as except]])
-  (:refer-clojure :exclude #{read-string}))
+            [clojure.contrib [except :as except]]))
 
 (defrecord SMILESContext
-  [molecule last-atom atom-counts])
+  [molecule last-atom atom-counts rings])
 
 (defn get-atom-count [context element]
   (or (get (:atom-counts context) element) 0))
@@ -229,7 +228,7 @@
 (defn read-smiles-string [input]
   (h/match
    (h/make-state input
-                 :context (SMILESContext. (make-molecule) nil nil))
+                 :context (SMILESContext. (make-molecule) nil nil nil))
    (h/for
     [chain <chain>
      _ <ws?>
