@@ -183,29 +183,12 @@
   (h/rep* (h/set-term "whitespace" " \t\n\r")))
 
 (h/defrule <ringbond>
-  (h/label "a ringbond"
+  (h/label "a ring bond"
            (h/+
             (h/cat
              (h/lex (h/opt <bond>)) (h/lit \%) <decimal-digit> <decimal-digit>)
             (h/cat
              (h/lex (h/opt <bond>)) <decimal-digit>))))
-
-(declare <branch>)
-(declare <chain>)
-
-(h/defrule <bond-or-dot>
-  (h/label "a bond or a dot"
-           (h/+ <bond> <dot>)))
-
-(h/defrule <branched-atom>
-  (h/label "a branched-atom"
-           (h/cat <atom>
-                  (h/rep* <ringbond>)
-                  (h/rep* <branch>)
-                  (h/opt <bond-or-dot>)
-                  (h/opt <chain>))))
-
-(declare <chain>)
 
 (h/defrule <branch>
   (h/for "a branch"
@@ -221,9 +204,23 @@
                (assoc context :last-atom last-atom)))]
          branch))
 
+(h/defrule <bond-or-dot>
+  (h/label "a bond or dot"
+           (h/+
+            <bond>
+            <dot>)))
+
+(h/defrule <atom-expr>
+  (h/label "an atom expression"
+           (h/cat <atom>
+                  (h/rep* <ringbond>)
+                  (h/rep* <branch>)
+                  (h/opt <bond-or-dot>)
+                  (h/opt <chain>))))
+
 (h/defrule <chain>
   (h/label "a chain"
-           (h/rep <branched-atom>)))
+           (h/rep <atom-expr>)))
 
 (defn read-smiles-string [input]
   (h/match
