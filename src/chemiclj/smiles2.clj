@@ -7,7 +7,15 @@
             [clojure.contrib [except :as except]]))
 
 (defrecord SMILESContext
-  [molecule last-atom atom-counts rings])
+  [molecule
+   last-atom
+   atom-counts
+   pending-rings
+   open-rings
+   arity
+   aromatic
+   aromatic-atoms
+   direction])
 
 (defn get-atom-count [context element]
   (or (get (:atom-counts context) element) 0))
@@ -33,13 +41,16 @@
                  (h/opt h/<lowercase-ascii-letter>))))
 
 (h/defrule <bracket-aromatic-element-symbol>
-  (h/+ (h/hook (comp str* concat) (h/cat (h/lit \s) (h/lit \e)))
-       (h/hook (comp str* concat) (h/cat (h/lit \a) (h/lit \s)))
-       (h/hook str (h/lit \c))
-       (h/hook str (h/lit \n))
-       (h/hook str (h/lit \o))
-       (h/hook str (h/lit \p))
-       (h/hook str (h/lit \s))))
+  (for [symbol (h/+ (h/hook (comp str* concat) (h/cat (h/lit \s) (h/lit \e)))
+                    (h/hook (comp str* concat) (h/cat (h/lit \a) (h/lit \s)))
+                    (h/hook str (h/lit \c))
+                    (h/hook str (h/lit \n))
+                    (h/hook str (h/lit \o))
+                    (h/hook str (h/lit \p))
+                    (h/hook str (h/lit \s)))
+        _ (h/alter-context
+           (fn [context] (assoc context :aromatic true)))]
+    symbol))
 
 (h/defrule <bracket-element-symbol>
   (h/label "a bracket element symbol"
@@ -96,13 +107,36 @@
 
 (h/defrule <bond>
   (h/+
-   (h/lit \-)
-   (h/lit \=)
-   (h/lit \#)
-   (h/lit \$)
-   (h/lit \:)
-   (h/lit \/)
-   (h/lit \\)))
+   (h/for [_ (h/alter-context
+              (fn [context] (assoc context :arity 1)))
+           bond-symbol (h/lit \-)]
+          bond-symbol)
+   (h/for [_ (h/alter-context
+              (fn [context] (assoc context :arity 2)))
+           bond-symbol (h/lit \=)]
+          bond-symbol)
+   (h/for [_ (h/alter-context
+              (fn [context] (assoc context :arity 3)))
+           bond-symbol (h/lit \#)]
+          bond-symbol)
+   (h/for [_ (h/alter-context
+              (fn [context] (assoc context :arity 4)))
+           bond-symbol (h/lit \$)]
+          bond-symbol)
+
+   ;; pick up where I left off here!!!!
+   (h/for [_ (h/alter-context
+              (fn [context] (assoc context :aromatic true)))
+           bond-symbol (h/lit \:)]
+          bond-symbol)
+   (h/for [_ (h/alter-context
+              (fn [context] (assoc context :direction :up)))
+           bond-symbol (h/lit \/)]
+          bond-symbol)
+   (h/for [_ (h/alter-context
+              (fn [context] (assoc context :direction :down)))
+           bond-symbol (h/lit \/)]
+          bond-symbol)))
 
 (h/defrule <dot> (h/lit \.))
 
@@ -161,19 +195,36 @@
                                               (h/opt
                                                (h/prefix (h/lit \:)
                                                          <decimal-natural-number>)))
-                                             <right-bracket>)))]
+                                             <right-bracket>)))
+          _ (h/alter-context
+             (fn [context]
+               (assoc context
+                 :aromatic nil
+                 :aromatic-atoms (conj (:aromatic-atoms context) atom))))]
          atom))
 
 (h/defrule <atom>
   (h/for "an atom"
          [atom (h/+ <organic-subset-atom> <bracket-expr>)
           _ (h/alter-context
-             (fn [{:keys [last-atom] :as context} atom]
+             (fn [{:keys [last-atom arity] :as context} atom]
                (assoc (inc-atom-count context (-> atom :element :id))
-                 :molecule (if last-atom
-                             (add-bond (add-atom (:molecule context) atom)
-                                       atom last-atom)
-                             (add-atom (:molecule context) atom))
+                 :molecule
+                 (if last-atom
+                   (cond
+                    (= arity 2) (add-double-bond
+                                 (add-atom (:molecule context) atom)
+                                 atom last-atom)
+                    (= arity 3) (add-triple-bond
+                                 (add-atom (:molecule context) atom)
+                                 atom last-atom)
+                    (= arity 4) (add-quadruple-bond
+                                 (add-atom (:molecule context) atom)
+                                 atom last-atom)
+                    true (add-bond
+                          (add-atom (:molecule context) atom)
+                          atom last-atom))
+                   (add-atom (:molecule context) atom))
                  :last-atom atom))
              atom)]
          atom))
@@ -225,7 +276,7 @@
 (defn read-smiles-string [input]
   (h/match
    (h/make-state input
-                 :context (SMILESContext. (make-molecule) nil nil nil))
+                 :context (SMILESContext. (make-molecule) nil nil nil nil nil nil nil nil))
    (h/for
     [chain <chain>
      _ <ws?>
