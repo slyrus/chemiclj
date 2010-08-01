@@ -203,6 +203,25 @@
                  :aromatic-atoms (conj (:aromatic-atoms context) atom))))]
          atom))
 
+(defn add-atom-and-bond [context atom last-atom arity]
+  (let [mol (:molecule context)]
+    (cond
+     (= arity 1) (add-single-bond
+                  (add-atom mol atom)
+                  atom last-atom)
+     (= arity 2) (add-double-bond
+                  (add-atom mol atom)
+                  atom last-atom)
+     (= arity 3) (add-triple-bond
+                  (add-atom mol atom)
+                  atom last-atom)
+     (= arity 4) (add-quadruple-bond
+                  (add-atom mol atom)
+                  atom last-atom)
+     true (add-bond
+           (add-atom (:molecule context) atom)
+           atom last-atom))))
+
 (h/defrule <atom>
   (h/for "an atom"
          [atom (h/+ <organic-subset-atom> <bracket-expr>)
@@ -211,22 +230,7 @@
                (assoc (inc-atom-count context (-> atom :element :id))
                  :molecule
                  (if last-atom
-                   (cond
-                    (= arity 1) (add-single-bond
-                                 (add-atom (:molecule context) atom)
-                                 atom last-atom)
-                    (= arity 2) (add-double-bond
-                                 (add-atom (:molecule context) atom)
-                                 atom last-atom)
-                    (= arity 3) (add-triple-bond
-                                 (add-atom (:molecule context) atom)
-                                 atom last-atom)
-                    (= arity 4) (add-quadruple-bond
-                                 (add-atom (:molecule context) atom)
-                                 atom last-atom)
-                    true (add-bond
-                          (add-atom (:molecule context) atom)
-                          atom last-atom))
+                   (add-atom-and-bond context atom last-atom arity)
                    (add-atom (:molecule context) atom))
                  :last-atom atom))
              atom)]
@@ -236,17 +240,9 @@
   "Consumes optional, ignored whitespace."
   (h/rep* (h/set-term "whitespace" " \t\n\r")))
 
-(h/defrule <ringbond>
-  (h/label "a ring bond"
-           (h/+
-            (h/cat
-             (h/lex (h/opt <bond>)) (h/lit \%) <decimal-digit> <decimal-digit>)
-            (h/cat
-             (h/lex (h/opt <bond>)) <decimal-digit>))))
-
 (h/defrule <branch>
   (h/for "a branch"
-         [{:keys [last-atom]} h/<fetch-context>
+         [{:keys [last-atom arity]} h/<fetch-context>
           branch (h/cat
                   (h/circumfix (h/lit \()
                                (h/cat
@@ -255,7 +251,9 @@
                                (h/lit \))))
           _ (h/alter-context
              (fn [context]
-               (assoc context :last-atom last-atom)))]
+               (assoc context
+                 :last-atom last-atom
+                 :arity arity)))]
          branch))
 
 (h/defrule <bond-or-dot>
@@ -264,22 +262,72 @@
             <bond>
             <dot>)))
 
+(defn add-ring-bond [mol atom last-atom arity]
+  (cond
+   (= arity 1) (add-single-bond mol atom last-atom)
+   (= arity 2) (add-double-bond mol atom last-atom)
+   (= arity 3) (add-triple-bond mol atom last-atom)
+   (= arity 4) (add-quadruple-bond mol atom last-atom)
+   true (add-bond mol atom last-atom)))
+
+(defn process-ring [context ring]
+  (let [pending (get (:pending-rings context) ring)
+        mol (:molecule context)
+        arity (:arity context)
+        last-atom (:last-atom context)]
+    (if pending
+      (let [mol (add-ring-bond mol pending last-atom arity)]
+        [mol (:pending-rings context)])
+      [mol (conj (:pending-rings context) {ring last-atom})])))
+
+(h/defrule <ringbond>
+  (h/label "a ring bond"
+           (h/for [context h/<fetch-context>
+                   [mol pending] (h/hook (fn [ring-num]
+                                           (process-ring context ring-num))
+                                         (h/+
+                                          (h/hook (fn [[_ _ digit1 digit2]]
+                                                    (when (and digit1 digit2)
+                                                      (+ (* 10 digit1) digit2)))
+                                                  (h/cat
+                                                   (h/lex (h/opt <bond>)) (h/lit \%)
+                                                   <decimal-digit> <decimal-digit>))
+                                          (h/hook (fn [[_ digit :as x]]
+                                                    digit)
+                                                  (h/cat
+                                                   (h/lex (h/opt <bond>))
+                                                   <decimal-digit>))))
+                   _ (h/alter-context
+                      (fn [context] (assoc context
+                                      :molecule mol
+                                      :pending-rings pending)))]
+                  _)))
+
 (h/defrule <atom-expr>
   (h/label "an atom expression"
-           (h/cat <atom>
-                  (h/rep* <ringbond>)
-                  (h/rep* <branch>)
-                  (h/opt <bond-or-dot>)
-                  (h/opt <chain>))))
+           (h/for
+            [atom <atom>
+             _ (h/rep*
+                (h/for
+                 [context h/<fetch-context>
+                  ringbond <ringbond>
+                  _ (h/alter-context
+                     (fn [context] context))]
+                 ringbond))
+             _ (h/rep* <branch>)
+             _ (h/opt <bond-or-dot>)
+             _ (h/opt <chain>)]
+            nil)))
 
 (h/defrule <chain>
+  "The main rule for a (possibly branched) chain of atoms."
   (h/label "a chain"
            (h/rep <atom-expr>)))
 
 (defn read-smiles-string [input]
   (h/match
    (h/make-state input
-                 :context (SMILESContext. (make-molecule) nil nil nil nil nil nil nil nil))
+                 :context (SMILESContext. (make-molecule) nil nil {} nil nil nil nil nil))
    (h/for
     [chain <chain>
      _ <ws?>
