@@ -280,7 +280,7 @@
         context-order (:order context)]
     (if pending
       (let [{:keys #{atom order}} pending
-            mol (add-ring-bond mol pending last-atom (or order context-order))]
+            mol (add-ring-bond mol atom last-atom (or order context-order))]
         [mol (:pending-rings context)])
       (let [{:keys #{atom order}} pending]
         [mol (conj (:pending-rings context)
