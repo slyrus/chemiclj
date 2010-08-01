@@ -99,24 +99,24 @@
 (h/defrule <organic-subset-atom>
   (h/for [context h/<fetch-context>
           atom (h/+ (h/for [symbol <aliphatic-organic>]
-                           (make-atom symbol
-                                      (str
-                                       symbol
-                                       (inc
-                                        (get-atom-count
-                                         context
-                                         (str/upper-case symbol))))))
-                    (h/for [symbol <aromatic-organic>
-                            _ (h/alter-context
-                               (fn [context] (assoc context :aromatic true)))]
-                           (make-atom symbol
-                                      (str
-                                       symbol
-                                       (inc
-                                        (get-atom-count
-                                         context
-                                         (str/upper-case symbol))))
-                                      nil nil nil nil true nil)))]
+                           (let [symbol (str/upper-case symbol)]
+                             (make-atom symbol
+                                        (str
+                                         symbol
+                                         (inc
+                                          (get-atom-count
+                                           context
+                                           (str/upper-case symbol)))))))
+                    (h/for [symbol <aromatic-organic>]
+                           (let [symbol (str/upper-case symbol)]
+                             (make-atom symbol
+                                        (str
+                                         symbol
+                                         (inc
+                                          (get-atom-count
+                                           context
+                                           (str/upper-case symbol))))
+                                        nil nil nil nil true nil))))]
          atom))
 
 (h/defrule <bond>
@@ -198,14 +198,16 @@
 (h/defrule <bracket-expr>
   (h/for [context h/<fetch-context>
           atom (h/hook (fn [[isotope symbol {:keys #{hydrogens chirality charge}} class]]
-                         (make-atom symbol
-                                    (str symbol (inc (get-atom-count context symbol)))
-                                    isotope
-                                    chirality
-                                    charge
-                                    nil
-                                    (:aromatic context)
-                                    hydrogens))
+                         (let [symbol (str/upper-case symbol)]
+                           (make-atom symbol
+                                      (str symbol (inc (get-atom-count
+                                                        context symbol)))
+                                      isotope
+                                      chirality
+                                      charge
+                                      nil
+                                      (:aromatic context)
+                                      hydrogens)))
                        (h/label "a bracket expression"
                                 (h/circumfix <left-bracket>
                                              (h/cat
