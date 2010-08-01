@@ -101,8 +101,14 @@
           atom (h/hook
                 (fn [symbol]
                   (make-atom symbol
-                             (str symbol (inc (get-atom-count context (str/upper-case symbol))))))
-                (h/+ <aliphatic-organic> <aromatic-organic>))]
+                             (str symbol
+                                  (inc (get-atom-count context
+                                                       (str/upper-case symbol))))))
+                (h/+ <aliphatic-organic>
+                     (h/for [symbol <aromatic-organic>
+                             _ (h/alter-context
+                                (fn [context] (assoc context :aromatic true)))]
+                            symbol)))]
          atom))
 
 (h/defrule <bond>
@@ -204,19 +210,19 @@
          atom))
 
 (defn add-atom-and-bond [context atom last-atom order]
-  (let [mol (:molecule context)]
+  (let [{:keys [molecule aromatic]} context]
     (cond
      (= order 1) (add-single-bond
-                  (add-atom mol atom)
+                  (add-atom molecule atom)
                   atom last-atom)
      (= order 2) (add-double-bond
-                  (add-atom mol atom)
+                  (add-atom molecule atom)
                   atom last-atom)
      (= order 3) (add-triple-bond
-                  (add-atom mol atom)
+                  (add-atom molecule atom)
                   atom last-atom)
      (= order 4) (add-quadruple-bond
-                  (add-atom mol atom)
+                  (add-atom molecule atom)
                   atom last-atom)
      true (add-bond
            (add-atom (:molecule context) atom)
@@ -226,14 +232,15 @@
   (h/for "an atom"
          [atom (h/+ <organic-subset-atom> <bracket-expr>)
           _ (h/alter-context
-             (fn [{:keys [last-atom order] :as context} atom]
+             (fn [{:keys [last-atom order aromatic] :as context} atom]
                (assoc (inc-atom-count context (-> atom :element :id))
                  :molecule
                  (if last-atom
                    (add-atom-and-bond context atom last-atom order)
                    (add-atom (:molecule context) atom))
                  :last-atom atom
-                 :order nil))
+                 :order nil
+                 :aromatic nil))
              atom)]
          atom))
 
