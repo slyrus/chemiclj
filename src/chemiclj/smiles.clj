@@ -198,8 +198,14 @@
 (h/defrule <bracket-expr>
   (h/for [context h/<fetch-context>
           atom (h/hook (fn [[isotope symbol {:keys #{hydrogens chirality charge}} class]]
-                         (make-atom symbol (str symbol (inc (get-atom-count context symbol)))
-                                    isotope chirality charge nil hydrogens))
+                         (make-atom symbol
+                                    (str symbol (inc (get-atom-count context symbol)))
+                                    isotope
+                                    chirality
+                                    charge
+                                    nil
+                                    (:aromatic context)
+                                    hydrogens))
                        (h/label "a bracket expression"
                                 (h/circumfix <left-bracket>
                                              (h/cat
