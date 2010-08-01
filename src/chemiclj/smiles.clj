@@ -41,16 +41,16 @@
                  (h/opt h/<lowercase-ascii-letter>))))
 
 (h/defrule <bracket-aromatic-element-symbol>
-  (for [symbol (h/+ (h/hook (comp str* concat) (h/cat (h/lit \s) (h/lit \e)))
-                    (h/hook (comp str* concat) (h/cat (h/lit \a) (h/lit \s)))
-                    (h/hook str (h/lit \c))
-                    (h/hook str (h/lit \n))
-                    (h/hook str (h/lit \o))
-                    (h/hook str (h/lit \p))
-                    (h/hook str (h/lit \s)))
-        _ (h/alter-context
-           (fn [context] (assoc context :aromatic true)))]
-    symbol))
+  (h/for [symbol (h/+ (h/hook (comp str* concat) (h/cat (h/lit \s) (h/lit \e)))
+                      (h/hook (comp str* concat) (h/cat (h/lit \a) (h/lit \s)))
+                      (h/hook str (h/lit \c))
+                      (h/hook str (h/lit \n))
+                      (h/hook str (h/lit \o))
+                      (h/hook str (h/lit \p))
+                      (h/hook str (h/lit \s)))
+          _ (h/alter-context
+             (fn [context] (assoc context :aromatic true)))]
+         symbol))
 
 (h/defrule <bracket-element-symbol>
   (h/label "a bracket element symbol"
