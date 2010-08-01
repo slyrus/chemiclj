@@ -36,15 +36,6 @@
 (defprotocol HasIsotopes
   (isotopes [obj]))
 
-(defrecord Element [atomic-number id name group period mass
-                    electronegativity max-bond-order]
-  HasIsotopes
-  (isotopes [element]
-            (reduce (fn [v x] (assoc v (:number x) x))
-                    (hash-map)
-                    (filter (fn [x] (= (:element x) id))
-                            isotope-list))))
-
 (defrecord Isotope [element number id exact-mass relative-abundance])
 
 (defn element-abundnant-isotopes [element]
@@ -91,6 +82,15 @@
   (reduce (fn [v x] (assoc v (key x) x))
           (vec (repeat (apply max (map key alist)) nil))
           alist))
+
+(defrecord Element [atomic-number id name group period mass
+                    electronegativity max-bond-order]
+  HasIsotopes
+  (isotopes [element]
+            (reduce (fn [v x] (assoc v (:number x) x))
+                    (hash-map)
+                    (filter (fn [x] (= (:element x) id))
+                            isotope-list))))
 
 (def elements-list (zf/xml->
                     (zip/xml-zip
