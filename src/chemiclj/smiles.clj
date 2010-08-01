@@ -98,17 +98,25 @@
 
 (h/defrule <organic-subset-atom>
   (h/for [context h/<fetch-context>
-          atom (h/hook
-                (fn [symbol]
-                  (make-atom symbol
-                             (str symbol
-                                  (inc (get-atom-count context
-                                                       (str/upper-case symbol))))))
-                (h/+ <aliphatic-organic>
-                     (h/for [symbol <aromatic-organic>
-                             _ (h/alter-context
-                                (fn [context] (assoc context :aromatic true)))]
-                            symbol)))]
+          atom (h/+ (h/for [symbol <aliphatic-organic>]
+                           (make-atom symbol
+                                      (str
+                                       symbol
+                                       (inc
+                                        (get-atom-count
+                                         context
+                                         (str/upper-case symbol))))))
+                    (h/for [symbol <aromatic-organic>
+                            _ (h/alter-context
+                               (fn [context] (assoc context :aromatic true)))]
+                           (make-atom symbol
+                                      (str
+                                       symbol
+                                       (inc
+                                        (get-atom-count
+                                         context
+                                         (str/upper-case symbol))))
+                                      nil nil nil nil true nil)))]
          atom))
 
 (h/defrule <bond>
