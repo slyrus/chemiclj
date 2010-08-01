@@ -95,8 +95,7 @@
      (Atom. name (element/get-element element)
             isotope chirality charge hybridization explicit-hydrogen-count)))
 
-(defn make-bond [atom1 atom2 & {:keys [type order direction],
-                                :or {type :single order 1}}]
+(defn make-bond [atom1 atom2 & {:keys [type order direction]}]
   (Bond. [atom1 atom2] type order direction))
 
 (defn make-molecule
@@ -125,11 +124,17 @@
      (assoc mol :_graph (add-edge (:_graph mol)
                                   (apply make-bond atom1 atom2 args)))))
 
+(defn add-single-bond [mol atom1 atom2]
+  (add-bond mol (make-bond atom1 atom2 :type :single :order 1)))
+
 (defn add-double-bond [mol atom1 atom2]
   (add-bond mol (make-bond atom1 atom2 :type :double :order 2)))
 
 (defn add-triple-bond [mol atom1 atom2]
-  (add-bond mol (make-bond atom1 atom2 :type :triple :order 2)))
+  (add-bond mol (make-bond atom1 atom2 :type :triple :order 3)))
+
+(defn add-quadruple-bond [mol atom1 atom2]
+  (add-bond mol (make-bond atom1 atom2 :type :quadruple :order 4)))
 
 (defn add-aromatic-bond [mol atom1 atom2]
   (add-bond mol (make-bond atom1 atom2 :type :aromatic :order 1.5)))
