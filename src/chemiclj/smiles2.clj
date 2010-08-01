@@ -12,7 +12,7 @@
    atom-counts
    pending-rings
    open-rings
-   arity
+   order
    aromatic
    aromatic-atoms
    direction])
@@ -108,19 +108,19 @@
 (h/defrule <bond>
   (h/+
    (h/for [_ (h/alter-context
-              (fn [context] (assoc context :arity 1)))
+              (fn [context] (assoc context :order 1)))
            bond-symbol (h/lit \-)]
           bond-symbol)
    (h/for [_ (h/alter-context
-              (fn [context] (assoc context :arity 2)))
+              (fn [context] (assoc context :order 2)))
            bond-symbol (h/lit \=)]
           bond-symbol)
    (h/for [_ (h/alter-context
-              (fn [context] (assoc context :arity 3)))
+              (fn [context] (assoc context :order 3)))
            bond-symbol (h/lit \#)]
           bond-symbol)
    (h/for [_ (h/alter-context
-              (fn [context] (assoc context :arity 4)))
+              (fn [context] (assoc context :order 4)))
            bond-symbol (h/lit \$)]
           bond-symbol)
 
@@ -203,19 +203,19 @@
                  :aromatic-atoms (conj (:aromatic-atoms context) atom))))]
          atom))
 
-(defn add-atom-and-bond [context atom last-atom arity]
+(defn add-atom-and-bond [context atom last-atom order]
   (let [mol (:molecule context)]
     (cond
-     (= arity 1) (add-single-bond
+     (= order 1) (add-single-bond
                   (add-atom mol atom)
                   atom last-atom)
-     (= arity 2) (add-double-bond
+     (= order 2) (add-double-bond
                   (add-atom mol atom)
                   atom last-atom)
-     (= arity 3) (add-triple-bond
+     (= order 3) (add-triple-bond
                   (add-atom mol atom)
                   atom last-atom)
-     (= arity 4) (add-quadruple-bond
+     (= order 4) (add-quadruple-bond
                   (add-atom mol atom)
                   atom last-atom)
      true (add-bond
@@ -226,13 +226,14 @@
   (h/for "an atom"
          [atom (h/+ <organic-subset-atom> <bracket-expr>)
           _ (h/alter-context
-             (fn [{:keys [last-atom arity] :as context} atom]
+             (fn [{:keys [last-atom order] :as context} atom]
                (assoc (inc-atom-count context (-> atom :element :id))
                  :molecule
                  (if last-atom
-                   (add-atom-and-bond context atom last-atom arity)
+                   (add-atom-and-bond context atom last-atom order)
                    (add-atom (:molecule context) atom))
-                 :last-atom atom))
+                 :last-atom atom
+                 :order nil))
              atom)]
          atom))
 
@@ -240,9 +241,11 @@
   "Consumes optional, ignored whitespace."
   (h/rep* (h/set-term "whitespace" " \t\n\r")))
 
+(declare <chain>)
+
 (h/defrule <branch>
   (h/for "a branch"
-         [{:keys [last-atom arity]} h/<fetch-context>
+         [{:keys [last-atom order]} h/<fetch-context>
           branch (h/cat
                   (h/circumfix (h/lit \()
                                (h/cat
@@ -253,7 +256,7 @@
              (fn [context]
                (assoc context
                  :last-atom last-atom
-                 :arity arity)))]
+                 :order order)))]
          branch))
 
 (h/defrule <bond-or-dot>
@@ -262,24 +265,28 @@
             <bond>
             <dot>)))
 
-(defn add-ring-bond [mol atom last-atom arity]
+(defn add-ring-bond [mol atom last-atom order]
   (cond
-   (= arity 1) (add-single-bond mol atom last-atom)
-   (= arity 2) (add-double-bond mol atom last-atom)
-   (= arity 3) (add-triple-bond mol atom last-atom)
-   (= arity 4) (add-quadruple-bond mol atom last-atom)
+   (= order 1) (add-single-bond mol atom last-atom)
+   (= order 2) (add-double-bond mol atom last-atom)
+   (= order 3) (add-triple-bond mol atom last-atom)
+   (= order 4) (add-quadruple-bond mol atom last-atom)
    true (add-bond mol atom last-atom)))
 
 (defn process-ring [context ring]
   (let [pending (get (:pending-rings context) ring)
         mol (:molecule context)
-        arity (:arity context)
-        last-atom (:last-atom context)]
+        last-atom (:last-atom context)
+        context-order (:order context)]
     (if pending
-      (let [mol (add-ring-bond mol pending last-atom arity)]
+      (let [{:keys #{atom order}} pending
+            mol (add-ring-bond mol pending last-atom (or order context-order))]
         [mol (:pending-rings context)])
-      [mol (conj (:pending-rings context) {ring last-atom})])))
-
+      (let [{:keys #{atom order}} pending]
+        [mol (conj (:pending-rings context)
+                   {ring {:atom last-atom
+                          :order order}})]))))
+  
 (h/defrule <ringbond>
   (h/label "a ring bond"
            (h/for [context h/<fetch-context>
@@ -310,10 +317,10 @@
              _ (h/rep*
                 (h/for
                  [context h/<fetch-context>
-                  ringbond <ringbond>
-                  _ (h/alter-context
-                     (fn [context] context))]
+                  ringbond <ringbond>]
                  ringbond))
+             _ (h/alter-context
+                (fn [context] (dissoc context :order)))
              _ (h/rep* <branch>)
              _ (h/opt <bond-or-dot>)
              _ (h/opt <chain>)]
