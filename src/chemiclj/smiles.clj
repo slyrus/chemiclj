@@ -1,7 +1,8 @@
 
 (ns chemiclj.smiles
   (:use [chemiclj.core])
-  (:require [shortcut.graph :as graph]
+  (:require [chemiclj.element :as element]
+            [shortcut.graph :as graph]
             [edu.arizona.fnparse [hound :as h] [core :as c]]
             [clojure.string :as str]
             [clojure.contrib [except :as except]]))
@@ -358,8 +359,21 @@
   (h/label "a chain"
            (h/rep <atom-expr>)))
 
-(defn- post-process [mol]
-  ;; loop through the atoms and mark the aromatic atoms as being :sp2 hybridized
+(defn- fixup-sp2-atom-bonds [mol]
+  (let [sp2-atoms (filter #(= (:hybridization %) :sp2) (atoms mol))]
+    (reduce (fn [mol atom]
+              (let [bonds (bonds mol atom)
+                    neighbors (neighbors mol atom)]
+                (let [valence (-> atom :element element/get-normal-valences first)]
+                  (print neighbors)))
+              mol)
+            mol
+            sp2-atoms)
+    mol))
+
+(defn- post-process-molecule [mol]
+  ;; let's take the sp2 hybridized atoms and fix up their bond orders:
+  ;; (fixup-sp2-atom-bonds mol)
   mol)
 
 (defn read-smiles-string [input]
@@ -373,7 +387,7 @@
      context h/<fetch-context>]
     context)
    :success-fn (fn [product position]
-                 (post-process (:molecule product)))
+                 (post-process-molecule (:molecule product)))
    :failure-fn (fn [error]
                  (except/throwf "SMILES parsing error: %s"
                                 (h/format-parse-error error)))))
