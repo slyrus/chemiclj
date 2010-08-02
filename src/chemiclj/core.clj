@@ -32,7 +32,7 @@
         [shortcut.graph
          :only (NodeSet Edge
                 make-graph
-                nodes add-node add-nodes
+                node? nodes add-node add-nodes
                 edges add-edge add-edges
                 neighbors
                 connected-components connected-component partition-graph)
@@ -85,6 +85,11 @@
   PMass
   (mass [mol] (reduce + (map mass (atoms mol))))
   (exact-mass [mol] (reduce + (map exact-mass (atoms mol))))
+
+  NodeSet
+  (nodes [mol] (nodes _graph))
+  (node? [mol node] (node? (_graph mol) node))
+  (neighbors [bond node] (remove #{node} (nodes _graph)))
 
   clojure.lang.Named
   (getName [mol] _name))
