@@ -294,34 +294,38 @@
 (defn process-ring [context ring bond-symbol]
   (let [pending (get (:pending-rings context) ring)
         mol (:molecule context)
-        last-atom (:last-atom context)
-        context-order (:order context)]
+        last-atom (:last-atom context)]
     (if pending
       (let [{:keys #{atom order}} pending
-            mol (add-ring-bond mol atom last-atom (or order context-order))]
-        [mol (dissoc (:pending-rings context) ring)])
-      [mol (conj (:pending-rings context)
-                 {ring {:atom last-atom
-                        :order (or (bond-symbol-order bond-symbol)
-                                   context-order)}})])))
+            specified-order (bond-symbol-order bond-symbol)]
+        ;; FIXME! I should throw an error if there is a conflict here!!
+        ;; (if (and (and order specified-order)
+        ;;     (not (= order specified-order))))
+        (let [mol (add-ring-bond mol atom last-atom (or order specified-order))]
+          [mol (dissoc (:pending-rings context) ring)]))
+      (do
+        [mol (conj (:pending-rings context)
+                   {ring {:atom last-atom
+                          :order (bond-symbol-order bond-symbol)}})]))))
 
 (h/defrule <ringbond>
   (h/label "a ring bond"
            (h/for [context h/<fetch-context>
-                   [mol pending] (h/hook (fn [[ring-num bond-symbol]]
-                                           (process-ring context ring-num bond-symbol))
-                                         (h/+
-                                          (h/hook (fn [[bond _ digit1 digit2]]
-                                                    (when (and digit1 digit2)
-                                                      [(+ (* 10 digit1) digit2) bond]))
-                                                  (h/cat
-                                                   (h/lex (h/opt <bond>)) (h/lit \%)
-                                                   <decimal-digit> <decimal-digit>))
-                                          (h/hook (fn [[bond digit :as x]]
-                                                    [digit bond])
-                                                  (h/cat
-                                                   (h/lex (h/opt <bond>))
-                                                   <decimal-digit>))))
+                   [mol pending] (h/hook
+                                  (fn [[ring-num bond-symbol]]
+                                    (process-ring context ring-num bond-symbol))
+                                  (h/+
+                                   (h/hook (fn [[bond _ digit1 digit2]]
+                                             (when (and digit1 digit2)
+                                               [(+ (* 10 digit1) digit2) bond]))
+                                           (h/cat
+                                            (h/lex (h/opt <bond>)) (h/lit \%)
+                                            <decimal-digit> <decimal-digit>))
+                                   (h/hook (fn [[bond digit :as x]]
+                                             [digit bond])
+                                           (h/cat
+                                            (h/lex (h/opt <bond>))
+                                            <decimal-digit>))))
                    _ (h/alter-context
                       (fn [context] (assoc context
                                       :molecule mol
