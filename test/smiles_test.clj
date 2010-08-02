@@ -10,7 +10,7 @@
 (map #(map name %)
      (map atoms
           (bonds
-           (:molecule (read-smiles-string "c=1=ccc1")))))
+           (read-smiles-string "c=1=ccc1"))))
 
 (:molecule (read-smiles-string "C"))
 (:molecule (read-smiles-string "c"))
@@ -30,36 +30,18 @@
 (:molecule (read-smiles-string "CC12CCC3C(C1CCC2O)CCC4=C3C=CC(=C4)O"))
 
 
-(map atoms
-     (bonds
-       (:molecule
-        (read-smiles-string
-         "CCC(C1=CC=CC=C1)=C(C2=CC=CC=C2)C3=CC=C(OCCN(C)C)C=C3"))))
 
-(map (fn [x] (map :_name x))
-     (map atoms
-          (bonds
-           (:molecule
-            (read-smiles-string
-             "CCC(C1=CC=CC=C1)=C(C2=CC=CC=C2)C3=CC=C(OCCN(C)C)C=C3")))))
+(def *molecules*
+     (reduce (fn [acc [name smiles]]
+               (into acc {name (read-smiles-string smiles)}))
+             {}
+             {"tamoxifen" "CCC(C1=CC=CC=C1)=C(C2=CC=CC=C2)C3=CC=C(OCCN(C)C)C=C3"
+              "anastrozole" "CC(C)(C#N)C1=CC(=CC(=C1)CN2C=NC=N2)C(C)(C)C#N"
+              "acetominophen" "CC(=O)NC1=CC=C(C=C1)O"
+              "morphine" "CN1CCC23C4C1CC5=C2C(=C(C=C5)O)OC3C(C=C4)O"
+              "estradiol" "CC12CCC3C(C1CCC2O)CCC4=C3C=CC(=C4)O"
+              "dicyclohexyl" "C1CCCCC1C2CCCCC2"}))
 
-(def q (map atoms
-          (bonds
-           (:molecule
-            (read-smiles-string
-             "CCC(C1=CC=CC=C1)=C(C2=CC=CC=C2)C3=CC=C(OCCN(C)C)C=C3")))))
+(defn get-molecule [name]
+  (get *molecules* name))
 
-(map :_name (first q))
-
-(map name (first q))
-
-(map (fn [x] (map :_name x)) q)
-
-(map (fn [x] (map name x)) q)
-
-(def tam (:molecule
-          (read-smiles-string
-           "CCC(C1=CC=CC=C1)=C(C2=CC=CC=C2)C3=CC=C(OCCN(C)C)C=C3")))
-
-(def r (:molecule (read-smiles-string
-                   "C1CC1")))
