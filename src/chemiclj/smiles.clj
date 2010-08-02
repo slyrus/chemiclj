@@ -109,7 +109,8 @@
                          (make-atom
                           symbol
                           (str symbol (inc (get-atom-count context symbol)))
-                          nil nil nil nil true nil))))]
+                          :aromatic true
+                          :hybridization :sp2))))]
          atom))
 
 (h/defrule <bond>
@@ -195,12 +196,11 @@
                            (make-atom
                             symbol
                             (str symbol (inc (get-atom-count context symbol)))
-                            isotope
-                            chirality
-                            charge
-                            nil
-                            (:aromatic context)
-                            hydrogens)))
+                            :isotope isotope
+                            :chirality chirality
+                            :charge charge
+                            :aromatic (:aromatic context)
+                            :explicit-hydrogen-count hydrogens)))
                        (h/label "a bracket expression"
                                 (h/circumfix <left-bracket>
                                              (h/cat
@@ -359,6 +359,7 @@
            (h/rep <atom-expr>)))
 
 (defn- post-process [mol]
+  ;; loop through the atoms and mark the aromatic atoms as being :sp2 hybridized
   mol)
 
 (defn read-smiles-string [input]
