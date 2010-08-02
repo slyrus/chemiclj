@@ -41,7 +41,7 @@
                  (h/opt h/<lowercase-ascii-letter>))))
 
 (h/defrule <bracket-aromatic-element-symbol>
-  (h/for [symbol (h/+ (h/hook (comp str* concat) (h/cat (h/lit \s) (h/lit \e)))
+  (h/for [symbol (h/+ (h/hook (comp str* concat) (h/cat (h/lex (h/lit \s)) (h/lit \e)))
                       (h/hook (comp str* concat) (h/cat (h/lit \a) (h/lit \s)))
                       (h/hook str (h/lit \c))
                       (h/hook str (h/lit \n))
@@ -98,25 +98,18 @@
 
 (h/defrule <organic-subset-atom>
   (h/for [context h/<fetch-context>
-          atom (h/+ (h/for [symbol <aliphatic-organic>]
-                           (let [symbol (str/upper-case symbol)]
-                             (make-atom symbol
-                                        (str
-                                         symbol
-                                         (inc
-                                          (get-atom-count
-                                           context
-                                           (str/upper-case symbol)))))))
-                    (h/for [symbol <aromatic-organic>]
-                           (let [symbol (str/upper-case symbol)]
-                             (make-atom symbol
-                                        (str
-                                         symbol
-                                         (inc
-                                          (get-atom-count
-                                           context
-                                           (str/upper-case symbol))))
-                                        nil nil nil nil true nil))))]
+          atom (h/+
+                (h/for [symbol <aliphatic-organic>]
+                       (let [symbol (str/capitalize symbol)]
+                         (make-atom
+                          symbol
+                          (str symbol (inc (get-atom-count context symbol))))))
+                (h/for [symbol <aromatic-organic>]
+                       (let [symbol (str/capitalize symbol)]
+                         (make-atom
+                          symbol
+                          (str symbol (inc (get-atom-count context symbol)))
+                          nil nil nil nil true nil))))]
          atom))
 
 (h/defrule <bond>
@@ -198,16 +191,16 @@
 (h/defrule <bracket-expr>
   (h/for [context h/<fetch-context>
           atom (h/hook (fn [[isotope symbol {:keys #{hydrogens chirality charge}} class]]
-                         (let [symbol (str/upper-case symbol)]
-                           (make-atom symbol
-                                      (str symbol (inc (get-atom-count
-                                                        context symbol)))
-                                      isotope
-                                      chirality
-                                      charge
-                                      nil
-                                      (:aromatic context)
-                                      hydrogens)))
+                         (let [symbol (str/capitalize symbol)]
+                           (make-atom
+                            symbol
+                            (str symbol (inc (get-atom-count context symbol)))
+                            isotope
+                            chirality
+                            charge
+                            nil
+                            (:aromatic context)
+                            hydrogens)))
                        (h/label "a bracket expression"
                                 (h/circumfix <left-bracket>
                                              (h/cat
