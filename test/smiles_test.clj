@@ -33,7 +33,7 @@
 
 (def *molecules*
      (reduce (fn [acc [name smiles]]
-               (into acc {name (read-smiles-string smiles)}))
+               (into acc {name (name-molecule (read-smiles-string smiles) name)}))
              {}
              {"valine" "CC(C)C(C(=O)O)N"
               "paroxetine" "C1CNCC(C1C2=CC=C(C=C2)F)COC3=CC4=C(C=C3)OCO4"
