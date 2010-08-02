@@ -88,14 +88,15 @@
   clojure.lang.Named
   (getName [mol] _name))
 
-(defn make-atom
-  ([element name]
-     (Atom. name (element/get-element element) nil nil 0 nil nil nil))
-  ([element name & {:keys [isotope chirality charge
-                           hybridization aromatic
-                           explicit-hydrogen-count]}]
-    (Atom. name (element/get-element element)
-           isotope chirality charge hybridization aromatic explicit-hydrogen-count)))
+(defn name-molecule [mol name]
+  (conj mol {:_name name}))
+
+(defn make-atom [element name & {:keys [isotope chirality charge
+                                        hybridization aromatic
+                                        explicit-hydrogen-count]
+                                 :or {charge 0}}]
+  (Atom. name (element/get-element element)
+         isotope chirality charge hybridization aromatic explicit-hydrogen-count))
 
 (defn make-bond [atom1 atom2 & {:keys [type order direction]}]
   (Bond. [atom1 atom2] type order direction))
