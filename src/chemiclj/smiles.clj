@@ -218,7 +218,7 @@
                  :aromatic-atoms (conj (:aromatic-atoms context) atom))))]
          atom))
 
-(defn add-atom-and-bond [context atom last-atom order]
+(defn- add-atom-and-bond [context atom last-atom order]
   (let [{:keys [molecule aromatic]} context]
     (cond
      (= order 1) (add-single-bond
@@ -280,7 +280,7 @@
            (h/+ <bond>
                 <dot>)))
 
-(defn add-ring-bond [mol atom last-atom order]
+(defn- add-ring-bond [mol atom last-atom order]
   (cond
    (= order 1) (add-single-bond mol atom last-atom)
    (= order 2) (add-double-bond mol atom last-atom)
@@ -288,10 +288,10 @@
    (= order 4) (add-quadruple-bond mol atom last-atom)
    true (add-bond mol atom last-atom)))
 
-(defn bond-symbol-order [symbol]
+(defn- bond-symbol-order [symbol]
   (get {\- 1 \= 2 \# 3 \$ 4} symbol))
 
-(defn process-ring [context ring bond-symbol]
+(defn- process-ring [context ring bond-symbol]
   (let [pending (get (:pending-rings context) ring)
         mol (:molecule context)
         last-atom (:last-atom context)]
@@ -336,6 +336,11 @@
   (h/label "an atom expression"
            (h/for
             [atom <atom>
+             ;; NOTE: this next rule is a hack to get around the fact
+             ;; we might have a branch followed by a ring-closing at
+             ;; the end of a molecule. Not sure this is allowed, but
+             ;; it exists in the wild.
+             _ (h/rep* <branch>)
              _ (h/rep*
                 (h/for
                  [context h/<fetch-context>
@@ -353,6 +358,9 @@
   (h/label "a chain"
            (h/rep <atom-expr>)))
 
+(defn- post-process [mol]
+  mol)
+
 (defn read-smiles-string [input]
   (h/match
    (h/make-state input
@@ -364,7 +372,7 @@
      context h/<fetch-context>]
     context)
    :success-fn (fn [product position]
-                 product)
+                 (post-process (:molecule product)))
    :failure-fn (fn [error]
                  (except/throwf "SMILES parsing error: %s"
                                 (h/format-parse-error error)))))
