@@ -299,9 +299,10 @@
     (if pending
       (let [{:keys #{atom order}} pending
             specified-order (bond-symbol-order bond-symbol)]
-        ;; FIXME! I should throw an error if there is a conflict here!!
-        ;; (if (and (and order specified-order)
-        ;;     (not (= order specified-order))))
+        (if (and (and order specified-order)
+                 (not (= order specified-order)))
+          (except/throwf "SMILES parsing error: %d and %d mismatch for ring bond order"
+                         order specified-order))
         (let [mol (add-ring-bond mol atom last-atom (or order specified-order))]
           [mol (dissoc (:pending-rings context) ring)]))
       (do
@@ -362,10 +363,10 @@
 (defn- fixup-sp2-atom-bonds [mol]
   (let [sp2-atoms (filter #(= (:hybridization %) :sp2) (atoms mol))]
     (reduce (fn [mol atom]
-              (let [bonds (bonds mol atom)
-                    neighbors (neighbors mol atom)]
-                (let [valence (-> atom :element element/get-normal-valences first)]
-                  (print neighbors)))
+              (let [bonds (bonds mol atom)]
+                (let [neighbors (neighbors mol atom)]
+                  (let [valence (-> atom :element element/get-normal-valences first)]
+                    (print (count neighbors)))))
               mol)
             mol
             sp2-atoms)
@@ -373,8 +374,7 @@
 
 (defn- post-process-molecule [mol]
   ;; let's take the sp2 hybridized atoms and fix up their bond orders:
-  ;; (fixup-sp2-atom-bonds mol)
-  mol)
+  (fixup-sp2-atom-bonds mol))
 
 (defn read-smiles-string [input]
   (h/match
