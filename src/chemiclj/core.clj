@@ -28,16 +28,12 @@
 ;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 (ns chemiclj.core
-  (:use [chemiclj.element :as element]
-        [shortcut.graph
-         :only (NodeSet Edge
-                make-graph
-                node? nodes add-node add-nodes
-                edges add-edge add-edges
-                neighbors
-                connected-components connected-component partition-graph)
-         :as graph])
-  (:require [clojure.string :as string]))
+  (:require [chemiclj.element :as element]
+            [shortcut.graph :as g]
+            [clojure.string :as string]
+            [clojure.contrib.def :as d]))
+
+(d/defalias neighbors g/neighbors)
 
 (defprotocol PHasAtoms
   (atoms [obj]))
@@ -53,7 +49,7 @@
   (exact-mass [atm]
               (if (:isotope atm)
                 (:exact-mass (:isotope atm))
-                (:exact-mass (first (element-abundnant-isotopes (:element atm))))))
+                (:exact-mass (first (element/element-abundnant-isotopes (:element atm))))))
 
   clojure.lang.Named
   (getName [atm] _name))
@@ -62,34 +58,36 @@
   PHasAtoms
   (atoms [bond] _nodes)
 
-  NodeSet
-  (nodes [bond] _nodes)
-  (node? [bond node] (some #{node} _nodes))
-  (neighbors [bond node] (remove #{node} _nodes))
+  g/NodeSet
+  (g/nodes [bond] _nodes)
+  (g/node? [bond node] (some #{node} _nodes))
+  (g/neighbors [bond node] (remove #{node} _nodes))
 
-  Edge
-  (left [bond] (first _nodes))
-  (right [bond] (second _nodes)))
+  g/Edge
+  (g/left [bond] (first _nodes))
+  (g/right [bond] (second _nodes)))
 
 (defprotocol PMolecule
   (bonds [mol] [mol atom]))
 
+(declare get-atom)
+
 (defrecord Molecule [_graph _name]
   PHasAtoms
-  (atoms [mol] (nodes _graph))
+  (atoms [mol] (g/nodes _graph))
 
   PMolecule
-  (bonds [mol] (edges _graph))
-  (bonds [mol atom] (edges _graph (get-atom mol atom)))
+  (bonds [mol] (g/edges _graph))
+  (bonds [mol atom] (g/edges _graph (get-atom mol atom)))
 
   PMass
   (mass [mol] (reduce + (map mass (atoms mol))))
   (exact-mass [mol] (reduce + (map exact-mass (atoms mol))))
 
-  NodeSet
-  (nodes [mol] (nodes _graph))
-  (node? [mol node] (node? (_graph mol) node))
-  (neighbors [bond node] (remove #{node} (nodes _graph)))
+  g/NodeSet
+  (g/nodes [mol] (g/nodes _graph))
+  (g/node? [mol node] (g/node? (_graph mol) node))
+  (g/neighbors [bond node] (remove #{node} (g/nodes _graph)))
 
   clojure.lang.Named
   (getName [mol] _name))
@@ -104,25 +102,6 @@
   (Atom. name (element/get-element element)
          isotope chirality charge hybridization aromatic explicit-hydrogen-count))
 
-(defn make-bond [atom1 atom2 & {:keys [type order direction]}]
-  (Bond. [atom1 atom2] type order direction))
-
-(defn make-molecule
-  ([]
-     (Molecule. (make-graph) nil))
-  ;;; this is broken!!!
-  ([atoms atom-pairs-vec]
-     (reduce
-      (fn [mol [atom1 atom2]]
-        (assoc mol :_graph (add-edge (:_graph mol) atom1 atom2 (make-bond atom1 atom2))))
-      (Molecule. (make-graph atoms) nil)
-      atom-pairs-vec))
-  ([atoms atom-pairs-vec name]
-     (assoc (make-molecule atoms atom-pairs-vec) :name name)))
-
-(defn add-atom [mol atom]
-  (assoc mol :_graph (add-node (:_graph mol) atom)))
-
 (defn get-atom [mol atom]
   (cond (= (type atom) java.lang.String)
         (when-let [res (filter #(= (name %) atom) (atoms mol))]
@@ -130,15 +109,34 @@
         true
         (get (atoms mol) atom)))
 
+(defn make-bond [atom1 atom2 & {:keys [type order direction]}]
+  (Bond. [atom1 atom2] type order direction))
+
+(defn make-molecule
+  ([]
+     (Molecule. (g/make-graph) nil))
+  ;;; this is broken!!!
+  ([atoms atom-pairs-vec]
+     (reduce
+      (fn [mol [atom1 atom2]]
+        (assoc mol :_graph (g/add-edge (:_graph mol) atom1 atom2 (make-bond atom1 atom2))))
+      (Molecule. (g/make-graph atoms) nil)
+      atom-pairs-vec))
+  ([atoms atom-pairs-vec name]
+     (assoc (make-molecule atoms atom-pairs-vec) :name name)))
+
+(defn add-atom [mol atom]
+  (assoc mol :_graph (g/add-node (:_graph mol) atom)))
+
 (defn add-bond
   ([mol bond]
-     (assoc mol :_graph (add-edge (:_graph mol) bond)))
+     (assoc mol :_graph (g/add-edge (:_graph mol) bond)))
   ([mol atom1 atom2 & args]
-     (assoc mol :_graph (add-edge (:_graph mol)
-                                  (apply make-bond
-                                         (get-atom mol atom1)
-                                         (get-atom mol atom2)
-                                         args)))))
+     (assoc mol :_graph (g/add-edge (:_graph mol)
+                                    (apply make-bond
+                                           (get-atom mol atom1)
+                                           (get-atom mol atom2)
+                                           args)))))
 
 (defn add-single-bond [mol atom1 atom2]
   (add-bond mol (make-bond atom1 atom2 :type :single :order 1)))
