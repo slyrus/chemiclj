@@ -40,7 +40,7 @@
 
 (defn element-abundnant-isotopes [element]
   (map second (reverse (sort-by #(:relative-abundance (val %))
-                                (:isotopes element)))))
+                                (isotopes element)))))
 
 (defn get-scalar-text [node dict-ref]
   (zf/xml1->
