@@ -72,7 +72,7 @@
   (right [bond] (second _nodes)))
 
 (defprotocol PMolecule
-  (bonds [mol]))
+  (bonds [mol] [mol atom]))
 
 (defrecord Molecule [_graph _name]
   PHasAtoms
@@ -80,6 +80,7 @@
 
   PMolecule
   (bonds [mol] (edges _graph))
+  (bonds [mol atom] (edges _graph (get-atom mol atom)))
 
   PMass
   (mass [mol] (reduce + (map mass (atoms mol))))
@@ -117,15 +118,22 @@
 (defn add-atom [mol atom]
   (assoc mol :_graph (add-node (:_graph mol) atom)))
 
-(defn get-atom [mol name]
-  (get (atoms mol) name))
+(defn get-atom [mol atom]
+  (cond (= (type atom) java.lang.String)
+        (when-let [res (filter #(= (name %) atom) (atoms mol))]
+          (first res))
+        true
+        (get (atoms mol) atom)))
 
 (defn add-bond
   ([mol bond]
      (assoc mol :_graph (add-edge (:_graph mol) bond)))
   ([mol atom1 atom2 & args]
      (assoc mol :_graph (add-edge (:_graph mol)
-                                  (apply make-bond atom1 atom2 args)))))
+                                  (apply make-bond
+                                         (get-atom mol atom1)
+                                         (get-atom mol atom2)
+                                         args)))))
 
 (defn add-single-bond [mol atom1 atom2]
   (add-bond mol (make-bond atom1 atom2 :type :single :order 1)))
