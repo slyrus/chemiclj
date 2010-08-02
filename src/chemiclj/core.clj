@@ -86,8 +86,8 @@
 
   g/NodeSet
   (g/nodes [mol] (g/nodes _graph))
-  (g/node? [mol node] (g/node? (_graph mol) node))
-  (g/neighbors [bond node] (remove #{node} (g/nodes _graph)))
+  (g/node? [mol node] (g/node? _graph node))
+  (g/neighbors [mol node] (g/neighbors _graph node))
 
   clojure.lang.Named
   (getName [mol] _name))
