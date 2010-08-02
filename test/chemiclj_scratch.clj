@@ -1,9 +1,8 @@
 
 (ns chemiclj-scratch
-  (:use [chemiclj.core]
-        [chemiclj.element])
-
-  (:require [shortcut.graph :as graph]))
+  (:use [chemiclj.core])
+  (:require [chemiclj.element :as element]
+            [shortcut.graph :as graph]))
 
 (def c1 (make-atom :c "C1"))
 (def h1 (make-atom :h "H1"))
