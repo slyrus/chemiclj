@@ -277,9 +277,8 @@
 
 (h/defrule <bond-or-dot>
   (h/label "a bond or dot"
-           (h/+
-            <bond>
-            <dot>)))
+           (h/+ <bond>
+                <dot>)))
 
 (defn add-ring-bond [mol atom last-atom order]
   (cond
@@ -289,7 +288,10 @@
    (= order 4) (add-quadruple-bond mol atom last-atom)
    true (add-bond mol atom last-atom)))
 
-(defn process-ring [context ring]
+(defn bond-symbol-order [symbol]
+  (get {\- 1 \= 2 \# 3 \$ 4} symbol))
+
+(defn process-ring [context ring bond-symbol]
   (let [pending (get (:pending-rings context) ring)
         mol (:molecule context)
         last-atom (:last-atom context)
@@ -298,25 +300,25 @@
       (let [{:keys #{atom order}} pending
             mol (add-ring-bond mol atom last-atom (or order context-order))]
         [mol (dissoc (:pending-rings context) ring)])
-      (let [{:keys #{atom order}} pending]
-        [mol (conj (:pending-rings context)
-                   {ring {:atom last-atom
-                          :order order}})]))))
-  
+      [mol (conj (:pending-rings context)
+                 {ring {:atom last-atom
+                        :order (or (bond-symbol-order bond-symbol)
+                                   context-order)}})])))
+
 (h/defrule <ringbond>
   (h/label "a ring bond"
            (h/for [context h/<fetch-context>
-                   [mol pending] (h/hook (fn [ring-num]
-                                           (process-ring context ring-num))
+                   [mol pending] (h/hook (fn [[ring-num bond-symbol]]
+                                           (process-ring context ring-num bond-symbol))
                                          (h/+
-                                          (h/hook (fn [[_ _ digit1 digit2]]
+                                          (h/hook (fn [[bond _ digit1 digit2]]
                                                     (when (and digit1 digit2)
-                                                      (+ (* 10 digit1) digit2)))
+                                                      [(+ (* 10 digit1) digit2) bond]))
                                                   (h/cat
                                                    (h/lex (h/opt <bond>)) (h/lit \%)
                                                    <decimal-digit> <decimal-digit>))
-                                          (h/hook (fn [[_ digit :as x]]
-                                                    digit)
+                                          (h/hook (fn [[bond digit :as x]]
+                                                    [digit bond])
                                                   (h/cat
                                                    (h/lex (h/opt <bond>))
                                                    <decimal-digit>))))
