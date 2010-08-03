@@ -68,7 +68,8 @@
   (g/right [bond] (second _nodes)))
 
 (defprotocol PMolecule
-  (bonds [mol] [mol atom]))
+  (bonds [mol] [mol atom])
+  (bond? [mol atom1 atom2]))
 
 (declare get-atom)
 
@@ -79,7 +80,8 @@
   PMolecule
   (bonds [mol] (g/edges _graph))
   (bonds [mol atom] (g/edges _graph (get-atom mol atom)))
-
+  (bond? [mol atom1 atom2] (g/edge? _graph atom1 atom2))
+  
   PMass
   (mass [mol] (reduce + (map mass (atoms mol))))
   (exact-mass [mol] (reduce + (map exact-mass (atoms mol))))
@@ -94,6 +96,9 @@
 
 (defn name-molecule [mol name]
   (conj mol {:_name name}))
+
+(defn names [seq]
+  (map name seq))
 
 (defn make-atom [element name & {:keys [isotope chirality charge
                                         hybridization aromatic
@@ -125,6 +130,7 @@
   ([atoms atom-pairs-vec name]
      (assoc (make-molecule atoms atom-pairs-vec) :name name)))
 
+;;; should these be protocol methods???
 (defn add-atom [mol atom]
   (assoc mol :_graph (g/add-node (:_graph mol) atom)))
 
@@ -152,6 +158,9 @@
 
 (defn add-aromatic-bond [mol atom1 atom2]
   (add-bond mol (make-bond atom1 atom2 :type :aromatic :order 1.5)))
+
+(defn remove-bond [mol atom1 atom2]
+  (assoc mol :_graph (g/remove-edge (:_graph mol) atom1 atom2)))
 
 (defn add-atom* [mol element name & [attached-to]]
   (let [atm (make-atom element name)]
