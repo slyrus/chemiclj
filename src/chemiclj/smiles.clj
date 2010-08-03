@@ -194,7 +194,7 @@
                             :charge charge
                             :aromatic (:aromatic context)
                             :hybridization (:hybridization context)
-                            :explicit-hydrogen-count hydrogens)))
+                            :explicit-hydrogen-count (or hydrogens 0))))
                        (h/label "a bracket expression"
                                 (h/circumfix <left-bracket>
                                              (h/cat
@@ -428,14 +428,20 @@
                            (add-bond (add-atom mol hatom) atom hatom))
                     "H")))
 
+(defn add-n-hydrogens [context atom n]
+  (loop [context context num n]
+    (if (pos? num)
+      (recur (add-1-hydrogen context atom) (dec num))
+      context)))
+
 (defn add-hydrogens-for-atom [context atom]
   (let [mol (:molecule context)
         valence (-> atom :element element/get-normal-valences first)
-        bonds (reduce + (map :order (bonds mol atom)))]
-    (loop [context context num (- valence bonds)]
-      (if (pos? num)
-        (recur (add-1-hydrogen context atom) (dec num))
-        context))))
+        bonds (reduce + (map :order (bonds mol atom)))
+        explicit-hydrogen-count (:explicit-hydrogen-count atom)]
+    (if explicit-hydrogen-count
+      (add-n-hydrogens context atom explicit-hydrogen-count)
+      (add-n-hydrogens context atom (- valence bonds)))))
 
 (defn add-hydrogens [context]
   (let [atoms (atoms (:molecule context))]
