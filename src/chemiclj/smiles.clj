@@ -370,16 +370,72 @@
       (filter #(= (:hybridization (first (neighbors % atom))) :sp2) bvec))))
 
 (defn- fixup-sp2-atom-bonds [mol]
-  (let [sp2-atoms (filter #(= (:hybridization %) :sp2) (atoms mol))]
-    (reduce (fn [mol atom]
-              (let [bonds (bonds mol atom)]
-                (let [neighbors (neighbors mol atom)]
-                  (let [valence (-> atom :element element/get-normal-valences first)]
-                    (print (count neighbors)))))
-              mol)
-            mol
-            sp2-atoms)
-    mol))
+  (let [sp2-atoms (filter #(and (= (:hybridization %) :sp2)
+                                (seq (filter nil? (atom-bond-orders mol %))))
+                          (atoms mol))]
+    (if (seq sp2-atoms)
+      (fixup-sp2-atom-bonds
+       (reduce (fn [mol atom]
+                 (let [bondvec (atom-aromatic-bonds mol atom)]
+                   (let [atom-neighbors (neighbors mol atom)]
+                     (let [valence (-> atom :element element/get-normal-valences first)]
+                       (cond (> (count atom-neighbors) 3)
+                             (except/throwf "Too many neighbors of sp2 atom: %s" atom)
+
+                             (< (count atom-neighbors) 2)
+                             (except/throwf "Too few neighbors of sp2 atom: %s" atom)
+
+                             true
+                             (do
+                               (let [bondvec (filter #(nil? (:order %)) bondvec)]
+                                 (cond
+                                  (> (count bondvec) 1)
+                                  (do
+                                    (cond (and (nil? (:order (first bondvec)))
+                                               (nil? (:order (second bondvec))))
+                                          (add-bond (remove-bond
+                                                     (add-bond (remove-bond mol (second bondvec))
+                                                               (assoc (second bondvec) :order 1))
+                                                     (first bondvec))
+                                                    (assoc (first bondvec) :order 2))
+                                      
+                                          (and (= (:order (first bondvec)) 1)
+                                               (nil? (:order (second bondvec))))
+                                          (add-bond (remove-bond mol (second bondvec))
+                                                    (assoc (second bondvec) :order 2))
+                                      
+                                          (and (= (:order (first bondvec)) 2)
+                                               (nil? (:order (second bondvec))))
+                                          (add-bond (remove-bond mol (second bondvec))
+                                                    (assoc (second bondvec) :order 1))
+                                      
+                                          (and (nil? (:order (first bondvec)))
+                                               (= (:order (second bondvec)) 1))
+                                          (add-bond (remove-bond mol (second bondvec))
+                                                    (assoc (second bondvec) :order 2))
+                                      
+                                          (and (nil? (:order (first bondvec)))
+                                               (= (:order (second bondvec)) 1))
+                                          (add-bond (remove-bond mol (second bondvec))
+                                                    (assoc (second bondvec) :order 1))
+                                          true mol))
+                                  (= (count bondvec) 1)
+                                  ;; (do
+                                  ;;   (print (names (atoms (first bondvec))))
+                                  ;;   (print [(name atom) (reduce + (map #(or (:order %) 1)
+                                  ;;                                      (remove #{(first bondvec)}
+                                  ;;                                              (bonds mol atom))))]))
+                                  (let [order (- 3 (min 2 (reduce max (map #(or (:order %) 1)
+                                                                           (remove #{(first bondvec)}
+                                                                                   (bonds mol atom))))))]
+                                    (add-bond (remove-bond mol (first bondvec))
+                                              (assoc (first bondvec) :order order)))
+                                  true mol)))
+
+                             )))))
+               mol
+               (graph/depth-first-traversal mol (first sp2-atoms))))
+      mol)))
 
 (defn- post-process-molecule [mol]
   ;; let's take the sp2 hybridized atoms and fix up their bond orders:
