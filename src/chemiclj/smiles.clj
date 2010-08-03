@@ -369,6 +369,23 @@
     (when (= (:hybridization atom) :sp2)
       (filter #(= (:hybridization (first (neighbors % atom))) :sp2) bvec))))
 
+
+(defmacro dprint [form]
+  `(let [res# ~form]
+     (print res#)
+     res#))
+
+(defn- calculate-aromatic-bond-max-valence [mol bond]
+  (let [[atom1 atom2] (atoms bond)]
+    (map name [atom1 atom2])
+    (max 1 (min 2 (- (min 3
+                          (-> atom1 :element element/get-normal-valences first)
+                          (-> atom2 :element element/get-normal-valences first))
+                     (reduce max (into (map #(or (:order %) 1)
+                                            (remove #{bond} (bonds mol atom1)))
+                                       (map #(or (:order %) 1)
+                                            (remove #{bond} (bonds mol atom2))))))))))
+
 (defn- fixup-sp2-atom-bonds [mol]
   (let [sp2-atoms (filter #(and (= (:hybridization %) :sp2)
                                 (seq (filter nil?
@@ -376,57 +393,27 @@
                           (atoms mol))]
     (if (seq sp2-atoms)
       (fixup-sp2-atom-bonds
-       (reduce (fn [mol atom]
-                 (let [bondvec (atom-aromatic-bonds mol atom)]
+       (loop [mol mol atom (first sp2-atoms)]
+         (let [bondvec (filter #(nil? (:order %)) (atom-aromatic-bonds mol atom))]
+           (if (seq bondvec)
+             (let [mol
                    (let [atom-neighbors (neighbors mol atom)]
                      (let [valence (-> atom :element element/get-normal-valences first)]
                        (cond (> (count atom-neighbors) 3)
                              (except/throwf "Too many neighbors of sp2 atom: %s" atom)
-
+                             
                              (< (count atom-neighbors) 2)
                              (except/throwf "Too few neighbors of sp2 atom: %s" atom)
-
+                           
                              true
-                             (do
-                               (let [bondvec (filter #(nil? (:order %)) bondvec)]
-                                 (cond
-                                  (> (count bondvec) 1)
-                                  (do
-                                    (cond (and (nil? (:order (first bondvec)))
-                                               (nil? (:order (second bondvec))))
-                                          (add-bond (remove-bond
-                                                     (add-bond (remove-bond mol (second bondvec))
-                                                               (assoc (second bondvec) :order 1))
-                                                     (first bondvec))
-                                                    (assoc (first bondvec) :order 2))
-                                      
-                                          (nil? (:order (second bondvec)))
-                                          (add-bond (remove-bond mol (second bondvec))
-                                                    (assoc (second bondvec)
-                                                      :order (cond (= (:order (first bondvec)) 1) 2
-                                                                   (= (:order (first bondvec)) 2) 1)))
-
-
-                                          (nil? (:order (first bondvec)))
-                                          (add-bond (remove-bond mol (first bondvec))
-                                                    (assoc (first bondvec)
-                                                      :order (cond (= (:order (second bondvec)) 1) 2
-                                                                   (= (:order (second bondvec)) 2) 1)))
-                                          
-                                          true mol))
-                                  
-                                  (= (count bondvec) 1)
-                                  (let [order (- 3 (min 2 (reduce max (map #(or (:order %) 1)
-                                                                           (remove #{(first bondvec)}
-                                                                                   (bonds mol atom))))))]
-                                    (add-bond (remove-bond mol (first bondvec))
-                                              (assoc (first bondvec) :order order)))
-
-                                  true mol)))
-
-                             )))))
-               mol
-               (graph/depth-first-traversal mol (first sp2-atoms))))
+                             (if (pos? (count bondvec))
+                               (let [order (calculate-aromatic-bond-max-valence mol (first bondvec))]
+                                 (add-bond (remove-bond mol (first bondvec))
+                                           (assoc (first bondvec)
+                                             :order order)))
+                               mol))))]
+               (recur mol (first (neighbors (first bondvec) atom))))
+             mol))))
       mol)))
 
 (defn fixup-non-aromatic-bonds [mol]
