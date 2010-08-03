@@ -42,8 +42,8 @@
   (mass [mol])
   (exact-mass [mol]))
 
-(defrecord Atom [_name element isotope chirality
-                 charge hybridization aromatic explicit-hydrogen-count]
+(defrecord Atom [_name element isotope chirality charge
+                 hybridization aromatic explicit-hydrogen-count]
   PMass
   (mass [atm] (-> atm :element :mass))
   (exact-mass [atm]
@@ -105,7 +105,8 @@
                                         explicit-hydrogen-count]
                                  :or {charge 0}}]
   (Atom. name (element/get-element element)
-         isotope chirality charge hybridization aromatic explicit-hydrogen-count))
+         isotope chirality charge hybridization
+         aromatic explicit-hydrogen-count))
 
 (defn get-atom [mol atom]
   (cond (= (type atom) java.lang.String)
