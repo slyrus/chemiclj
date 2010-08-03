@@ -380,10 +380,11 @@
                                             (remove #{bond} (bonds mol atom2))))))))))
 
 (defn- fixup-sp2-atom-bonds [mol]
-  (let [sp2-atoms (filter #(and
-                            (= (:hybridization %) :sp2)
-                            (seq (filter nil? (map :order (atom-aromatic-bonds mol %)))))
-                          (atoms mol))]
+  (let [sp2-atoms (sort-by #(-> % :element chemiclj.element/get-normal-valences first)
+                           (filter #(and
+                                     (= (:hybridization %) :sp2)
+                                     (seq (filter nil? (map :order (atom-aromatic-bonds mol %)))))
+                                   (atoms mol)))]
     (if (seq sp2-atoms)
       (fixup-sp2-atom-bonds
        (loop [mol mol atom (first sp2-atoms)]
@@ -415,15 +416,32 @@
           mol
           (filter #(nil? (:order %)) (bonds mol))))
 
-(defn add-hydrogens [mol]
-  ;; FIXME
-  mol)
-
 (defn- post-process-molecule [mol]
   (-> mol
       fixup-sp2-atom-bonds
-      fixup-non-aromatic-bonds
-      add-hydrogens))
+      fixup-non-aromatic-bonds))
+
+(defn add-1-hydrogen [context atom]
+  (let [mol (:molecule context)
+        hatom (make-atom "H" (str "H" (inc (get-atom-count context "H"))))]
+    (inc-atom-count (assoc context :molecule
+                           (add-bond (add-atom mol hatom) atom hatom))
+                    "H")))
+
+(defn add-hydrogens-for-atom [context atom]
+  (let [mol (:molecule context)
+        valence (-> atom :element element/get-normal-valences first)
+        bonds (reduce + (map :order (bonds mol atom)))]
+    (loop [context context num (- valence bonds)]
+      (if (pos? num)
+        (recur (add-1-hydrogen context atom) (dec num))
+        context))))
+
+(defn add-hydrogens [context]
+  (let [atoms (atoms (:molecule context))]
+    (reduce (fn [context atom]
+              (add-hydrogens-for-atom context atom))
+            context atoms)))
 
 (defn read-smiles-string [input]
   (h/match
@@ -436,7 +454,10 @@
      context h/<fetch-context>]
     context)
    :success-fn (fn [product position]
-                 (post-process-molecule (:molecule product)))
+                 (fixup-non-aromatic-bonds
+                  (:molecule
+                   (add-hydrogens
+                    (assoc product :molecule (post-process-molecule (:molecule product)))))))
    :failure-fn (fn [error]
                  (except/throwf "SMILES parsing error: %s"
                                 (h/format-parse-error error)))))
