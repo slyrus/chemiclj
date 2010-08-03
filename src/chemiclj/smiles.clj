@@ -360,6 +360,15 @@
   (h/label "a chain"
            (h/rep <atom-expr>)))
 
+(defn atom-bond-orders [mol atom]
+  (let [bvec (bonds mol atom)]
+    (map :order bvec)))
+
+(defn atom-aromatic-bonds [mol atom]
+  (let [bvec (bonds mol atom)]
+    (when (= (:hybridization atom) :sp2)
+      (filter #(= (:hybridization (first (neighbors % atom))) :sp2) bvec))))
+
 (defn- fixup-sp2-atom-bonds [mol]
   (let [sp2-atoms (filter #(= (:hybridization %) :sp2) (atoms mol))]
     (reduce (fn [mol atom]
@@ -387,7 +396,10 @@
      context h/<fetch-context>]
     context)
    :success-fn (fn [product position]
-                 (post-process-molecule (:molecule product)))
+                 (:molecule product))
    :failure-fn (fn [error]
                  (except/throwf "SMILES parsing error: %s"
                                 (h/format-parse-error error)))))
+
+(defn read-smiles-string* [input]
+  (post-process-molecule (read-smiles-string input)))
