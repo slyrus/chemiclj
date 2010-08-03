@@ -400,37 +400,28 @@
                                                      (first bondvec))
                                                     (assoc (first bondvec) :order 2))
                                       
-                                          (and (= (:order (first bondvec)) 1)
-                                               (nil? (:order (second bondvec))))
+                                          (nil? (:order (second bondvec)))
                                           (add-bond (remove-bond mol (second bondvec))
-                                                    (assoc (second bondvec) :order 2))
-                                      
-                                          (and (= (:order (first bondvec)) 2)
-                                               (nil? (:order (second bondvec))))
-                                          (add-bond (remove-bond mol (second bondvec))
-                                                    (assoc (second bondvec) :order 1))
-                                      
-                                          (and (nil? (:order (first bondvec)))
-                                               (= (:order (second bondvec)) 1))
-                                          (add-bond (remove-bond mol (second bondvec))
-                                                    (assoc (second bondvec) :order 2))
-                                      
-                                          (and (nil? (:order (first bondvec)))
-                                               (= (:order (second bondvec)) 2))
-                                          (add-bond (remove-bond mol (second bondvec))
-                                                    (assoc (second bondvec) :order 1))
+                                                    (assoc (second bondvec)
+                                                      :order (cond (= (:order (first bondvec)) 1) 2
+                                                                   (= (:order (first bondvec)) 2) 1)))
+
+
+                                          (nil? (:order (first bondvec)))
+                                          (add-bond (remove-bond mol (first bondvec))
+                                                    (assoc (first bondvec)
+                                                      :order (cond (= (:order (second bondvec)) 1) 2
+                                                                   (= (:order (second bondvec)) 2) 1)))
+                                          
                                           true mol))
+                                  
                                   (= (count bondvec) 1)
-                                  ;; (do
-                                  ;;   (print (names (atoms (first bondvec))))
-                                  ;;   (print [(name atom) (reduce + (map #(or (:order %) 1)
-                                  ;;                                      (remove #{(first bondvec)}
-                                  ;;                                              (bonds mol atom))))]))
                                   (let [order (- 3 (min 2 (reduce max (map #(or (:order %) 1)
                                                                            (remove #{(first bondvec)}
                                                                                    (bonds mol atom))))))]
                                     (add-bond (remove-bond mol (first bondvec))
                                               (assoc (first bondvec) :order order)))
+
                                   true mol)))
 
                              )))))
