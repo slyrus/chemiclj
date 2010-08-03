@@ -371,7 +371,8 @@
 
 (defn- fixup-sp2-atom-bonds [mol]
   (let [sp2-atoms (filter #(and (= (:hybridization %) :sp2)
-                                (seq (filter nil? (atom-bond-orders mol %))))
+                                (seq (filter nil?
+                                             (map :order (atom-aromatic-bonds mol %)))))
                           (atoms mol))]
     (if (seq sp2-atoms)
       (fixup-sp2-atom-bonds
@@ -415,7 +416,7 @@
                                                     (assoc (second bondvec) :order 2))
                                       
                                           (and (nil? (:order (first bondvec)))
-                                               (= (:order (second bondvec)) 1))
+                                               (= (:order (second bondvec)) 2))
                                           (add-bond (remove-bond mol (second bondvec))
                                                     (assoc (second bondvec) :order 1))
                                           true mol))
@@ -437,9 +438,19 @@
                (graph/depth-first-traversal mol (first sp2-atoms))))
       mol)))
 
+(defn fixup-non-aromatic-bonds [mol]
+  ;; FIXME
+  mol)
+
+(defn add-hydrogens [mol]
+  ;; FIXME
+  mol)
+
 (defn- post-process-molecule [mol]
   ;; let's take the sp2 hybridized atoms and fix up their bond orders:
-  (fixup-sp2-atom-bonds mol))
+  (fixup-non-aromatic-bonds mol)
+  (fixup-sp2-atom-bonds mol)
+  (add-hydrogens mol))
 
 (defn read-smiles-string [input]
   (h/match
