@@ -159,8 +159,11 @@
 (defn add-aromatic-bond [mol atom1 atom2]
   (add-bond mol (make-bond atom1 atom2 :type :aromatic :order 1.5)))
 
-(defn remove-bond [mol atom1 atom2]
-  (assoc mol :_graph (g/remove-edge (:_graph mol) atom1 atom2)))
+(defn remove-bond
+  ([mol bond]
+     (assoc mol :_graph (g/remove-edge (:_graph mol) bond)))
+  ([mol atom1 atom2]
+     (assoc mol :_graph (g/remove-edge (:_graph mol) atom1 atom2))))
 
 (defn add-atom* [mol element name & [attached-to]]
   (let [atm (make-atom element name)]
