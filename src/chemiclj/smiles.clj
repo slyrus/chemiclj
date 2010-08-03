@@ -118,34 +118,25 @@
 
 (h/defrule <bond>
   (h/+
-   (h/for [_ (h/alter-context
-              (fn [context] (assoc context :order 1)))
+   (h/for [_ (h/alter-context (fn [context] (assoc context :order 1)))
            bond-symbol (h/lit \-)]
           bond-symbol)
-   (h/for [_ (h/alter-context
-              (fn [context] (assoc context :order 2)))
+   (h/for [_ (h/alter-context (fn [context] (assoc context :order 2)))
            bond-symbol (h/lit \=)]
           bond-symbol)
-   (h/for [_ (h/alter-context
-              (fn [context] (assoc context :order 3)))
+   (h/for [_ (h/alter-context (fn [context] (assoc context :order 3)))
            bond-symbol (h/lit \#)]
           bond-symbol)
-   (h/for [_ (h/alter-context
-              (fn [context] (assoc context :order 4)))
+   (h/for [_ (h/alter-context (fn [context] (assoc context :order 4)))
            bond-symbol (h/lit \$)]
           bond-symbol)
-
-   ;; pick up where I left off here!!!!
-   (h/for [_ (h/alter-context
-              (fn [context] (assoc context :aromatic true)))
+   (h/for [_ (h/alter-context (fn [context] (assoc context :aromatic true)))
            bond-symbol (h/lit \:)]
           bond-symbol)
-   (h/for [_ (h/alter-context
-              (fn [context] (assoc context :direction :up)))
+   (h/for [_ (h/alter-context (fn [context] (assoc context :direction :up)))
            bond-symbol (h/lit \/)]
           bond-symbol)
-   (h/for [_ (h/alter-context
-              (fn [context] (assoc context :direction :down)))
+   (h/for [_ (h/alter-context (fn [context] (assoc context :direction :down)))
            bond-symbol (h/lit \/)]
           bond-symbol)))
 
