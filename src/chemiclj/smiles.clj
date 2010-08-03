@@ -447,10 +447,10 @@
   mol)
 
 (defn- post-process-molecule [mol]
-  ;; let's take the sp2 hybridized atoms and fix up their bond orders:
-  (fixup-non-aromatic-bonds mol)
-  (fixup-sp2-atom-bonds mol)
-  (add-hydrogens mol))
+  (-> mol
+      fixup-non-aromatic-bonds
+      fixup-sp2-atom-bonds
+      add-hydrogens))
 
 (defn read-smiles-string [input]
   (h/match
