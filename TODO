@@ -1,0 +1,34 @@
+
+1. SMILES Parsing
+
+ - deal with dot -- ???
+
+ - support wildcards
+
+ HALF-DONE throw an error if there is a conflict with bond orders specified
+   at ring opening and closing -- this is done, but probably done incorrectly
+
+ DONE cycles -- parsing is ok, but need to connect up the other bond!
+
+ DONE bond arity -- again, parsing works, but we don't set the bond arity
+
+ DONE fix names of aromatic bracket atoms!!!
+
+ DONE fix bond order of ring bonds
+
+ DONE fix bond order specified at ring closing and 
+
+ DONE bugfix: c1cCccc1 breaks aromatic bond fixup
+
+ DONE BUGFIX: bracket aromatic atoms aren't treated as such
+
+ DONE add implicit hydrogens (and explicit via [H] exprs!)
+
+ DONE- post-processing phase to fix arity of bonds:
+
+   DONE between aromatic atoms
+
+   DONE fill in unspecified bond arities (default to single unless
+      between two aromatic atoms)
+
+2. TODO SMILES Writing
