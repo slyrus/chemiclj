@@ -421,8 +421,10 @@
       mol)))
 
 (defn fixup-non-aromatic-bonds [mol]
-  ;; FIXME
-  mol)
+  (reduce #(add-bond (remove-bond %1 %2)
+                     (assoc %2 :order 1))
+          mol
+          (filter #(nil? (:order %)) (bonds mol))))
 
 (defn add-hydrogens [mol]
   ;; FIXME
@@ -430,8 +432,8 @@
 
 (defn- post-process-molecule [mol]
   (-> mol
-      fixup-non-aromatic-bonds
       fixup-sp2-atom-bonds
+      fixup-non-aromatic-bonds
       add-hydrogens))
 
 (defn read-smiles-string [input]
@@ -445,10 +447,8 @@
      context h/<fetch-context>]
     context)
    :success-fn (fn [product position]
-                 (:molecule product))
+                 (post-process-molecule (:molecule product)))
    :failure-fn (fn [error]
                  (except/throwf "SMILES parsing error: %s"
                                 (h/format-parse-error error)))))
 
-(defn read-smiles-string* [input]
-  (post-process-molecule (read-smiles-string input)))
