@@ -52,9 +52,7 @@
                       (h/hook str (h/lit \p))
                       (h/hook str (h/lit \s)))
           _ (h/alter-context
-             (fn [context] (assoc context
-                             :aromatic true
-                             :hybridization :sp2)))]
+             (fn [context] (assoc context :aromatic true :hybridization :sp2)))]
          symbol))
 
 (h/defrule <bracket-element-symbol>
