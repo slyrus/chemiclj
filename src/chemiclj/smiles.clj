@@ -369,6 +369,10 @@
     (when (= (:hybridization atom) :sp2)
       (filter #(= (:hybridization (first (neighbors % atom))) :sp2) bvec))))
 
+(defn atom-non-aromatic-bonds [mol atom]
+  (let [bvec (bonds mol atom)]
+    (when (not (= (:hybridization atom) :sp2))
+      (filter #(not (= (:hybridization (first (neighbors % atom))) :sp2)) bvec))))
 
 (defmacro dprint [form]
   `(let [res# ~form]
@@ -387,15 +391,15 @@
                                             (remove #{bond} (bonds mol atom2))))))))))
 
 (defn- fixup-sp2-atom-bonds [mol]
-  (let [sp2-atoms (filter #(and (= (:hybridization %) :sp2)
-                                (seq (filter nil?
-                                             (map :order (atom-aromatic-bonds mol %)))))
+  (let [sp2-atoms (filter #(and
+                            (= (:hybridization %) :sp2)
+                            (seq (filter nil? (map :order (atom-aromatic-bonds mol %)))))
                           (atoms mol))]
     (if (seq sp2-atoms)
       (fixup-sp2-atom-bonds
        (loop [mol mol atom (first sp2-atoms)]
-         (let [bondvec (filter #(nil? (:order %)) (atom-aromatic-bonds mol atom))]
-           (if (seq bondvec)
+         (let [bondseq (filter #(nil? (:order %)) (atom-aromatic-bonds mol atom))]
+           (if (seq bondseq)
              (let [mol
                    (let [atom-neighbors (neighbors mol atom)]
                      (let [valence (-> atom :element element/get-normal-valences first)]
@@ -406,13 +410,13 @@
                              (except/throwf "Too few neighbors of sp2 atom: %s" atom)
                            
                              true
-                             (if (pos? (count bondvec))
-                               (let [order (calculate-aromatic-bond-max-valence mol (first bondvec))]
-                                 (add-bond (remove-bond mol (first bondvec))
-                                           (assoc (first bondvec)
+                             (if (pos? (count bondseq))
+                               (let [order (calculate-aromatic-bond-max-valence mol (first bondseq))]
+                                 (add-bond (remove-bond mol (first bondseq))
+                                           (assoc (first bondseq)
                                              :order order)))
                                mol))))]
-               (recur mol (first (neighbors (first bondvec) atom))))
+               (recur mol (first (neighbors (first bondseq) atom))))
              mol))))
       mol)))
 
