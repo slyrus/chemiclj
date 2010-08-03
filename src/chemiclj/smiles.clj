@@ -7,6 +7,11 @@
             [clojure.string :as str]
             [clojure.contrib [except :as except]]))
 
+(defmacro dprint [form]
+  `(let [res# ~form]
+     (print res#)
+     res#))
+
 (defrecord SMILESContext
   [molecule
    last-atom
@@ -25,9 +30,6 @@
   (assoc context :atom-counts
          (assoc (:atom-counts context) element
                 (inc (get-atom-count context element)))))
-
-(defrecord BracketAtom
-  [isotope symbol chirality hydrogen-count charge class])
 
 (defn str* [objects]
   (apply str objects))
@@ -50,7 +52,9 @@
                       (h/hook str (h/lit \p))
                       (h/hook str (h/lit \s)))
           _ (h/alter-context
-             (fn [context] (assoc context :aromatic true)))]
+             (fn [context] (assoc context
+                             :aromatic true
+                             :hybridization :sp2)))]
          symbol))
 
 (h/defrule <bracket-element-symbol>
@@ -191,8 +195,7 @@
             <charge>))))
 
 (h/defrule <bracket-expr>
-  (h/for [context h/<fetch-context>
-          atom (h/hook (fn [[isotope symbol {:keys #{hydrogens chirality charge}} class]]
+  (h/for [atom (h/hook (fn [[isotope symbol {:keys #{hydrogens chirality charge}} class context]]
                          (let [symbol (str/capitalize symbol)]
                            (make-atom
                             symbol
@@ -201,6 +204,7 @@
                             :chirality chirality
                             :charge charge
                             :aromatic (:aromatic context)
+                            :hybridization (:hybridization context)
                             :explicit-hydrogen-count hydrogens)))
                        (h/label "a bracket expression"
                                 (h/circumfix <left-bracket>
@@ -210,7 +214,8 @@
                                               <bracket-mods>
                                               (h/opt
                                                (h/prefix (h/lit \:)
-                                                         <decimal-natural-number>)))
+                                                         <decimal-natural-number>))
+                                              h/<fetch-context>)
                                              <right-bracket>)))
           _ (h/alter-context
              (fn [context]
@@ -373,11 +378,6 @@
   (let [bvec (bonds mol atom)]
     (when (not (= (:hybridization atom) :sp2))
       (filter #(not (= (:hybridization (first (neighbors % atom))) :sp2)) bvec))))
-
-(defmacro dprint [form]
-  `(let [res# ~form]
-     (print res#)
-     res#))
 
 (defn- calculate-aromatic-bond-max-valence [mol bond]
   (let [[atom1 atom2] (atoms bond)]
