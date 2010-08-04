@@ -142,13 +142,12 @@
 
 (defn make-molecule
   ([]
-     (Molecule. (g/make-graph) nil #{}))
-  ;;; this is broken!!!
+     (Molecule. (g/make-graph) nil {}))
   ([atoms atom-pairs-vec]
      (reduce
       (fn [mol [atom1 atom2]]
         (assoc mol :_graph (g/add-edge (:_graph mol) atom1 atom2 (make-bond atom1 atom2))))
-      (Molecule. (g/make-graph atoms) nil #{})
+      (Molecule. (g/make-graph atoms) nil {})
       atom-pairs-vec))
   ([atoms atom-pairs-vec name]
      (assoc (make-molecule atoms atom-pairs-vec) :name name)))
