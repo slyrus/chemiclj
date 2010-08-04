@@ -159,9 +159,10 @@
           (h/cat (h/lit \H) (h/opt <decimal-natural-number>))))
 
 (h/defrule <chirality>
-  (h/hook (fn [l] {:chirality (str* (concat l))})
-                    (h/+ (h/cat (h/lit \@)) (h/lit \@)
-                         (h/lit \@))))
+  (h/+ (h/hook (fn [l] {:chirality (str* (concat l))})
+               (h/cat (h/lex (h/lit \@)) (h/lit \@)))
+       (h/hook (fn [l] {:chirality (str l)})
+               (h/lit \@))))
 
 (h/defrule <charge>
   (h/+
