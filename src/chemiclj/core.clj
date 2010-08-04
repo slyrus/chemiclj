@@ -69,11 +69,15 @@
 
 (defprotocol PMolecule
   (bonds [mol] [mol atom])
-  (bond? [mol atom1 atom2]))
+  (bond? [mol atom1 atom2])
+  (configurations [mol])
+  (add-configuration [mol configuration]))
 
 (declare get-atom)
 
-(defrecord Molecule [_graph _name]
+(defrecord TetrahedralConfiguration [w x y z])
+
+(defrecord Molecule [_graph _name _configurations]
   PHasAtoms
   (atoms [mol] (g/nodes _graph))
 
@@ -81,7 +85,9 @@
   (bonds [mol] (g/edges _graph))
   (bonds [mol atom] (g/edges _graph (get-atom mol atom)))
   (bond? [mol atom1 atom2] (g/edge? _graph atom1 atom2))
-  
+  (configurations [mol] _configurations)
+  (add-configuration [mol configuration] (conj _configurations configuration))
+
   PMass
   (mass [mol] (reduce + (map mass (atoms mol))))
   (exact-mass [mol] (reduce + (map exact-mass (atoms mol))))
@@ -120,13 +126,13 @@
 
 (defn make-molecule
   ([]
-     (Molecule. (g/make-graph) nil))
+     (Molecule. (g/make-graph) nil #{}))
   ;;; this is broken!!!
   ([atoms atom-pairs-vec]
      (reduce
       (fn [mol [atom1 atom2]]
         (assoc mol :_graph (g/add-edge (:_graph mol) atom1 atom2 (make-bond atom1 atom2))))
-      (Molecule. (g/make-graph atoms) nil)
+      (Molecule. (g/make-graph atoms) nil #{})
       atom-pairs-vec))
   ([atoms atom-pairs-vec name]
      (assoc (make-molecule atoms atom-pairs-vec) :name name)))
