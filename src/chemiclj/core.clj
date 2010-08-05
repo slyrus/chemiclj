@@ -123,11 +123,12 @@
                                       (get-atom mol atom2)
                                       nil))))
   (remove-bond [mol bond]
-               (assoc mol :_graph (g/remove-edge (:_graph mol) bond)))
+               (assoc mol :_graph (g/remove-edge _graph bond)))
   (remove-bond [mol atom1 atom2]
-               (assoc mol :_graph (g/remove-edge (:_graph mol) atom1 atom2)))
+               (assoc mol :_graph (g/remove-edge _graph atom1 atom2)))
   (configurations [mol] _configurations)
-  (add-configuration [mol configuration] (conj _configurations configuration))
+  (add-configuration [mol configuration]
+                     (assoc mol :_configurations (conj _configurations configuration)))
 
   PMass
   (mass [mol] (reduce + (map mass (atoms mol))))
