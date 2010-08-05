@@ -21,7 +21,8 @@
    order
    aromatic
    aromatic-atoms
-   direction])
+   direction
+   configurations])
 
 (defn get-atom-count [context element]
   (or (get (:atom-counts context) element) 0))
@@ -158,11 +159,17 @@
             {:hydrogens (or hydrogen-count 1)})
           (h/cat (h/lit \H) (h/opt <decimal-natural-number>))))
 
-(h/defrule <chirality>
-  (h/+ (h/hook (fn [l] {:chirality (str* (concat l))})
-               (h/cat (h/lex (h/lit \@)) (h/lit \@)))
-       (h/hook (fn [l] {:chirality (str l)})
-               (h/lit \@))))
+(h/defrule <configuration>
+  (h/for [context h/<fetch-context>
+          config (h/+ (h/hook (fn [config]
+                                (make-tetrahedral-configuration
+                                 (:last-atom context) nil nil nil))
+                              (h/cat (h/lex (h/lit \@)) (h/lit \@)))
+                      (h/hook (fn [config]
+                                (make-tetrahedral-configuration
+                                 (:last-atom context) nil nil nil))
+                              (h/lit \@)))]
+         {:configuration config}))
 
 (h/defrule <charge>
   (h/+
@@ -181,37 +188,40 @@
           (h/rep*
            (h/+
             <hydrogen-count>
-            <chirality>
+            <configuration>
             <charge>))))
 
 (h/defrule <bracket-expr>
-  (h/for [atom (h/hook (fn [[isotope symbol {:keys #{hydrogens chirality charge}} class context]]
-                         (let [symbol (str/capitalize symbol)]
-                           (make-atom
-                            symbol
-                            (str symbol (inc (get-atom-count context symbol)))
-                            :isotope isotope
-                            :chirality chirality
-                            :charge charge
-                            :aromatic (:aromatic context)
-                            :hybridization (:hybridization context)
-                            :explicit-hydrogen-count (or hydrogens 0))))
-                       (h/label "a bracket expression"
-                                (h/circumfix <left-bracket>
-                                             (h/cat
-                                              (h/opt <isotope>)
-                                              <bracket-element-symbol>
-                                              <bracket-mods>
-                                              (h/opt
-                                               (h/prefix (h/lit \:)
-                                                         <decimal-natural-number>))
-                                              h/<fetch-context>)
-                                             <right-bracket>)))
+  (h/for [[atom configuration] (h/hook (fn [[isotope symbol
+                                             {:keys #{hydrogens configuration charge}}
+                                             class context]]
+                                         [(let [symbol (str/capitalize symbol)]
+                                            (make-atom
+                                             symbol
+                                             (str symbol (inc (get-atom-count context symbol)))
+                                             :isotope isotope
+                                             :charge charge
+                                             :aromatic (:aromatic context)
+                                             :hybridization (:hybridization context)
+                                             :explicit-hydrogen-count (or hydrogens 0)))
+                                          configuration])
+                         (h/label "a bracket expression"
+                                  (h/circumfix <left-bracket>
+                                               (h/cat
+                                                (h/opt <isotope>)
+                                                <bracket-element-symbol>
+                                                <bracket-mods>
+                                                (h/opt
+                                                 (h/prefix (h/lit \:)
+                                                           <decimal-natural-number>))
+                                                h/<fetch-context>)
+                                               <right-bracket>)))
           _ (h/alter-context
              (fn [context]
                (assoc context
                  :aromatic nil
-                 :aromatic-atoms (conj (:aromatic-atoms context) atom))))]
+                 :aromatic-atoms (conj (:aromatic-atoms context) atom)
+                 :configurations (assoc (:configurations context) atom configuration))))]
          atom))
 
 (defn- add-atom-and-bond [context atom last-atom order]
@@ -233,6 +243,13 @@
            (add-atom (:molecule context) atom)
            atom last-atom))))
 
+(defn fixup-configuration [context atom last-atom]
+  (if last-atom
+    (when-let [configuration (#{last-atom} (:configurations context))]
+      (assoc context :configurations
+             (assoc (:configurations context) last-atom configuration))))
+  (:configurations context))
+
 (h/defrule <atom>
   (h/for "an atom"
          [atom (h/+ <organic-subset-atom> <bracket-expr>)
@@ -245,7 +262,8 @@
                    (add-atom (:molecule context) atom))
                  :last-atom atom
                  :order nil
-                 :aromatic nil))
+                 :aromatic nil
+                 :configurations (fixup-configuration context atom last-atom)))
              atom)]
          atom))
 
@@ -453,7 +471,7 @@
 (defn read-smiles-string [input]
   (h/match
    (h/make-state input
-                 :context (SMILESContext. (make-molecule) nil nil {} nil nil nil nil nil))
+                 :context (SMILESContext. (make-molecule) nil nil {} nil nil nil nil nil {}))
    (h/for
     [chain <chain>
      _ <ws?>
