@@ -218,32 +218,32 @@
             <hydrogen-count>
             <configuration>
             <charge>))))
-
 (h/defrule <bracket-expr>
-  (h/for [[atom configuration] (h/hook (fn [[isotope symbol
-                                             {:keys #{hydrogens configuration charge}}
-                                             class context]]
-                                         [(let [symbol (str/capitalize symbol)]
-                                            (make-atom
-                                             symbol
-                                             (str symbol (inc (get-atom-count context symbol)))
-                                             :isotope isotope
-                                             :charge charge
-                                             :aromatic (:aromatic context)
-                                             :hybridization (:hybridization context)
-                                             :explicit-hydrogen-count (or hydrogens 0)))
-                                          configuration])
-                         (h/label "a bracket expression"
-                                  (h/circumfix <left-bracket>
-                                               (h/cat
-                                                (h/opt <isotope>)
-                                                <bracket-element-symbol>
-                                                <bracket-mods>
-                                                (h/opt
-                                                 (h/prefix (h/lit \:)
-                                                           <decimal-natural-number>))
-                                                h/<fetch-context>)
-                                               <right-bracket>)))
+  (h/for [[atom configuration]
+          (h/hook (fn [[isotope symbol
+                        {:keys #{hydrogens configuration charge}}
+                        class context]]
+                    [(let [symbol (str/capitalize symbol)]
+                       (make-atom
+                        symbol
+                        (str symbol (inc (get-atom-count context symbol)))
+                        :isotope isotope
+                        :charge charge
+                        :aromatic (:aromatic context)
+                        :hybridization (:hybridization context)
+                        :explicit-hydrogen-count (or hydrogens 0)))
+                     configuration])
+                  (h/label "a bracket expression"
+                           (h/circumfix <left-bracket>
+                                        (h/cat
+                                         (h/opt <isotope>)
+                                         <bracket-element-symbol>
+                                         <bracket-mods>
+                                         (h/opt
+                                          (h/prefix (h/lit \:)
+                                                    <decimal-natural-number>))
+                                         h/<fetch-context>)
+                                        <right-bracket>)))
           _ (h/alter-context
              (fn [context]
                (assoc context
