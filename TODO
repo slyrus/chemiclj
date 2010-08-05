@@ -1,6 +1,10 @@
 
 1. SMILES Parsing
 
+ - deal with explicit H in tetrahedral configuration atoms (@ and @@)
+
+ - double bond configuration (E/Z, up/down)
+
  - deal with dot -- ???
 
  - support wildcards
@@ -10,7 +14,8 @@
 
  DONE cycles -- parsing is ok, but need to connect up the other bond!
 
- DONE bond arity -- again, parsing works, but we don't set the bond arity
+ DONE bond arity -- again, parsing works, but we don't set the bond
+      arity
 
  DONE fix names of aromatic bracket atoms!!!
 
@@ -24,11 +29,13 @@
 
  DONE add implicit hydrogens (and explicit via [H] exprs!)
 
- DONE- post-processing phase to fix arity of bonds:
+ DONE post-processing phase to fix arity of bonds:
 
    DONE between aromatic atoms
 
    DONE fill in unspecified bond arities (default to single unless
-      between two aromatic atoms)
+        between two aromatic atoms)
+
+ DONE support tetrahedral configurations
 
 2. TODO SMILES Writing
