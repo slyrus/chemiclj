@@ -40,3 +40,8 @@
 (defn get-molecule [name]
   (get *molecules* name))
 
+(read-smiles-string "C[C@](Br)(Cl)I") 
+(read-smiles-string "C[C@H](Br)I")
+(read-smiles-string "N[C@](Br)(O)C")
+(read-smiles-string "N[C@@](Br)(C)O")
+
