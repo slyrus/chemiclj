@@ -31,7 +31,8 @@
   (:require [chemiclj.element :as element]
             [shortcut.graph :as g]
             [clojure.string :as string]
-            [clojure.contrib.def :as d]))
+            [clojure.contrib.def :as d]
+            [clojure.contrib [except :as except]]))
 
 (d/defalias neighbors g/neighbors)
 
@@ -184,4 +185,22 @@
 
 (defn make-tetrahedral-configuration [w x y z]
   (TetrahedralConfiguration. w x y z))
+
+(defn get-configuration-vector [configuration]
+  [(:w configuration) (:x configuration) (:y configuration) (:z configuration)])
+
+(defn set-configuration-vector [configuration v]
+  (assoc configuration
+    :w (nth v 0)
+    :x (nth v 1)
+    :y (nth v 2)
+    :z (nth v 3)))
+
+(defn add-configuration-atom [configuration atom]
+  (cond (nil? (:w configuration)) (assoc configuration :w atom)
+        (nil? (:x configuration)) (assoc configuration :x atom)
+        (nil? (:y configuration)) (assoc configuration :y atom)
+        (nil? (:z configuration)) (assoc configuration :z atom)
+        true (except/throwf "Too many neighbors for tetrahedral atom %s"
+                            atom)))
 

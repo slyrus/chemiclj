@@ -272,11 +272,13 @@
            atom last-atom))))
 
 (defn fixup-configuration [context atom last-atom]
-  (if last-atom
-    (when-let [configuration (#{last-atom} (:configurations context))]
-      (assoc context :configurations
-             (assoc (:configurations context) last-atom configuration))))
-  (:configurations context))
+  (if last-atom 
+    (let [configuration (get (:configurations context) last-atom)]
+      (if configuration
+        (assoc (:configurations context) last-atom
+               (add-configuration-atom configuration atom))
+        (:configurations context)))
+    (:configurations context)))
 
 (h/defrule <atom>
   (h/for "an atom"
@@ -507,6 +509,8 @@
      context h/<fetch-context>]
     context)
    :success-fn (fn [product position]
+                 ;; (print (:configurations product))
+                 ;; FIXME! Need to store the configurations somewhere in the molecule!
                  (fixup-non-aromatic-bonds
                   (:molecule
                    (add-hydrogens
