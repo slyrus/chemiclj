@@ -50,7 +50,8 @@
      (reduce (fn [acc [name smiles]]
                (into acc {name (name-molecule (read-smiles-string smiles) name)}))
              {}
-             {"valine" "CC(C)C(C(=O)O)N"
+             {"l-alanine" "C[C@@H](C(=O)O)N"
+              "valine" "CC(C)C(C(=O)O)N"
               "paroxetine" "C1CNCC(C1C2=CC=C(C=C2)F)COC3=CC4=C(C=C3)OCO4"
               "tamoxifen" "CCC(C1=CC=CC=C1)=C(C2=CC=CC=C2)C3=CC=C(OCCN(C)C)C=C3"
               "anastrozole" "CC(C)(C#N)C1=CC(=CC(=C1)CN2C=NC=N2)C(C)(C)C#N"
