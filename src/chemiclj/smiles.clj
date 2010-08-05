@@ -509,12 +509,13 @@
      context h/<fetch-context>]
     context)
    :success-fn (fn [product position]
-                 ;; (print (:configurations product))
-                 ;; FIXME! Need to store the configurations somewhere in the molecule!
-                 (fixup-non-aromatic-bonds
-                  (:molecule
-                   (add-hydrogens
-                    (assoc product :molecule (post-process-molecule (:molecule product)))))))
+                 (reduce (fn [mol configuration]
+                           (add-configuration mol configuration))
+                         (fixup-non-aromatic-bonds
+                          (:molecule
+                           (add-hydrogens
+                            (assoc product :molecule (post-process-molecule (:molecule product))))))
+                         (:configurations product)))
    :failure-fn (fn [error]
                  (except/throwf "SMILES parsing error: %s"
                                 (h/format-parse-error error)))))
