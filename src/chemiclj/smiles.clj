@@ -356,21 +356,22 @@
 (h/defrule <ringbond>
   (h/label "a ring bond"
            (h/for [context h/<fetch-context>
-                   [mol pending] (h/hook
-                                  (fn [[ring-num bond-symbol]]
-                                    (process-ring context ring-num bond-symbol))
-                                  (h/+
-                                   (h/hook (fn [[bond _ digit1 digit2]]
-                                             (when (and digit1 digit2)
-                                               [(+ (* 10 digit1) digit2) bond]))
-                                           (h/cat
-                                            (h/lex (h/opt <bond>)) (h/lit \%)
-                                            <decimal-digit> <decimal-digit>))
-                                   (h/hook (fn [[bond digit :as x]]
-                                             [digit bond])
-                                           (h/cat
-                                            (h/lex (h/opt <bond>))
-                                            <decimal-digit>))))
+                   [mol pending]
+                   (h/hook
+                    (fn [[ring-num bond-symbol]]
+                      (process-ring context ring-num bond-symbol))
+                    (h/+
+                     (h/hook (fn [[bond _ digit1 digit2]]
+                               (when (and digit1 digit2)
+                                 [(+ (* 10 digit1) digit2) bond]))
+                             (h/cat
+                              (h/lex (h/opt <bond>)) (h/lit \%)
+                              <decimal-digit> <decimal-digit>))
+                     (h/hook (fn [[bond digit :as x]]
+                               [digit bond])
+                             (h/cat
+                              (h/lex (h/opt <bond>))
+                              <decimal-digit>))))
                    _ (h/alter-context
                       (fn [context] (assoc context
                                       :molecule mol
