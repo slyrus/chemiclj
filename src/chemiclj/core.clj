@@ -182,3 +182,6 @@
 
 (defrecord TetrahedralConfiguration [w x y z])
 
+(defn make-tetrahedral-configuration [w x y z]
+  (TetrahedralConfiguration. w x y z))
+
