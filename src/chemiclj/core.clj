@@ -142,6 +142,18 @@
   clojure.lang.Named
   (getName [mol] _name))
 
+(defn count-elements [mol]
+  (reduce
+   (fn [counts atom]
+     (assoc counts (:element atom) (inc (or (get counts (:element atom)) 0))))
+   {}
+   (shortcut.graph/breadth-first-traversal (:_graph mol) (first (atoms mol)))))
+
+(defn molecular-formula [mol]
+  (apply str
+         (map #(str (:id (first %)) (second %))
+              (sort-by #(:id (first %)) (chemiclj.core/count-elements mol)))))
+
 (defn make-molecule
   ([]
      (Molecule. (g/make-graph) nil {}))
