@@ -1,10 +1,12 @@
 
+# chemiclj
+
 chemiclj is a chemistry library for clojure
 
 NOTE: make sure that the dependencies are installed be lein deps, or by
 putting the appropriate symlinks in a directory named checkouts.
 
-Dependencies
+# Dependencies
 
  shortuct - a graph library for clojure
 
@@ -30,6 +32,10 @@ note that one needs the develop branch from this repo, so, do:
 
 and then make sure that you put a link the fnparse directory in the
 chemiclj/checkouts directory.
+
+# License
+
+chemiclj is released under a BSD-style license
 
 Cyrus Harmon
 ch-github at bobobeach.com
