@@ -65,7 +65,9 @@
               "furan" "c1occc1"
               "fluoroform" "C(F)(F)F"
               "vanillin" "O=Cc1ccc(O)c(OC)c1"
-              "thiamin" "OCCc1c(C)[n+](=cs1)Cc2cnc(C)nc(N)2"}))
+              "thiamin" "OCCc1c(C)[n+](=cs1)Cc2cnc(C)nc(N)2"
+              "oxytocin" "[H][C@]1(NC(=O)[C@H](Cc2ccc(O)cc2)NC(=O)[C@@H](N)CSSC[C@H](NC(=O)[C@H](CC(N)=O)NC(=O)[C@H](CCC(N)=O)NC1=O)C(=O)N1CCC[C@H]1C(=O)N[C@@H](CC(C)C)C(=O)NCC(N)=O)[C@@H](C)CC"
+              "sildenafil" "CCCc1nn(C)c2c1nc([nH]c2=O)-c1cc(ccc1OCC)S(=O)(=O)N1CCN(C)CC1"}))
 
 (defn get-molecule [name]
   (get *molecules* name))
