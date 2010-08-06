@@ -1,10 +1,4 @@
 
-chemiclj
-Tue Aug  3 16:32:11 2010
-
-Cyrus Harmon
-ch-lisp at bobobeach.com
-
 chemiclj is a chemistry library for clojure
 
 NOTE: make sure that the dependencies are installed be lein deps, or by
@@ -37,5 +31,7 @@ note that one needs the develop branch from this repo, so, do:
 and then make sure that you put a link the fnparse directory in the
 chemiclj/checkouts directory.
 
-
+Cyrus Harmon
+ch-github at bobobeach.com
+Fri Aug  6 14:21:07 2010
 
