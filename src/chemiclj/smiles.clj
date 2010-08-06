@@ -459,16 +459,18 @@
     (when (not (= (:hybridization atom) :sp2))
       (filter #(not (= (:hybridization (first (neighbors % atom))) :sp2)) bvec))))
 
+(defn- available-valence [mol atom]
+  (- (-> atom :element element/get-normal-valences first)
+     (count (neighbors mol atom))))
+
 (defn- calculate-aromatic-bond-max-valence [mol bond]
   (let [[atom1 atom2] (atoms bond)]
-    (map name [atom1 atom2])
-    (max 1 (min 2 (- (min 3
-                          (-> atom1 :element element/get-normal-valences first)
-                          (-> atom2 :element element/get-normal-valences first))
-                     (reduce max (into (map #(or (:order %) 1)
-                                            (remove #{bond} (bonds mol atom1)))
-                                       (map #(or (:order %) 1)
-                                            (remove #{bond} (bonds mol atom2))))))))))
+    (if (and (> 2 (apply max (into (map #(or (:order %) 1) (bonds mol atom1))
+                                   (map #(or (:order %) 1) (bonds mol atom2)))))
+             (pos? (available-valence mol atom1))
+             (pos? (available-valence mol atom2)))
+      2
+      1)))
 
 (defn- fixup-sp2-atom-bonds [mol]
   (let [sp2-atoms (sort-by #(-> % :element chemiclj.element/get-normal-valences first)
@@ -489,14 +491,15 @@
                              
                              (< (count atom-neighbors) 2)
                              (except/throwf "Too few neighbors of sp2 atom: %s" atom)
-                           
-                             true
-                             (if (pos? (count bondseq))
-                               (let [order (calculate-aromatic-bond-max-valence mol (first bondseq))]
-                                 (add-bond (remove-bond mol (first bondseq))
-                                           (assoc (first bondseq)
-                                             :order order)))
-                               mol))))]
+
+                             (and (< (count atom-neighbors) valence)
+                                  (pos? (count bondseq)))
+                             (let [order (calculate-aromatic-bond-max-valence mol (first bondseq))]
+                               (add-bond (remove-bond mol (first bondseq))
+                                         (assoc (first bondseq)
+                                           :order order)))
+
+                             true mol)))]
                (recur mol (first (neighbors (first bondseq) atom))))
              mol))))
       mol)))
