@@ -218,6 +218,7 @@
             <hydrogen-count>
             <configuration>
             <charge>))))
+
 (h/defrule <bracket-expr>
   (h/for [[atom configuration]
           (h/hook (fn [[isotope symbol
@@ -246,10 +247,13 @@
                                         <right-bracket>)))
           _ (h/alter-context
              (fn [context]
-               (assoc context
-                 :aromatic nil
-                 :aromatic-atoms (conj (:aromatic-atoms context) atom)
-                 :configurations (assoc (:configurations context) atom configuration))))]
+               (let [context (assoc context
+                               :aromatic nil
+                               :aromatic-atoms (conj (:aromatic-atoms context) atom))]
+                 (if configuration
+                   (assoc context :configurations
+                          (assoc (:configurations context) atom configuration))
+                   context))))]
          atom))
 
 (defn- add-atom-and-bond [context atom last-atom order]
@@ -283,11 +287,14 @@
 (defn context-add-1-hydrogen [context atom]
   (let [mol (:molecule context)
         hatom (make-atom "H" (str "H" (inc (get-atom-count context "H"))))]
-    (let [context (inc-atom-count (assoc context :molecule
-                               (add-bond (add-atom mol hatom) atom hatom))
-                        "H")]
-      (assoc context
-          :configurations (fixup-configuration context hatom atom)))))
+    (let [context (inc-atom-count
+                   (assoc context :molecule
+                          (add-bond (add-atom mol hatom) atom hatom))
+                   "H")
+          configurations (fixup-configuration context hatom atom)]
+      (if configurations
+        (assoc context :configurations configurations)
+        context))))
 
 (defn context-add-n-hydrogens [context atom n]
   (loop [context context num n]
