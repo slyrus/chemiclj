@@ -1,8 +1,6 @@
 
 1. SMILES Parsing
 
- - deal with explicit H in tetrahedral configuration atoms (@ and @@)
-
  - double bond configuration (E/Z, up/down)
 
  - deal with dot -- ???
@@ -37,5 +35,10 @@
         between two aromatic atoms)
 
  DONE support tetrahedral configurations
+
+ DONE deal with explicit H in tetrahedral configuration atoms (@ and @@)
+
+ DONE bugfix: inappropriate double bond inferrence between two aromatic nitrogens
+   where one has three neighbors already (see sildenafil N2=N1).
 
 2. TODO SMILES Writing
