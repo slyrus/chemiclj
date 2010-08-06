@@ -293,12 +293,13 @@
       (recur (add-1-hydrogen context atom) (dec num))
       context)))
 
-(defn post-process-atom [{:keys [last-atom ] :as context} atom]
+(defn post-process-atom [{:keys [last-atom] :as context} atom]
   (assoc (let [explicit-hydrogen-count (:explicit-hydrogen-count atom)]
            (if explicit-hydrogen-count
              (context-add-n-hydrogens context atom explicit-hydrogen-count)
              context))
-    :configurations (fixup-configuration context atom last-atom)))
+    :configurations (fixup-configuration context atom last-atom)
+    :last-atom atom))
 
 (h/defrule <atom>
   (h/for "an atom"
@@ -310,7 +311,6 @@
                  (if last-atom
                    (add-atom-and-bond context atom last-atom order)
                    (add-atom (:molecule context) atom))
-                 :last-atom atom
                  :order nil
                  :aromatic nil))
              atom)
