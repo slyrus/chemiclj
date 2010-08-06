@@ -22,7 +22,11 @@ requires leiningen 1.2 or later.
  writing this, does not have a project.clj file. I have a forked
  repository that can be found at:
 
-   git@github.com:slyrus/fnparse.git
+    git://github.com/slyrus/fnparse.git
+
+or
+
+    http://github.com/slyrus/fnparse.git
 
 note that one needs the develop branch from this repo, so, do:
 
@@ -32,6 +36,23 @@ note that one needs the develop branch from this repo, so, do:
 
 and then make sure that you put a link the fnparse directory in the
 chemiclj/checkouts directory.
+
+# Getting Started
+
+Here's a quick example of using chemiclj to read in a compound from a
+SMILES string and compute the mass and exact-mass of the molecule:
+
+    user> (require '[chemiclj.core :as chem] '[chemiclj.smiles :as smiles])
+    nil
+    user> (def vanillin (smiles/read-smiles-string "O=Cc1ccc(O)c(OC)c1"))
+    #'user/vanillin
+    user> (mass vanillin)
+    ; Evaluation aborted.
+    user> (chem/mass vanillin)
+    152.14732
+    user> (chem/exact-mass vanillin)
+    152.04736
+    user> 
 
 # License
 
