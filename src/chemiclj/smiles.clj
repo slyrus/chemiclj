@@ -280,6 +280,26 @@
         (:configurations context)))
     (:configurations context)))
 
+(defn context-add-1-hydrogen [context atom]
+  (let [mol (:molecule context)
+        hatom (make-atom "H" (str "H" (inc (get-atom-count context "H"))))]
+    (inc-atom-count (assoc context :molecule
+                           (add-bond (add-atom mol hatom) atom hatom))
+                    "H")))
+
+(defn context-add-n-hydrogens [context atom n]
+  (loop [context context num n]
+    (if (pos? num)
+      (recur (add-1-hydrogen context atom) (dec num))
+      context)))
+
+(defn post-process-atom [{:keys [last-atom ] :as context} atom]
+  (assoc (let [explicit-hydrogen-count (:explicit-hydrogen-count atom)]
+           (if explicit-hydrogen-count
+             (context-add-n-hydrogens context atom explicit-hydrogen-count)
+             context))
+    :configurations (fixup-configuration context atom last-atom)))
+
 (h/defrule <atom>
   (h/for "an atom"
          [atom (h/+ <organic-subset-atom> <bracket-expr>)
@@ -292,10 +312,10 @@
                    (add-atom (:molecule context) atom))
                  :last-atom atom
                  :order nil
-                 :aromatic nil
-                 :configurations (fixup-configuration context atom last-atom)))
-             atom)]
-         atom))
+                 :aromatic nil))
+             atom)
+          _ (h/alter-context post-process-atom atom)]
+         _))
 
 (h/defrule <ws?>
   "Consumes optional, ignored whitespace."
@@ -471,32 +491,19 @@
       fixup-sp2-atom-bonds
       fixup-non-aromatic-bonds))
 
-(defn add-1-hydrogen [context atom]
-  (let [mol (:molecule context)
-        hatom (make-atom "H" (str "H" (inc (get-atom-count context "H"))))]
-    (inc-atom-count (assoc context :molecule
-                           (add-bond (add-atom mol hatom) atom hatom))
-                    "H")))
-
-(defn add-n-hydrogens [context atom n]
-  (loop [context context num n]
-    (if (pos? num)
-      (recur (add-1-hydrogen context atom) (dec num))
-      context)))
-
-(defn add-hydrogens-for-atom [context atom]
+(defn context-add-hydrogens-for-atom [context atom]
   (let [mol (:molecule context)
         valence (-> atom :element element/get-normal-valences first)
         bonds (reduce + (map :order (bonds mol atom)))
         explicit-hydrogen-count (:explicit-hydrogen-count atom)]
-    (if explicit-hydrogen-count
-      (add-n-hydrogens context atom explicit-hydrogen-count)
+    (if (or (not valence) explicit-hydrogen-count)
+      context
       (add-n-hydrogens context atom (- valence bonds)))))
 
 (defn add-hydrogens [context]
   (let [atoms (atoms (:molecule context))]
     (reduce (fn [context atom]
-              (add-hydrogens-for-atom context atom))
+              (context-add-hydrogens-for-atom context atom))
             context atoms)))
 
 (defn read-smiles-string [input]
