@@ -14,7 +14,7 @@ currently, chemiclj requires (in addition to clojure and clojure-contrib):
 
 * shortcut -- there is no official release (not yet anyway) of a
 shortcut jar on clojars, or elsewhere, one MUST INSTALL SHORTCUT BY
-HAND IN PLACE A SYMLINK TO IT IN THE checkouts DIRECTORY. This
+HAND AND PLACE A SYMLINK TO IT IN THE checkouts DIRECTORY. This
 requires leiningen 1.2 or later.
 
 * fnparse3 -- Joshua Choi's fnparse3 is required for SMILES
