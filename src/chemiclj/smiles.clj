@@ -283,23 +283,37 @@
 (defn context-add-1-hydrogen [context atom]
   (let [mol (:molecule context)
         hatom (make-atom "H" (str "H" (inc (get-atom-count context "H"))))]
-    (inc-atom-count (assoc context :molecule
-                           (add-bond (add-atom mol hatom) atom hatom))
-                    "H")))
+    (let [context (inc-atom-count (assoc context :molecule
+                               (add-bond (add-atom mol hatom) atom hatom))
+                        "H")]
+      (assoc context
+          :configurations (fixup-configuration context hatom atom)))))
 
 (defn context-add-n-hydrogens [context atom n]
   (loop [context context num n]
     (if (pos? num)
-      (recur (add-1-hydrogen context atom) (dec num))
+      (recur (context-add-1-hydrogen context atom) (dec num))
       context)))
 
+(defn update-explicit-hydrogens [context atom]
+  (let [explicit-hydrogen-count (:explicit-hydrogen-count atom)]
+    (if explicit-hydrogen-count
+      (context-add-n-hydrogens context atom explicit-hydrogen-count)
+      context)))
+
+(defn update-configuration [{:keys [last-atom] :as context} atom]
+  (assoc context
+    :configurations (fixup-configuration context atom last-atom)))
+
+(defn update-last-atom [context atom]
+  (assoc context :last-atom atom))
+
 (defn post-process-atom [{:keys [last-atom] :as context} atom]
-  (assoc (let [explicit-hydrogen-count (:explicit-hydrogen-count atom)]
-           (if explicit-hydrogen-count
-             (context-add-n-hydrogens context atom explicit-hydrogen-count)
-             context))
-    :configurations (fixup-configuration context atom last-atom)
-    :last-atom atom))
+  (update-last-atom
+   (update-explicit-hydrogens
+    (update-configuration context atom)
+    atom)
+   atom))
 
 (h/defrule <atom>
   (h/for "an atom"
