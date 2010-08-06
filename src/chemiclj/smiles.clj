@@ -519,7 +519,7 @@
         explicit-hydrogen-count (:explicit-hydrogen-count atom)]
     (if (or (not valence) explicit-hydrogen-count)
       context
-      (add-n-hydrogens context atom (- valence bonds)))))
+      (context-add-n-hydrogens context atom (- valence bonds)))))
 
 (defn add-hydrogens [context]
   (let [atoms (atoms (:molecule context))]
