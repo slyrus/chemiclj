@@ -90,7 +90,9 @@
             (reduce (fn [v x] (assoc v (:number x) x))
                     (hash-map)
                     (filter (fn [x] (= (:element x) id))
-                            isotope-list))))
+                            isotope-list)))
+  clojure.lang.Named
+  (getName [atm] name))
 
 (def elements-list (zf/xml->
                     (zip/xml-zip
