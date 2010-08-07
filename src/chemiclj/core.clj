@@ -194,10 +194,12 @@
       (add-bond (add-atom mol atm) (make-bond atm attached-to))
       (add-atom mol atm))))
 
-(defrecord TetrahedralConfiguration [w x y z])
+(defrecord TetrahedralAtomConfiguration [w x y z])
 
-(defn make-tetrahedral-configuration [w x y z]
-  (TetrahedralConfiguration. w x y z))
+(defn make-tetrahedral-atom-configuration [w x y z]
+  (TetrahedralAtomConfiguration. w x y z))
+
+(defrecord DoubleBondConfiguration [a b c d])
 
 (defn get-configuration-vector [configuration]
   [(:w configuration) (:x configuration) (:y configuration) (:z configuration)])

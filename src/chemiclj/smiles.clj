@@ -166,7 +166,7 @@
            bond-symbol (h/lit \/)]
           bond-symbol)
    (h/for [_ (h/alter-context (fn [context] (assoc context :direction :down)))
-           bond-symbol (h/lit \/)]
+           bond-symbol (h/lit \\)]
           bond-symbol)))
 
 (h/defrule <dot> (h/lit \.))
@@ -190,11 +190,11 @@
 (h/defrule <configuration>
   (h/for [context h/<fetch-context>
           config (h/+ (h/hook (fn [config]
-                                (make-tetrahedral-configuration
+                                (make-tetrahedral-atom-configuration
                                  (:last-atom context) nil nil nil))
                               (h/cat (h/lex (h/lit \@)) (h/lit \@)))
                       (h/hook (fn [config]
-                                (make-tetrahedral-configuration
+                                (make-tetrahedral-atom-configuration
                                  (:last-atom context) nil nil nil))
                               (h/lit \@)))]
          {:configuration config}))
@@ -552,3 +552,15 @@
                  (except/throwf "SMILES parsing error: %s"
                                 (h/format-parse-error error)))))
 
+;;; to compute the canonical SMILES we're going to need to do a few
+;;; things:
+;;; 1. compute the invariants for each atom in the molecule
+;;; 2. assign a rank order to each atom
+;;; 3. convert the rank into the nth prime
+;;; 4. compute the product of the neighboring primes
+;;; 5. rank the product of the primes using the previous ranks to
+;;;    break ties
+
+(defn write-smiles-string [molecule]
+  (with-out-str
+    ))
