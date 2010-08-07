@@ -34,8 +34,18 @@ To see an example, let's use the chemiclj API to build a simple molecule, say, m
                        c1 h3)
                       c1 h4))))
 
-This may seem tedious at first, but will see how to alleviate this
-tedium shortly.
+Rather than building molecules by hand like this, one usually starts
+with a concise representation of a molecule, such as a SMILES
+string. For instance, the amino acid valine is represented by the
+SMILES string `CC(C)C(C(=O)O)N`. To read a smiles string, use the
+function `chemiclj.smiles/read-smiles-string`, as in the following
+example:
+
+    user> (def alanine (smiles/read-smiles-string "CC(C)C(C(=O)O)N"))
+    #'user/alanine
+
+NOTE: writing SMILES strings is not yet supported. Hopefully this
+feature will appear in the near future.
 
 # Dependencies
 
