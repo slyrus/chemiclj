@@ -33,26 +33,29 @@
             [clojure.zip :as zip]
             [clojure.contrib.zip-filter.xml :as zf]))
 
-(defprotocol HasIsotopes
+(defprotocol PElement
   (isotopes [obj]))
 
 (defrecord Isotope [element number id exact-mass relative-abundance])
 
 (defn element-abundnant-isotopes [element]
+  "Returns a list of Isotopes for the given element, ordered by
+decreasing relative abundance, such that the most common isotope
+appears first."
   (map second (reverse (sort-by #(:relative-abundance (val %))
                                 (isotopes element)))))
 
-(defn get-scalar-text [node dict-ref]
+(defn- get-scalar-text [node dict-ref]
   (zf/xml1->
    (zip/xml-zip node)
    :scalar [(zf/attr= :dictRef dict-ref)]
    zf/text))
 
-(defn float-if [number?]
+(defn- float-if [number?]
   (when number?
     (Float/parseFloat number?)))
 
-(defn int-if [number?]
+(defn- int-if [number?]
   (when number?
     (Integer/parseInt number?)))
 
@@ -77,7 +80,7 @@
                          (float-if exact-mass)
                          (float-if relative-abundance)))))))))
 
-(defn convert-alist
+(defn- convert-alist
   [alist & [key first]]
   (reduce (fn [v x] (assoc v (key x) x))
           (vec (repeat (apply max (map key alist)) nil))
@@ -85,7 +88,7 @@
 
 (defrecord Element [atomic-number id name group period mass
                     electronegativity max-bond-order]
-  HasIsotopes
+  PElement
   (isotopes [element]
             (reduce (fn [v x] (assoc v (:number x) x))
                     (hash-map)
@@ -127,11 +130,10 @@
                              elements-vec))
 
 (def element-name-hash (reduce (fn [v x] (assoc v (:name x) x))
-                               (hash-map)
+                                (hash-map)
                                elements-vec))
 
 (defmulti get-element class)
-
 (defmethod get-element Number [id] (nth elements-vec id))
 (defmethod get-element String [id]
   (or
@@ -142,21 +144,20 @@
   (get-element (name id)))
 
 (def *element-normal-valences*
-     (reduce (fn [v x] (assoc v (get-element (first x)) (rest x)))
-             (hash-map)
-             '(("B" 3)
-               ("C" 4)
-               ("N" 3 5)
-               ("O" 2)
-               ("P" 3 5)
-               ("S" 2 4 6)
-               ("F" 1)
-               ("Cl" 1)
-               ("Br" 1)
-               ("I" 1))))
+  (reduce (fn [v x] (assoc v (get-element (first x)) (rest x)))
+          (hash-map)
+          '(("B" 3)
+            ("C" 4)
+            ("N" 3 5)
+            ("O" 2)
+            ("P" 3 5)
+            ("S" 2 4 6)
+            ("F" 1)
+            ("Cl" 1)
+            ("Br" 1)
+            ("I" 1))))
 
 (defmulti get-normal-valences class)
-
 (defmethod get-normal-valences Number [id] (get *element-normal-valences* (get-element id)))
 (defmethod get-normal-valences String [id] (get *element-normal-valences* (get-element id)))
 (defmethod get-normal-valences Element [element] (get *element-normal-valences* element))
