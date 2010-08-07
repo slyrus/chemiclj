@@ -59,7 +59,7 @@
 (def isotope-list
      (zf/xml->
       (zip/xml-zip
-       (xml/parse "/Users/sly/projects/chemiclj/data/isotopes.xml"))
+       (xml/parse "data/isotopes.xml"))
       :isotopeList
       zip/right
       zip/node
@@ -96,7 +96,7 @@
 
 (def elements-list (zf/xml->
                     (zip/xml-zip
-                     (xml/parse "/Users/sly/projects/chemiclj/data/elementdata.xml"))
+                     (xml/parse "data/elementdata.xml"))
                     zip/down
                     zip/rights
                     (fn [x]
