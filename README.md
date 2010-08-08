@@ -62,17 +62,9 @@ HAND AND PLACE A SYMLINK TO IT IN THE checkouts DIRECTORY. This
 requires leiningen 1.2 or later.
 
 * fnparse3 -- Joshua Choi's fnparse3 is required for SMILES
-parsing. However, the version that exists on github, at the time of
-writing this, does not have a project.clj file. I have a forked
-repository that can be found at:
+parsing. Currently, fnparse3 exists in the develop branch:
 
-`git://github.com/slyrus/fnparse.git`
-or
-`http://github.com/slyrus/fnparse.git`
-
-note that one needs the develop branch from this repo, so, do:
-
-    git clone git://github.com/slyrus/fnparse.git
+    git clone git://github.com/joshua-choi/fnparse.git
     cd fnparse
     git checkout develop
 
