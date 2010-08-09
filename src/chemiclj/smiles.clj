@@ -1,3 +1,31 @@
+;;; file: chemiclj/smiles.clj
+;;;
+;;; Copyright (c) 2010 Cyrus Harmon (ch-lisp@bobobeach.com) All rights
+;;; reserved.
+;;;
+;;; Redistribution and use in source and binary forms, with or without
+;;; modification, are permitted provided that the following conditions
+;;; are met:
+;;;
+;;;   * Redistributions of source code must retain the above copyright
+;;;     notice, this list of conditions and the following disclaimer.
+;;;
+;;;   * Redistributions in binary form must reproduce the above
+;;;     copyright notice, this list of conditions and the following
+;;;     disclaimer in the documentation and/or other materials
+;;;     provided with the distribution.
+;;;
+;;; THIS SOFTWARE IS PROVIDED BY THE AUTHOR 'AS IS' AND ANY EXPRESSED
+;;; OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+;;; WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+;;; ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+;;; DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+;;; DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+;;; GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+;;; INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+;;; WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+;;; NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 (ns chemiclj.smiles
   (:use [chemiclj.core])
@@ -138,7 +166,7 @@
            bond-symbol (h/lit \/)]
           bond-symbol)
    (h/for [_ (h/alter-context (fn [context] (assoc context :direction :down)))
-           bond-symbol (h/lit \/)]
+           bond-symbol (h/lit \\)]
           bond-symbol)))
 
 (h/defrule <dot> (h/lit \.))
@@ -162,11 +190,11 @@
 (h/defrule <configuration>
   (h/for [context h/<fetch-context>
           config (h/+ (h/hook (fn [config]
-                                (make-tetrahedral-configuration
+                                (make-tetrahedral-atom-configuration
                                  (:last-atom context) nil nil nil))
                               (h/cat (h/lex (h/lit \@)) (h/lit \@)))
                       (h/hook (fn [config]
-                                (make-tetrahedral-configuration
+                                (make-tetrahedral-atom-configuration
                                  (:last-atom context) nil nil nil))
                               (h/lit \@)))]
          {:configuration config}))
@@ -192,36 +220,40 @@
             <charge>))))
 
 (h/defrule <bracket-expr>
-  (h/for [[atom configuration] (h/hook (fn [[isotope symbol
-                                             {:keys #{hydrogens configuration charge}}
-                                             class context]]
-                                         [(let [symbol (str/capitalize symbol)]
-                                            (make-atom
-                                             symbol
-                                             (str symbol (inc (get-atom-count context symbol)))
-                                             :isotope isotope
-                                             :charge charge
-                                             :aromatic (:aromatic context)
-                                             :hybridization (:hybridization context)
-                                             :explicit-hydrogen-count (or hydrogens 0)))
-                                          configuration])
-                         (h/label "a bracket expression"
-                                  (h/circumfix <left-bracket>
-                                               (h/cat
-                                                (h/opt <isotope>)
-                                                <bracket-element-symbol>
-                                                <bracket-mods>
-                                                (h/opt
-                                                 (h/prefix (h/lit \:)
-                                                           <decimal-natural-number>))
-                                                h/<fetch-context>)
-                                               <right-bracket>)))
+  (h/for [[atom configuration]
+          (h/hook (fn [[isotope symbol
+                        {:keys #{hydrogens configuration charge}}
+                        class context]]
+                    [(let [symbol (str/capitalize symbol)]
+                       (make-atom
+                        symbol
+                        (str symbol (inc (get-atom-count context symbol)))
+                        :isotope isotope
+                        :charge charge
+                        :aromatic (:aromatic context)
+                        :hybridization (:hybridization context)
+                        :explicit-hydrogen-count (or hydrogens 0)))
+                     configuration])
+                  (h/label "a bracket expression"
+                           (h/circumfix <left-bracket>
+                                        (h/cat
+                                         (h/opt <isotope>)
+                                         <bracket-element-symbol>
+                                         <bracket-mods>
+                                         (h/opt
+                                          (h/prefix (h/lit \:)
+                                                    <decimal-natural-number>))
+                                         h/<fetch-context>)
+                                        <right-bracket>)))
           _ (h/alter-context
              (fn [context]
-               (assoc context
-                 :aromatic nil
-                 :aromatic-atoms (conj (:aromatic-atoms context) atom)
-                 :configurations (assoc (:configurations context) atom configuration))))]
+               (let [context (assoc context
+                               :aromatic nil
+                               :aromatic-atoms (conj (:aromatic-atoms context) atom))]
+                 (if configuration
+                   (assoc context :configurations
+                          (assoc (:configurations context) atom configuration))
+                   context))))]
          atom))
 
 (defn- add-atom-and-bond [context atom last-atom order]
@@ -244,11 +276,51 @@
            atom last-atom))))
 
 (defn fixup-configuration [context atom last-atom]
-  (if last-atom
-    (when-let [configuration (#{last-atom} (:configurations context))]
-      (assoc context :configurations
-             (assoc (:configurations context) last-atom configuration))))
-  (:configurations context))
+  (if last-atom 
+    (let [configuration (get (:configurations context) last-atom)]
+      (if configuration
+        (assoc (:configurations context) last-atom
+               (add-configuration-atom configuration atom))
+        (:configurations context)))
+    (:configurations context)))
+
+(defn context-add-1-hydrogen [context atom]
+  (let [mol (:molecule context)
+        hatom (make-atom "H" (str "H" (inc (get-atom-count context "H"))))]
+    (let [context (inc-atom-count
+                   (assoc context :molecule
+                          (add-bond (add-atom mol hatom) atom hatom))
+                   "H")
+          configurations (fixup-configuration context hatom atom)]
+      (if configurations
+        (assoc context :configurations configurations)
+        context))))
+
+(defn context-add-n-hydrogens [context atom n]
+  (loop [context context num n]
+    (if (pos? num)
+      (recur (context-add-1-hydrogen context atom) (dec num))
+      context)))
+
+(defn update-explicit-hydrogens [context atom]
+  (let [explicit-hydrogen-count (:explicit-hydrogen-count atom)]
+    (if explicit-hydrogen-count
+      (context-add-n-hydrogens context atom explicit-hydrogen-count)
+      context)))
+
+(defn update-configuration [{:keys [last-atom] :as context} atom]
+  (assoc context
+    :configurations (fixup-configuration context atom last-atom)))
+
+(defn update-last-atom [context atom]
+  (assoc context :last-atom atom))
+
+(defn post-process-atom [{:keys [last-atom] :as context} atom]
+  (update-last-atom
+   (update-explicit-hydrogens
+    (update-configuration context atom)
+    atom)
+   atom))
 
 (h/defrule <atom>
   (h/for "an atom"
@@ -260,12 +332,11 @@
                  (if last-atom
                    (add-atom-and-bond context atom last-atom order)
                    (add-atom (:molecule context) atom))
-                 :last-atom atom
                  :order nil
-                 :aromatic nil
-                 :configurations (fixup-configuration context atom last-atom)))
-             atom)]
-         atom))
+                 :aromatic nil))
+             atom)
+          _ (h/alter-context post-process-atom atom)]
+         _))
 
 (h/defrule <ws?>
   "Consumes optional, ignored whitespace."
@@ -326,21 +397,22 @@
 (h/defrule <ringbond>
   (h/label "a ring bond"
            (h/for [context h/<fetch-context>
-                   [mol pending] (h/hook
-                                  (fn [[ring-num bond-symbol]]
-                                    (process-ring context ring-num bond-symbol))
-                                  (h/+
-                                   (h/hook (fn [[bond _ digit1 digit2]]
-                                             (when (and digit1 digit2)
-                                               [(+ (* 10 digit1) digit2) bond]))
-                                           (h/cat
-                                            (h/lex (h/opt <bond>)) (h/lit \%)
-                                            <decimal-digit> <decimal-digit>))
-                                   (h/hook (fn [[bond digit :as x]]
-                                             [digit bond])
-                                           (h/cat
-                                            (h/lex (h/opt <bond>))
-                                            <decimal-digit>))))
+                   [mol pending]
+                   (h/hook
+                    (fn [[ring-num bond-symbol]]
+                      (process-ring context ring-num bond-symbol))
+                    (h/+
+                     (h/hook (fn [[bond _ digit1 digit2]]
+                               (when (and digit1 digit2)
+                                 [(+ (* 10 digit1) digit2) bond]))
+                             (h/cat
+                              (h/lex (h/opt <bond>)) (h/lit \%)
+                              <decimal-digit> <decimal-digit>))
+                     (h/hook (fn [[bond digit :as x]]
+                               [digit bond])
+                             (h/cat
+                              (h/lex (h/opt <bond>))
+                              <decimal-digit>))))
                    _ (h/alter-context
                       (fn [context] (assoc context
                                       :molecule mol
@@ -387,16 +459,18 @@
     (when (not (= (:hybridization atom) :sp2))
       (filter #(not (= (:hybridization (first (neighbors % atom))) :sp2)) bvec))))
 
+(defn- available-valence [mol atom]
+  (- (-> atom :element element/get-normal-valences first)
+     (count (neighbors mol atom))))
+
 (defn- calculate-aromatic-bond-max-valence [mol bond]
   (let [[atom1 atom2] (atoms bond)]
-    (map name [atom1 atom2])
-    (max 1 (min 2 (- (min 3
-                          (-> atom1 :element element/get-normal-valences first)
-                          (-> atom2 :element element/get-normal-valences first))
-                     (reduce max (into (map #(or (:order %) 1)
-                                            (remove #{bond} (bonds mol atom1)))
-                                       (map #(or (:order %) 1)
-                                            (remove #{bond} (bonds mol atom2))))))))))
+    (if (and (> 2 (apply max (into (map #(or (:order %) 1) (bonds mol atom1))
+                                   (map #(or (:order %) 1) (bonds mol atom2)))))
+             (pos? (available-valence mol atom1))
+             (pos? (available-valence mol atom2)))
+      2
+      1)))
 
 (defn- fixup-sp2-atom-bonds [mol]
   (let [sp2-atoms (sort-by #(-> % :element chemiclj.element/get-normal-valences first)
@@ -417,14 +491,15 @@
                              
                              (< (count atom-neighbors) 2)
                              (except/throwf "Too few neighbors of sp2 atom: %s" atom)
-                           
-                             true
-                             (if (pos? (count bondseq))
-                               (let [order (calculate-aromatic-bond-max-valence mol (first bondseq))]
-                                 (add-bond (remove-bond mol (first bondseq))
-                                           (assoc (first bondseq)
-                                             :order order)))
-                               mol))))]
+
+                             (and (< (count atom-neighbors) valence)
+                                  (pos? (count bondseq)))
+                             (let [order (calculate-aromatic-bond-max-valence mol (first bondseq))]
+                               (add-bond (remove-bond mol (first bondseq))
+                                         (assoc (first bondseq)
+                                           :order order)))
+
+                             true mol)))]
                (recur mol (first (neighbors (first bondseq) atom))))
              mol))))
       mol)))
@@ -440,32 +515,19 @@
       fixup-sp2-atom-bonds
       fixup-non-aromatic-bonds))
 
-(defn add-1-hydrogen [context atom]
-  (let [mol (:molecule context)
-        hatom (make-atom "H" (str "H" (inc (get-atom-count context "H"))))]
-    (inc-atom-count (assoc context :molecule
-                           (add-bond (add-atom mol hatom) atom hatom))
-                    "H")))
-
-(defn add-n-hydrogens [context atom n]
-  (loop [context context num n]
-    (if (pos? num)
-      (recur (add-1-hydrogen context atom) (dec num))
-      context)))
-
-(defn add-hydrogens-for-atom [context atom]
+(defn context-add-hydrogens-for-atom [context atom]
   (let [mol (:molecule context)
         valence (-> atom :element element/get-normal-valences first)
         bonds (reduce + (map :order (bonds mol atom)))
         explicit-hydrogen-count (:explicit-hydrogen-count atom)]
-    (if explicit-hydrogen-count
-      (add-n-hydrogens context atom explicit-hydrogen-count)
-      (add-n-hydrogens context atom (- valence bonds)))))
+    (if (or (not valence) explicit-hydrogen-count)
+      context
+      (context-add-n-hydrogens context atom (- valence bonds)))))
 
 (defn add-hydrogens [context]
   (let [atoms (atoms (:molecule context))]
     (reduce (fn [context atom]
-              (add-hydrogens-for-atom context atom))
+              (context-add-hydrogens-for-atom context atom))
             context atoms)))
 
 (defn read-smiles-string [input]
@@ -479,11 +541,26 @@
      context h/<fetch-context>]
     context)
    :success-fn (fn [product position]
-                 (fixup-non-aromatic-bonds
-                  (:molecule
-                   (add-hydrogens
-                    (assoc product :molecule (post-process-molecule (:molecule product)))))))
+                 (reduce (fn [mol configuration]
+                           (add-configuration mol configuration))
+                         (fixup-non-aromatic-bonds
+                          (:molecule
+                           (add-hydrogens
+                            (assoc product :molecule (post-process-molecule (:molecule product))))))
+                         (:configurations product)))
    :failure-fn (fn [error]
                  (except/throwf "SMILES parsing error: %s"
                                 (h/format-parse-error error)))))
 
+;;; to compute the canonical SMILES we're going to need to do a few
+;;; things:
+;;; 1. compute the invariants for each atom in the molecule
+;;; 2. assign a rank order to each atom
+;;; 3. convert the rank into the nth prime
+;;; 4. compute the product of the neighboring primes
+;;; 5. rank the product of the primes using the previous ranks to
+;;;    break ties
+
+(defn write-smiles-string [molecule]
+  (with-out-str
+    ))

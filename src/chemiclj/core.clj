@@ -31,7 +31,8 @@
   (:require [chemiclj.element :as element]
             [shortcut.graph :as g]
             [clojure.string :as string]
-            [clojure.contrib.def :as d]))
+            [clojure.contrib.def :as d]
+            [clojure.contrib [except :as except]]))
 
 (d/defalias neighbors g/neighbors)
 
@@ -122,11 +123,12 @@
                                       (get-atom mol atom2)
                                       nil))))
   (remove-bond [mol bond]
-               (assoc mol :_graph (g/remove-edge (:_graph mol) bond)))
+               (assoc mol :_graph (g/remove-edge _graph bond)))
   (remove-bond [mol atom1 atom2]
-               (assoc mol :_graph (g/remove-edge (:_graph mol) atom1 atom2)))
+               (assoc mol :_graph (g/remove-edge _graph atom1 atom2)))
   (configurations [mol] _configurations)
-  (add-configuration [mol configuration] (conj _configurations configuration))
+  (add-configuration [mol configuration]
+                     (assoc mol :_configurations (conj _configurations configuration)))
 
   PMass
   (mass [mol] (reduce + (map mass (atoms mol))))
@@ -139,6 +141,18 @@
 
   clojure.lang.Named
   (getName [mol] _name))
+
+(defn count-elements [mol]
+  (reduce
+   (fn [counts atom]
+     (assoc counts (:element atom) (inc (or (get counts (:element atom)) 0))))
+   {}
+   (shortcut.graph/breadth-first-traversal (:_graph mol) (first (atoms mol)))))
+
+(defn molecular-formula [mol]
+  (apply str
+         (map #(str (:id (first %)) (second %))
+              (sort-by #(:id (first %)) (chemiclj.core/count-elements mol)))))
 
 (defn make-molecule
   ([]
@@ -180,8 +194,28 @@
       (add-bond (add-atom mol atm) (make-bond atm attached-to))
       (add-atom mol atm))))
 
-(defrecord TetrahedralConfiguration [w x y z])
+(defrecord TetrahedralAtomConfiguration [w x y z])
 
-(defn make-tetrahedral-configuration [w x y z]
-  (TetrahedralConfiguration. w x y z))
+(defn make-tetrahedral-atom-configuration [w x y z]
+  (TetrahedralAtomConfiguration. w x y z))
+
+(defrecord DoubleBondConfiguration [a b c d])
+
+(defn get-configuration-vector [configuration]
+  [(:w configuration) (:x configuration) (:y configuration) (:z configuration)])
+
+(defn set-configuration-vector [configuration v]
+  (assoc configuration
+    :w (nth v 0)
+    :x (nth v 1)
+    :y (nth v 2)
+    :z (nth v 3)))
+
+(defn add-configuration-atom [configuration atom]
+  (cond (nil? (:w configuration)) (assoc configuration :w atom)
+        (nil? (:x configuration)) (assoc configuration :x atom)
+        (nil? (:y configuration)) (assoc configuration :y atom)
+        (nil? (:z configuration)) (assoc configuration :z atom)
+        true (except/throwf "Too many neighbors for tetrahedral atom %s"
+                            atom)))
 
