@@ -1,6 +1,8 @@
 
 1. SMILES Parsing
 
+ - parse chiral SMILES strings -- esp. @ and @@
+
  - deal with dot -- ???
 
  - support wildcards
@@ -30,5 +32,6 @@
 
    DONE fill in unspecified bond arities (default to single unless
       between two aromatic atoms)
+
 
 2. TODO SMILES Writing
