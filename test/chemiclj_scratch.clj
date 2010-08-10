@@ -31,7 +31,11 @@
 (ns chemiclj-scratch
   (:use [chemiclj.core])
   (:require [chemiclj.element :as element]
-            [shortcut.graph :as graph]))
+            [chemiclj.smiles :as smiles]
+            [smiles-test :as smiles-test]
+            [shortcut.graph :as graph]
+            [clojure.contrib.lazy-seqs :as lazy-seqs]
+            [clojure.contrib.def :as def]))
 
 (def c1 (make-atom :c "C1"))
 (def h1 (make-atom :h "H1"))
@@ -57,3 +61,67 @@
           (make-bond c1 c2))
 
 (add-bond (reduce add-atom (make-molecule) [c1 c2]) c1 c2)
+
+
+
+;;; scratch for writing SMILES strings
+
+
+(let [mol (smiles-test/get-molecule "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
+  (smiles/smiles-atomic-invariants mol))
+
+(let [mol (smiles-test/get-molecule "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
+  (smiles/rank-by second (smiles/smiles-atomic-invariants mol)))
+
+(sort-by first
+         (reduce #(assoc %1 ((comp name first) %2) (second %2))
+                 {}
+                 (let [mol (smiles-test/get-molecule
+                            "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
+                   (smiles/smiles-atomic-invariants mol))))
+
+(sort-by first
+         (reduce #(assoc %1 ((comp name first) %2) (second %2))
+                 {}
+                 (let [mol (smiles-test/get-molecule
+                            "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
+                   (smiles/rank-by second
+                                   (smiles/smiles-atomic-invariants mol)))))
+
+(sort-by first
+         (reduce #(assoc %1 ((comp name first) %2) (second %2))
+                 {}
+                 (let [mol (smiles-test/get-molecule
+                            "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
+                   (smiles/smiles-atomic-invariant-ranks mol))))
+
+(sort-by first
+         (reduce #(assoc %1 ((comp name first) %2) (second %2))
+                 {}
+                 (let [mol (smiles-test/get-molecule
+                            "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
+                   (smiles/sum-of-neighbor-invariants mol))))
+
+(sort-by first
+         (reduce #(assoc %1 ((comp name first) %2) (second %2))
+                 {}
+                 (let [mol (smiles-test/get-molecule
+                            "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
+                   (smiles/nth-prime-invariants mol))))
+
+(sort-by first
+         (reduce #(assoc %1 ((comp name first) %2) (second %2))
+                 {}
+                 (let [mol (smiles-test/get-molecule
+                            "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
+                   (smiles/product-of-neighbor-primes mol))))
+
+
+;;; test
+(reduce conj {}
+        (let [mol (smiles-test/get-molecule
+                   "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
+          (map (fn [[[atom invariant] rank]]
+                 (hash-map atom (inc rank)))
+               (smiles/rank-by second
+                               (smiles/smiles-atomic-invariants mol)))))
