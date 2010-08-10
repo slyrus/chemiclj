@@ -616,21 +616,21 @@
             {}
             (atoms mol))))
 
-(defn smiles-atomic-invariants-rank-map [mol]
+(defn smiles-atomic-invariant-ranks [mol]
   (reduce (fn [m [[atom invariant] rank]]
             (assoc m atom (inc rank)))
           {}
           (rank-by second
                    (smiles-atomic-invariants mol))))
 
-(defn nth-prime-invariant-map [mol]
+(defn nth-prime-invariants [mol]
   (reduce (fn [m [atom rank]]
             (assoc m atom (nth-prime (dec rank))))
           {}
-          (smiles-atomic-invariants-rank-map mol)))
+          (smiles-atomic-invariant-ranks mol)))
 
-(defn sum-of-neighbor-invariants-map [mol]
-  (let [aimap (atomic-invariant-map mol)]
+(defn sum-of-neighbor-invariants [mol]
+  (let [aimap (smiles-atomic-invariant-ranks mol)]
     (reduce (fn [m atom]
               (assoc m atom
                      (reduce + (map #(or (get aimap %) 0)
@@ -638,8 +638,8 @@
             {}
             (keys aimap))))
 
-(defn product-of-neighbor-primes-map [mol]
-  (let [npmap (nth-prime-invariant-map mol)]
+(defn product-of-neighbor-primes [mol]
+  (let [npmap (nth-prime-invariants mol)]
     (reduce (fn [m atom]
               (assoc m atom
                      (reduce * (map #(or (get npmap %) 1)
