@@ -33,7 +33,9 @@
             [shortcut.graph :as graph]
             [edu.arizona.fnparse [hound :as h] [core :as c]]
             [clojure.string :as str]
-            [clojure.contrib [except :as except]]))
+            [clojure.contrib [except :as except]]
+            [clojure.contrib.lazy-seqs :as lazy-seqs]
+            [clojure.contrib.def :as def]))
 
 (defmacro dprint [form]
   `(let [res# ~form]
@@ -280,7 +282,7 @@
     (let [configuration (get (:configurations context) last-atom)]
       (if configuration
         (assoc (:configurations context) last-atom
-               (add-configuration-atom configuration atom))
+               (add-tetrahedral-configuration-atom configuration atom))
         (:configurations context)))
     (:configurations context)))
 
@@ -561,6 +563,70 @@
 ;;; 5. rank the product of the primes using the previous ranks to
 ;;;    break ties
 
+
+(defn sgn [num] (cond (neg? num) -1 (pos? num) 1 (zero? num) 0))
+
+(defn smiles-atomic-invariant [full-molecule h-removed-molecule atom]
+  (let [connections (count (graph/neighbors h-removed-molecule atom))
+        non-h-bonds (reduce + (map :order (bonds h-removed-molecule atom)))
+        atomic-number (:atomic-number (:element atom))
+        sign-of-charge (sgn (:charge atom))
+        abs-charge (if (neg? (:charge atom)) (- (:charge atom)) (:charge atom))
+        hydrogens (count (filter
+                          #{(element/get-element "H")}
+                          (map :element (graph/neighbors full-molecule atom))))]
+    (+ (* 10000000 connections)
+       (* 100000 non-h-bonds)
+       (* 1000 atomic-number)
+       (* 100 sign-of-charge)
+       (* 10 abs-charge)
+       hydrogens)))
+
+(defn smiles-atomic-invariants [full-mol]
+  (let [mol (chemiclj.core/remove-atoms-of-element full-mol "H")]
+    (map vector (map (partial smiles-atomic-invariant full-mol mol)
+                     (atoms mol))
+         (atoms mol))))
+
+(defn ranks [coll]
+  (let [sorted (map vector
+                    (iterate inc 0)
+                    (sort (set coll)))]
+    (map (fn [x] (ffirst (filter #(= x (second %)) sorted))) coll)))
+
+(defn rank-by [keyfn coll]
+  (let [sorted (map vector
+                    (iterate inc 0)
+                    (sort (set (map keyfn coll))))]
+    (map vector
+         (map (fn [x]
+                (ffirst (filter #(= (keyfn x) (second %)) sorted))) coll)
+         coll)))
+
+(defn rank-vector [coll]
+  (let [sorted (map vector
+                    (iterate inc 0)
+                    (sort (set coll)))]
+    (map (fn [x] (first (filter #(= x (second %)) sorted))) coll)))
+
+(def/defn-memo nth-prime [n]
+  (nth clojure.contrib.lazy-seqs/primes n))
+
+(defn mapvec-first [f coll]
+  (map #(apply vector (f (first %)) (rest %)) coll))
+
+
+(defn nth-prime-invariant-map [mol]
+  (reduce into {}
+          (map #(hash-map (second (second %))
+                          (first %))
+               (mapvec-first nth-prime
+                             (rank-by first
+                                      (smiles-atomic-invariants mol))))))
+
 (defn write-smiles-string [molecule]
   (with-out-str
-    ))
+    ;; TODO special cases for H and H2
+    (let [mol (remove-atoms-of-element molecule "H")]
+      
+      )))
