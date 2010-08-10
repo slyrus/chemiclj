@@ -45,6 +45,7 @@
 
 (defprotocol PMolecule
   (add-atom [mol atom])
+  (remove-atom [mol atom])
   (bonds [mol] [mol atom])
   (bond? [mol atom1 atom2])
   (add-bond [mol bond] [mol atom1 atom2])
@@ -108,11 +109,13 @@
   (atoms [mol] (g/nodes _graph))
 
   PMolecule
+  (add-atom [mol atom]
+            (assoc mol :_graph (g/add-node _graph atom)))
+  (remove-atom [mol atom]
+               (assoc mol :_graph (g/remove-node _graph atom)))
   (bonds [mol] (g/edges _graph))
   (bonds [mol atom] (g/edges _graph (get-atom mol atom)))
   (bond? [mol atom1 atom2] (g/edge? _graph atom1 atom2))
-  (add-atom [mol atom]
-            (assoc mol :_graph (g/add-node _graph atom)))
   (add-bond [mol bond]
             (assoc mol :_graph (g/add-edge _graph bond)))
   (add-bond [mol atom1 atom2]
@@ -199,23 +202,33 @@
 (defn make-tetrahedral-atom-configuration [w x y z]
   (TetrahedralAtomConfiguration. w x y z))
 
-(defrecord DoubleBondConfiguration [a b c d])
-
-(defn get-configuration-vector [configuration]
+(defn get-tetrahedral-configuration-vector [configuration]
   [(:w configuration) (:x configuration) (:y configuration) (:z configuration)])
 
-(defn set-configuration-vector [configuration v]
+(defn set-tetrahedral-configuration-vector [configuration v]
   (assoc configuration
     :w (nth v 0)
     :x (nth v 1)
     :y (nth v 2)
     :z (nth v 3)))
 
-(defn add-configuration-atom [configuration atom]
+(defn add-tetrahedral-configuration-atom [configuration atom]
   (cond (nil? (:w configuration)) (assoc configuration :w atom)
         (nil? (:x configuration)) (assoc configuration :x atom)
         (nil? (:y configuration)) (assoc configuration :y atom)
         (nil? (:z configuration)) (assoc configuration :z atom)
         true (except/throwf "Too many neighbors for tetrahedral atom %s"
                             atom)))
+
+(defrecord DoubleBondConfiguration [a b c d])
+
+(defn get-atoms-of-element [mol elmnt]
+  (let [elmnt (element/get-element elmnt)]
+    (filter #(= (:element %) elmnt) (atoms mol))))
+
+(defn remove-atoms-of-element [mol element]
+  (reduce (fn [mol atom]
+            (remove-atom mol atom))
+          mol
+          (filter-element mol element)))
 
