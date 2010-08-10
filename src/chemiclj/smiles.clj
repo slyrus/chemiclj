@@ -566,6 +566,31 @@
 
 (defn sgn [num] (cond (neg? num) -1 (pos? num) 1 (zero? num) 0))
 
+(defn ranks [coll]
+  (let [sorted (map vector
+                    (iterate inc 0)
+                    (sort (set coll)))]
+    (map (fn [x] (ffirst (filter #(= x (second %)) sorted))) coll)))
+
+(defn rank-vector [coll]
+  (let [sorted (map vector
+                    (iterate inc 0)
+                    (sort (set coll)))]
+    (map (fn [x] (first (filter #(= x (second %)) sorted))) coll)))
+
+;;; TODO? replace with a map lookup?
+(defn rank-by [keyfn coll]
+  (let [sorted (map vector
+                    (iterate inc 0)
+                    (sort (set (map keyfn coll))))]
+    (map vector
+         (map (fn [x]
+                (ffirst (filter #(= (keyfn x) (second %)) sorted))) coll)
+         coll)))
+
+(def/defn-memo nth-prime [n]
+  (nth clojure.contrib.lazy-seqs/primes n))
+
 (defn smiles-atomic-invariant [full-molecule h-removed-molecule atom]
   (let [connections (count (graph/neighbors h-removed-molecule atom))
         non-h-bonds (reduce + (map :order (bonds h-removed-molecule atom)))
@@ -588,41 +613,37 @@
                      (atoms mol))
          (atoms mol))))
 
-(defn ranks [coll]
-  (let [sorted (map vector
-                    (iterate inc 0)
-                    (sort (set coll)))]
-    (map (fn [x] (ffirst (filter #(= x (second %)) sorted))) coll)))
-
-(defn rank-by [keyfn coll]
-  (let [sorted (map vector
-                    (iterate inc 0)
-                    (sort (set (map keyfn coll))))]
-    (map vector
-         (map (fn [x]
-                (ffirst (filter #(= (keyfn x) (second %)) sorted))) coll)
-         coll)))
-
-(defn rank-vector [coll]
-  (let [sorted (map vector
-                    (iterate inc 0)
-                    (sort (set coll)))]
-    (map (fn [x] (first (filter #(= x (second %)) sorted))) coll)))
-
-(def/defn-memo nth-prime [n]
-  (nth clojure.contrib.lazy-seqs/primes n))
-
-(defn mapvec-first [f coll]
-  (map #(apply vector (f (first %)) (rest %)) coll))
-
+(defn atomic-invariant-map [mol]
+  (reduce conj 
+          {}
+          (map (fn [[rank [invariant atom]]]
+                 (vector atom (inc rank)))
+               (rank-by first
+                        (smiles-atomic-invariants mol)))))
 
 (defn nth-prime-invariant-map [mol]
-  (reduce into {}
-          (map #(hash-map (second (second %))
-                          (first %))
-               (mapvec-first nth-prime
-                             (rank-by first
-                                      (smiles-atomic-invariants mol))))))
+  (reduce conj 
+          {}
+          (map (fn [[rank [invariant atom]]]
+                 (vector atom (nth-prime rank)))
+               (rank-by first
+                        (smiles-atomic-invariants mol)))))
+
+(defn product-of-neighbor-primes-map [mol]
+  (let [npmap (nth-prime-invariant-map mol)]
+    (map (fn [atom]
+           (vector atom
+                   (reduce * (map #(or (get npmap %) 1)
+                                  (graph/neighbors mol atom)))))
+         (keys npmap))))
+
+(defn sum-of-neighbor-invariants-map [mol]
+  (let [npmap (atomic-invariant-map mol)]
+    (map (fn [atom]
+           (vector atom
+                   (reduce + (map #(or (get npmap %) 0)
+                                  (graph/neighbors mol atom)))))
+         (keys npmap))))
 
 (defn write-smiles-string [molecule]
   (with-out-str
