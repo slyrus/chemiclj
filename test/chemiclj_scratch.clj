@@ -85,14 +85,6 @@
                  {}
                  (let [mol (smiles-test/get-molecule
                             "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
-                   (smiles/rank-by second
-                                   (smiles/smiles-atomic-invariants mol)))))
-
-(sort-by first
-         (reduce #(assoc %1 ((comp name first) %2) (second %2))
-                 {}
-                 (let [mol (smiles-test/get-molecule
-                            "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
                    (smiles/smiles-atomic-invariant-ranks mol))))
 
 (sort-by first
@@ -125,3 +117,11 @@
                  (hash-map atom (inc rank)))
                (smiles/rank-by second
                                (smiles/smiles-atomic-invariants mol)))))
+
+(sort-by (comp name first)
+         (let [mol (smiles-test/get-molecule
+                    "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
+           (let [invariants (smiles/smiles-atomic-invariants mol)]
+             (zipmap
+              (map first invariants)
+              (map inc (smiles/rank-by second invariants))))))
