@@ -50,7 +50,13 @@
      (reduce (fn [acc [name smiles]]
                (into acc {name (name-molecule (read-smiles-string smiles) name)}))
              {}
-             {"l-alanine" "C[C@@H](C(=O)O)N"
+             {"methane" "C"
+              "ethane" "CC"
+              "propane" "CCC"
+              "butane" "CCCC"
+              "pentane" "CCCCC"
+              "hexane" "CCCCCC"
+              "l-alanine" "C[C@@H](C(=O)O)N"
               "valine" "CC(C)C(C(=O)O)N"
               "paroxetine" "C1CNCC(C1C2=CC=C(C=C2)F)COC3=CC4=C(C=C3)OCO4"
               "tamoxifen" "CCC(C1=CC=CC=C1)=C(C2=CC=CC=C2)C3=CC=C(OCCN(C)C)C=C3"
@@ -68,7 +74,9 @@
               "thiamin" "OCCc1c(C)[n+](=cs1)Cc2cnc(C)nc(N)2"
               "oxytocin" "[H][C@]1(NC(=O)[C@H](Cc2ccc(O)cc2)NC(=O)[C@@H](N)CSSC[C@H](NC(=O)[C@H](CC(N)=O)NC(=O)[C@H](CCC(N)=O)NC1=O)C(=O)N1CCC[C@H]1C(=O)N[C@@H](CC(C)C)C(=O)NCC(N)=O)[C@@H](C)CC"
               "sildenafil" "CCCc1nn(C)c2c1nc([nH]c2=O)-c1cc(ccc1OCC)S(=O)(=O)N1CCN(C)CC1"
-              "capsaicin" "COc1cc(CNC(=O)CCCC\\C=C\\C(C)C)ccc1O"}))
+              "capsaicin" "COc1cc(CNC(=O)CCCC\\C=C\\C(C)C)ccc1O"
+              "tricky" "[C@@]123[C@H](C(C=C3)(C)C)CC[C@@](C1)(CCC2)C"
+              "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol" "OCC(CC)CCC(CN)CN"}))
 
 (defn get-molecule [name]
   (get *molecules* name))
