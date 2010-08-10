@@ -109,19 +109,3 @@
                    (smiles/product-of-neighbor-primes mol))))
 
 
-;;; test
-(reduce conj {}
-        (let [mol (smiles-test/get-molecule
-                   "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
-          (map (fn [[[atom invariant] rank]]
-                 (hash-map atom (inc rank)))
-               (smiles/rank-by second
-                               (smiles/smiles-atomic-invariants mol)))))
-
-(sort-by (comp name first)
-         (let [mol (smiles-test/get-molecule
-                    "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
-           (let [invariants (smiles/smiles-atomic-invariants mol)]
-             (zipmap
-              (map first invariants)
-              (map inc (smiles/rank-by second invariants))))))
