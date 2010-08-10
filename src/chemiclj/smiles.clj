@@ -583,10 +583,12 @@
   (let [sorted (map vector
                     (iterate inc 0)
                     (sort (set (map keyfn coll))))]
-    (map vector
-         coll
-         (map (fn [x]
-                (ffirst (filter #(= (keyfn x) (second %)) sorted))) coll))))
+    (reduce conj
+            {}
+            (map vector
+                 coll
+                 (map (fn [x]
+                        (ffirst (filter #(= (keyfn x) (second %)) sorted))) coll)))))
 
 (def/defn-memo nth-prime [n]
   (nth clojure.contrib.lazy-seqs/primes n))
