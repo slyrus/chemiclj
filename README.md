@@ -7,18 +7,19 @@ chemiclj is a chemistry library for clojure
 
 Clojure encourages a functional programming style in which objects are
 immutable. chemiclj is a library for representing various chemical
-entities -- molecules, atoms, bons, elements, etc... in a functional,
-immutable style. To get a feel for the difference between this
-approach and the traditional object-oriented approach to a chemistry
-library, consider the task of adding a bond to a molecule. One might
-expect that a method, say add-bond, would take a molecule and two
-atoms as parameters, and modify the molecule such that it now contains
-the new bond. In chemiclj, add-bond returns a completely new molecule,
-but one which contains the new bond, and all of the previous
-information of the molecule. This approach is used throughout chemiclj
-and may take a bit of getting used to.
+entities -- molecules, atoms, bons, elements, etc... in a functional
+style using immutable objects. To get a feel for the difference
+between this approach and the traditional object-oriented approach to
+a chemistry library, consider the task of adding a bond to a
+molecule. One might expect that a method, say `add-bond`, would take a
+molecule and two atoms as parameters, and modify the molecule such
+that it now contains the new bond. In chemiclj, add-bond returns a
+completely new molecule, but one which contains the new bond, and all
+of the previous information of the molecule. This approach is used
+throughout chemiclj and may take a bit of getting used to.
 
-To see an example, let's use the chemiclj API to build a simple molecule, say, methane:
+To see an example, let's use the chemiclj API to build a simple
+molecule, say, methane:
 
     (let [c1 (make-atom :c "C1")
           h1 (make-atom :h "H1")
@@ -51,8 +52,6 @@ feature will appear in the near future.
 
 NOTE: make sure that the dependencies are installed be lein deps, or by
 putting the appropriate symlinks in a directory named checkouts.
-
- shortuct - a graph library for clojure
 
 currently, chemiclj requires (in addition to clojure and clojure-contrib):
 
