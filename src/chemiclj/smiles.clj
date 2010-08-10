@@ -619,10 +619,10 @@
      (map inc (rank-by second invariants)))))
 
 (defn nth-prime-invariants [mol]
-  (reduce (fn [m [atom rank]]
-            (assoc m atom (nth-prime (dec rank))))
-          {}
-          (smiles-atomic-invariant-ranks mol)))
+  (let [invariants (smiles-atomic-invariants mol)]
+    (zipmap
+     (keys invariants)
+     (map nth-prime (rank-by second invariants)))))
 
 (defn sum-of-neighbor-invariants [mol]
   (let [aimap (smiles-atomic-invariant-ranks mol)]
