@@ -611,46 +611,41 @@
 
 (defn smiles-atomic-invariants [full-mol]
   (let [mol (chemiclj.core/remove-atoms-of-element full-mol "H")]
-    (map vector
-         (atoms mol)
-         (map (partial smiles-atomic-invariant full-mol mol)
-              (atoms mol)))))
+    (reduce (fn [m atom]
+              (assoc m atom (smiles-atomic-invariant full-mol mol atom)))
+            {}
+            (atoms mol))))
 
-(defn atomic-invariant-map [mol]
-  (reduce conj 
+(defn smiles-atomic-invariants-rank-map [mol]
+  (reduce (fn [m [[atom invariant] rank]]
+            (assoc m atom (inc rank)))
           {}
-          (map (fn [[[atom invariant] rank]]
-                 {atom (inc rank)})
-               (rank-by second
-                        (smiles-atomic-invariants mol)))))
+          (rank-by second
+                   (smiles-atomic-invariants mol))))
 
 (defn nth-prime-invariant-map [mol]
-  (reduce conj 
+  (reduce (fn [m [atom rank]]
+            (assoc m atom (nth-prime (dec rank))))
           {}
-          (map (fn [[[atom invariant] rank]]
-                 {atom (nth-prime rank)})
-               (rank-by second
-                        (smiles-atomic-invariants mol)))))
+          (smiles-atomic-invariants-rank-map mol)))
 
 (defn sum-of-neighbor-invariants-map [mol]
   (let [aimap (atomic-invariant-map mol)]
-    (reduce conj
+    (reduce (fn [m atom]
+              (assoc m atom
+                     (reduce + (map #(or (get aimap %) 0)
+                                    (graph/neighbors mol atom)))))
             {}
-            (map (fn [atom]
-                   {atom
-                    (reduce + (map #(or (get aimap %) 0)
-                                   (graph/neighbors mol atom)))})
-                 (keys aimap)))))
+            (keys aimap))))
 
 (defn product-of-neighbor-primes-map [mol]
   (let [npmap (nth-prime-invariant-map mol)]
-    (reduce conj
+    (reduce (fn [m atom]
+              (assoc m atom
+                     (reduce * (map #(or (get npmap %) 1)
+                                    (graph/neighbors mol atom)))))
             {}
-            (map (fn [atom]
-                   {atom
-                    (reduce * (map #(or (get npmap %) 1)
-                                   (graph/neighbors mol atom)))})
-                 (keys npmap)))))
+            (keys npmap))))
 
 ;;; TODO
 (defn write-smiles-string [molecule]
