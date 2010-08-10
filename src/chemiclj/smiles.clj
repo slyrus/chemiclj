@@ -583,12 +583,8 @@
   (let [sorted (map vector
                     (iterate inc 0)
                     (sort (set (map keyfn coll))))]
-    (reduce conj
-            {}
-            (map vector
-                 coll
-                 (map (fn [x]
-                        (ffirst (filter #(= (keyfn x) (second %)) sorted))) coll)))))
+    (map (fn [x]
+           (ffirst (filter #(= (keyfn x) (second %)) sorted))) coll)))
 
 (def/defn-memo nth-prime [n]
   (nth clojure.contrib.lazy-seqs/primes n))
@@ -617,11 +613,10 @@
             (atoms mol))))
 
 (defn smiles-atomic-invariant-ranks [mol]
-  (reduce (fn [m [[atom invariant] rank]]
-            (assoc m atom (inc rank)))
-          {}
-          (rank-by second
-                   (smiles-atomic-invariants mol))))
+  (let [invariants (smiles-atomic-invariants mol)]
+    (zipmap
+     (map first invariants)
+     (map inc (rank-by second invariants)))))
 
 (defn nth-prime-invariants [mol]
   (reduce (fn [m [atom rank]]
