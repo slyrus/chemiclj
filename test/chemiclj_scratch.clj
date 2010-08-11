@@ -85,74 +85,8 @@
                             "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
                    (smiles/smiles-atomic-invariant-ranks mol)))
 
-(reduce #(assoc %1 ((comp name first) %2) (second %2))
-                 {}
-                 (let [mol (smiles-test/get-molecule
-                            "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
-                   (smiles/sum-of-neighbor-invariants mol)))
 
-(reduce #(assoc %1 ((comp name first) %2) (second %2))
-                 {}
-                 (let [mol (smiles-test/get-molecule
-                            "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
-                   (smiles/nth-prime-invariants mol)))
-
-(reduce #(assoc %1 ((comp name first) %2) (second %2))
-                 {}
-                 (let [mol (smiles-test/get-molecule
-                            "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
-                   (smiles/product-of-neighbor-primes mol)))
-
-(reduce #(assoc %1 ((comp name first) %2) (second %2))
-                 {}
-                 (let [mol (smiles-test/get-molecule
-                            "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
-                   (smiles/invariant-ranks-and-sums mol)))
 ;;;
-
-
-(let [mol (smiles-test/get-molecule
-           "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")
-      sums (smiles/sum-of-neighbor-invariants mol)]
-  (zipmap
-   (map (comp name first) sums)
-   (map inc (smiles/rank-by second sums))))
-
-
-(sort-by first
-         (reduce #(assoc %1 ((comp name first) %2) (second %2))
-                 {}
-                 (let [mol (smiles-test/get-molecule
-                            "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
-                   (smiles/sum-of-neighbor-invariants mol))))
-
-
-
-(let [mol (smiles-test/get-molecule
-           "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
-  (smiles/invariant-ranks-and-sums mol))
-
-(let [mol (smiles-test/get-molecule
-           "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")
-      sums (smiles/invariant-ranks-and-sums mol)]
-  (zipmap
-   (map (comp name first) sums)
-   (map inc (smiles/rank-by second sums))))
-
-(let [mol (smiles-test/get-molecule
-           "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")
-      sums (smiles/invariant-ranks-and-prime-products mol)]
-  (zipmap
-   (map (comp name first) sums)
-   (map inc (smiles/rank-by second sums))))
-
-(let [mol (smiles-test/get-molecule
-           "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")
-      sums (smiles/invariant-ranks-and-prime-products mol)]
-  (vector
-   (map (comp name first) sums)
-   (map inc (smiles/rank-by second sums))))
-
 
 (let [mol (smiles-test/get-molecule
            "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")
@@ -164,15 +98,12 @@
                                 (map inc (smiles/rank-by second sums)))))
                            ranks))))
 
-
-
 (sort-by first
          (map #(vector ((comp name first) %)
                        ((comp inc second) %))
               (let [mol (smiles-test/get-molecule
                          "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
                 (smiles/smiles-canonical-labels mol))))
-
 
 (let [mol (smiles-test/get-molecule
            "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")
@@ -183,10 +114,8 @@
                     (smiles/fixpoint
                      (iterate (fn [ranks]
                                 (let [sums (smiles/ranks-and-prime-products mol ranks)]
-                                  (rank-coll-by-second sums)))
+                                  (smiles/rank-coll-by-second sums)))
                               ranks))))))
-
-
 
 (let [mol (smiles-test/get-molecule
            "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")

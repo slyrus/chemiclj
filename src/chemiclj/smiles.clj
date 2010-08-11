@@ -617,44 +617,10 @@
      (map first invariants)
      (rank-by second invariants))))
 
-(defn nth-prime-invariants [mol]
-  (let [invariants (smiles-atomic-invariants mol)]
-    (zipmap
-     (keys invariants)
-     (map nth-prime (rank-by second invariants)))))
-
-(defn sum-of-neighbors [mol nmap]
-  (reduce (fn [m atom]
-            (assoc m atom
-                   (reduce + (map #(or (get nmap %) 0)
-                                  (graph/neighbors mol atom)))))
-          {}
-          (keys nmap)))
-
-(defn sum-of-neighbor-invariants [mol]
-  (sum-of-neighbors mol (smiles-atomic-invariant-ranks mol)))
-
-(defn invariant-ranks-and-sums [mol]
-  (let [aimap (smiles-atomic-invariant-ranks mol)]
-    (reduce (fn [m [atom rank]]
-              (assoc m atom
-                     [rank (reduce + (map #(or (get aimap %) 0)
-                                          (graph/neighbors mol atom)))]))
-            {}
-            aimap)))
-
-(defn invariant-ranks-and-prime-products [mol]
-  (let [aimap (smiles-atomic-invariant-ranks mol)]
-    (reduce (fn [m [atom rank]]
-              (assoc m atom
-                     [rank (reduce * (map #(or (get aimap %) 1)
-                                          (graph/neighbors mol atom)))]))
-            {}
-            aimap)))
-
 ;; note that ranks are 0-indexed, but the ranks in the weininger paper
 ;; start at 1. shouldn't make a difference in the answer, but if one
-;; inspects the ranks, beware of this.
+;; inspects the ranks, beware of this. Note that we get the right
+;; prime either way.
 (defn ranks-and-prime-products [mol imap]
   (reduce (fn [m [atom rank]]
             (assoc m atom
@@ -664,17 +630,6 @@
                                         (graph/neighbors mol atom)))]))
           {}
           imap))
-
-(defn product-of-neighbors [mol nmap]
-  (reduce (fn [m atom]
-            (assoc m atom
-                   (reduce * (map #(or (get nmap %) 1)
-                                  (graph/neighbors mol atom)))))
-          {}
-          (keys nmap)))
-
-(defn product-of-neighbor-primes [mol]
-  (product-of-neighbors mol (nth-prime-invariants mol)))
 
 (defn rank-coll-by-second [coll]
   (zipmap
