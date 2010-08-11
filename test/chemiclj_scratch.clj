@@ -66,7 +66,6 @@
 
 ;;; scratch for writing SMILES strings
 
-
 (let [mol (smiles-test/get-molecule "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
   (smiles/smiles-atomic-invariants mol))
 
@@ -85,18 +84,7 @@
                             "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
                    (smiles/smiles-atomic-invariant-ranks mol)))
 
-
 ;;;
-
-(let [mol (smiles-test/get-molecule
-           "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")
-      ranks (smiles/smiles-atomic-invariant-ranks mol)]
-  (drop 1 (take 4 (iterate (fn [ranks]
-                             (let [sums (smiles/ranks-and-prime-products mol ranks)]
-                               (zipmap
-                                (map (comp name first) sums)
-                                (map inc (smiles/rank-by second sums)))))
-                           ranks))))
 
 (sort-by first
          (map #(vector ((comp name first) %)
@@ -105,30 +93,7 @@
                          "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
                 (smiles/smiles-canonical-labels mol))))
 
-(let [mol (smiles-test/get-molecule
-           "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")
-      ranks (smiles/smiles-atomic-invariant-ranks mol)]
-  (graph/depth-first-traversal
-   mol
-   (ffirst (sort-by second
-                    (smiles/fixpoint
-                     (iterate (fn [ranks]
-                                (let [sums (smiles/ranks-and-prime-products mol ranks)]
-                                  (smiles/rank-coll-by-second sums)))
-                              ranks))))))
-
-(let [mol (smiles-test/get-molecule
-           "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")
-      ranks (smiles/smiles-atomic-invariant-ranks mol)]
-  (smiles/rank-by second
-                  (smiles/ranks-and-prime-products
-                   mol
-                   (let [ranks2 (smiles/ranks-and-prime-products mol ranks)]
-                     (zipmap
-                      (map (comp name first) ranks2)
-                      (map inc (smiles/rank-by second ranks2)))))))
-
-
-(let [mol (smiles-test/get-molecule
-           "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
-  (smiles/smiles-atomic-invariant-ranks mol))
+(let [mol (smiles-test/get-molecule "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")
+      labels (smiles/smiles-canonical-labels mol)]
+  (graph/depth-first-traversal mol
+                               (ffirst (sort-by second labels))))
