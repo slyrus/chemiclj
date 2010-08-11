@@ -580,6 +580,14 @@
 (def/defn-memo nth-prime [n]
   (nth clojure.contrib.lazy-seqs/primes n))
 
+(defn fixpoint [coll]
+  (letfn [(fixpoint* [coll last]
+                     (when-let [s (seq coll)]
+                       (if (= (first s) last)
+                         last
+                         (fixpoint* (rest s) (first s)))))]
+    (fixpoint* (rest coll) (first coll))))
+
 (defn smiles-atomic-invariant [full-molecule h-removed-molecule atom]
   (let [connections (count (graph/neighbors h-removed-molecule atom))
         non-h-bonds (reduce + (map :order (bonds h-removed-molecule atom)))
@@ -615,14 +623,16 @@
      (keys invariants)
      (map nth-prime (rank-by second invariants)))))
 
+(defn sum-of-neighbors [mol nmap]
+  (reduce (fn [m atom]
+            (assoc m atom
+                   (reduce + (map #(or (get nmap %) 0)
+                                  (graph/neighbors mol atom)))))
+          {}
+          (keys nmap)))
+
 (defn sum-of-neighbor-invariants [mol]
-  (let [aimap (smiles-atomic-invariant-ranks mol)]
-    (reduce (fn [m atom]
-              (assoc m atom
-                     (reduce + (map #(or (get aimap %) 0)
-                                    (graph/neighbors mol atom)))))
-            {}
-            (keys aimap))))
+  (sum-of-neighbors mol (smiles-atomic-invariant-ranks mol)))
 
 (defn invariant-ranks-and-sums [mol]
   (let [aimap (smiles-atomic-invariant-ranks mol)]
@@ -633,14 +643,48 @@
             {}
             aimap)))
 
-(defn product-of-neighbor-primes [mol]
-  (let [npmap (nth-prime-invariants mol)]
-    (reduce (fn [m atom]
+(defn invariant-ranks-and-prime-products [mol]
+  (let [aimap (smiles-atomic-invariant-ranks mol)]
+    (reduce (fn [m [atom rank]]
               (assoc m atom
-                     (reduce * (map #(or (get npmap %) 1)
-                                    (graph/neighbors mol atom)))))
+                     [rank (reduce * (map #(or (get aimap %) 1)
+                                          (graph/neighbors mol atom)))]))
             {}
-            (keys npmap))))
+            aimap)))
+
+(defn ranks-and-prime-products [mol imap]
+  (reduce (fn [m [atom rank]]
+            (assoc m atom
+                   [rank (reduce * (map #(or (get imap %) 1)
+                                        (graph/neighbors mol atom)))]))
+          {}
+          imap))
+
+(defn product-of-neighbors [mol nmap]
+  (reduce (fn [m atom]
+            (assoc m atom
+                   (reduce * (map #(or (get nmap %) 1)
+                                  (graph/neighbors mol atom)))))
+          {}
+          (keys nmap)))
+
+(defn product-of-neighbor-primes [mol]
+  (product-of-neighbors mol (nth-prime-invariants mol)))
+
+
+(defn rank-coll-by-second [coll]
+  (zipmap
+   (map first coll)
+   (rank-by second coll)))
+
+(defn smiles-canonical-labels [mol]
+  (let [ranks (smiles-atomic-invariant-ranks mol)]
+    (fixpoint
+     (iterate (fn [ranks]
+                (let [sums (ranks-and-prime-products mol ranks)]
+                  (rank-coll-by-second sums)))
+              ranks))))
+
 
 ;;; TODO
 (defn write-smiles-string [molecule]
