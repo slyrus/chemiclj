@@ -572,7 +572,6 @@
   (let [sorted (zipmap (sort (set coll)) (iterate inc 0))]
     (map #(get sorted %) coll)))
 
-;;; TODO? replace with a map lookup?
 (defn rank-by [keyfn coll]
   (let [sorted (zipmap
                 (sort (set (map keyfn coll)))
@@ -621,8 +620,8 @@
 
 ;; note that ranks are 0-indexed, but the ranks in the weininger paper
 ;; start at 1. shouldn't make a difference in the answer, but if one
-;; inspects the ranks, beware of this. Note that we get the right
-;; prime either way.
+;; inspects the ranks, beware of this. Note that we get the same
+;; multiple of primes either way.
 (defn ranks-and-prime-products [mol imap]
   (reduce (fn [m [atom rank]]
             (assoc m atom
