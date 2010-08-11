@@ -580,20 +580,6 @@
 (def/defn-memo nth-prime [n]
   (nth clojure.contrib.lazy-seqs/primes n))
 
-(defn vector-compare [v1 v2]
-  (cond (and (not (seq v1)) (not (seq v2)))
-        0
-        (not (seq v1))
-        -1
-        (not (seq v2))
-        1
-        (> (first v1) (first v2))
-        1
-        (< (first v1) (first v2))
-        -1
-        true
-        (vector-compare (rest v1) (rest v2))))
-
 (defn smiles-atomic-invariant [full-molecule h-removed-molecule atom]
   (let [connections (count (graph/neighbors h-removed-molecule atom))
         non-h-bonds (reduce + (map :order (bonds h-removed-molecule atom)))
