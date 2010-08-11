@@ -230,5 +230,5 @@
   (reduce (fn [mol atom]
             (remove-atom mol atom))
           mol
-          (filter-element mol element)))
+          (get-atoms-of-element mol element)))
 
