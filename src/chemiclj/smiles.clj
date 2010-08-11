@@ -564,7 +564,9 @@
 ;;;    break ties
 
 
-(defn sgn [num] (cond (neg? num) -1 (pos? num) 1 (zero? num) 0))
+;;; I _think_ the SMILES spec requires us to use 1 for negative
+;;; charges and 0 otherwise.
+(defn charge-sgn [num] (if (neg? num) 1 0))
 
 (defn rank [coll]
   (let [sorted (zipmap (sort (set coll)) (iterate inc 0))]
@@ -592,7 +594,7 @@
   (let [connections (count (graph/neighbors h-removed-molecule atom))
         non-h-bonds (reduce + (map :order (bonds h-removed-molecule atom)))
         atomic-number (:atomic-number (:element atom))
-        sign-of-charge (sgn (:charge atom))
+        sign-of-charge (charge-sgn (:charge atom))
         abs-charge (if (neg? (:charge atom)) (- (:charge atom)) (:charge atom))
         hydrogens (count (filter
                           #{(element/get-element "H")}
