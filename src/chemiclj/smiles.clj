@@ -615,7 +615,7 @@
   (let [invariants (smiles-atomic-invariants mol)]
     (zipmap
      (map first invariants)
-     (map inc (rank-by second invariants)))))
+     (rank-by second invariants))))
 
 (defn nth-prime-invariants [mol]
   (let [invariants (smiles-atomic-invariants mol)]
@@ -652,10 +652,15 @@
             {}
             aimap)))
 
+;; note that ranks are 0-indexed, but the ranks in the weininger paper
+;; start at 1. shouldn't make a difference in the answer, but if one
+;; inspects the ranks, beware of this.
 (defn ranks-and-prime-products [mol imap]
   (reduce (fn [m [atom rank]]
             (assoc m atom
-                   [rank (reduce * (map #(or (get imap %) 1)
+                   [rank (reduce * (map #(or (when-let [p (get imap %)]
+                                               (nth-prime p))
+                                             1)
                                         (graph/neighbors mol atom)))]))
           {}
           imap))
@@ -670,7 +675,6 @@
 
 (defn product-of-neighbor-primes [mol]
   (product-of-neighbors mol (nth-prime-invariants mol)))
-
 
 (defn rank-coll-by-second [coll]
   (zipmap
