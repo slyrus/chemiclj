@@ -567,19 +567,15 @@
 (defn sgn [num] (cond (neg? num) -1 (pos? num) 1 (zero? num) 0))
 
 (defn rank [coll]
-  (let [sorted (map vector
-                    (iterate inc 0)
-                    (sort (set coll)))]
-    (map (fn [x]
-           (ffirst (filter #(= x (second %)) sorted))) coll)))
+  (let [sorted (zipmap (sort (set coll)) (iterate inc 0))]
+    (map #(get sorted %) coll)))
 
 ;;; TODO? replace with a map lookup?
 (defn rank-by [keyfn coll]
-  (let [sorted (map vector
-                    (iterate inc 0)
-                    (sort (set (map keyfn coll))))]
-    (map (fn [x]
-           (ffirst (filter #(= (keyfn x) (second %)) sorted))) coll)))
+  (let [sorted (zipmap
+                (sort (set (map keyfn coll)))
+                (iterate inc 0))]
+    (map #(get sorted (keyfn %)) coll)))
 
 (def/defn-memo nth-prime [n]
   (nth clojure.contrib.lazy-seqs/primes n))
