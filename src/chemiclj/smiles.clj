@@ -566,17 +566,12 @@
 
 (defn sgn [num] (cond (neg? num) -1 (pos? num) 1 (zero? num) 0))
 
-(defn ranks [coll]
+(defn rank [coll]
   (let [sorted (map vector
                     (iterate inc 0)
                     (sort (set coll)))]
-    (map (fn [x] (ffirst (filter #(= x (second %)) sorted))) coll)))
-
-(defn rank-vector [coll]
-  (let [sorted (map vector
-                    (iterate inc 0)
-                    (sort (set coll)))]
-    (map (fn [x] (first (filter #(= x (second %)) sorted))) coll)))
+    (map (fn [x]
+           (ffirst (filter #(= x (second %)) sorted))) coll)))
 
 ;;; TODO? replace with a map lookup?
 (defn rank-by [keyfn coll]
@@ -588,6 +583,20 @@
 
 (def/defn-memo nth-prime [n]
   (nth clojure.contrib.lazy-seqs/primes n))
+
+(defn vector-compare [v1 v2]
+  (cond (and (not (seq v1)) (not (seq v2)))
+        0
+        (not (seq v1))
+        -1
+        (not (seq v2))
+        1
+        (> (first v1) (first v2))
+        1
+        (< (first v1) (first v2))
+        -1
+        true
+        (vector-compare (rest v1) (rest v2))))
 
 (defn smiles-atomic-invariant [full-molecule h-removed-molecule atom]
   (let [connections (count (graph/neighbors h-removed-molecule atom))
@@ -632,6 +641,15 @@
                                     (graph/neighbors mol atom)))))
             {}
             (keys aimap))))
+
+(defn invariant-ranks-and-sums [mol]
+  (let [aimap (smiles-atomic-invariant-ranks mol)]
+    (reduce (fn [m [atom rank]]
+              (assoc m atom
+                     [rank (reduce + (map #(or (get aimap %) 0)
+                                          (graph/neighbors mol atom)))]))
+            {}
+            aimap)))
 
 (defn product-of-neighbor-primes [mol]
   (let [npmap (nth-prime-invariants mol)]
