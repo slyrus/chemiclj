@@ -610,13 +610,13 @@
     (reduce (fn [m atom]
               (assoc m atom (smiles-atomic-invariant full-mol mol atom)))
             {}
-            (atoms mol))))
+            (sort-by name (atoms mol)))))
 
 (defn smiles-atomic-invariant-ranks [mol]
   (let [invariants (smiles-atomic-invariants mol)]
     (zipmap
      (map first invariants)
-     (rank-by second invariants))))
+     (map inc (rank-by second invariants)))))
 
 ;; note that ranks are 0-indexed, but the ranks in the weininger paper
 ;; start at 1. shouldn't make a difference in the answer, but if one
@@ -626,7 +626,7 @@
   (reduce (fn [m [atom rank]]
             (assoc m atom
                    [rank (reduce * (map #(or (when-let [p (get imap %)]
-                                               (nth-prime p))
+                                               (nth-prime (dec p)))
                                              1)
                                         (graph/neighbors mol atom)))]))
           {}
@@ -635,21 +635,67 @@
 (defn rank-coll-by-second [coll]
   (zipmap
    (map first coll)
-   (rank-by second coll)))
+   (map inc (rank-by second coll))))
+
+
+;;; FIXME! We need to fix this such that we don't sort the atoms by
+;;; name, which means we need to preserve the order of atoms between
+;;; iterations of the canoical labeling algorithm.
+(defn break-ties [ranked-atoms]
+  (let [freqs (frequencies (map second ranked-atoms))]
+    (let [lowest (ffirst (sort-by key (filter #(> (val %) 1) freqs)))]
+      (if lowest
+        (first (reduce (fn [[acc lowest] [atom rank]]
+                         (if (= rank lowest)
+                           [(conj acc {atom (dec (* 2 rank))}) nil]
+                           [(conj acc {atom (* 2 rank)}) lowest]))
+                       [{} lowest]
+                       (sort-by (comp name first) ranked-atoms)))
+        ranked-atoms))))
 
 (defn smiles-canonical-labels [mol]
   (let [ranks (smiles-atomic-invariant-ranks mol)]
     (fixpoint
      (iterate (fn [ranks]
+                (println
+                 (map (comp name first) ranks)
+                 (map second ranks))
                 (let [sums (ranks-and-prime-products mol ranks)]
-                  (rank-coll-by-second sums)))
+                  (println (map second sums))
+                  (break-ties (rank-coll-by-second sums))))
               ranks))))
 
-
 ;;; TODO
+
+(def *organic-subset-atoms*
+     (set (map element/get-element ["B" "C" "N" "O" "P" "S" "F" "Cl" "Br" "I"])))
+
+(defn organic-subset? [atom]
+  (*organic-subset-atoms* atom))
+
+
+(defn write-smiles-atom [mol atom & [bond]]
+  (when bond
+    (cond (= (:order bond) 2)
+          (print "=")))
+  (let [element (:element atom)]
+    (if (organic-subset? element)
+      (print (:id element))
+      (print "[" (:id element) "]"))
+    (loop [neighbors (graph/neighbors mol atom)]
+      (when (seq neighbors)
+        (let [neighbor (first neighbors)]
+          (if (> (count neighbors) 1)
+            (do (print "(")
+                (write-smiles-atom (remove-bond mol atom neighbor) neighbor (bond? mol atom neighbor))
+                (print ")"))
+            (write-smiles-atom (remove-bond mol atom neighbor) neighbor (bond? mol atom neighbor))))
+        (recur (rest neighbors))))))
+
 (defn write-smiles-string [molecule]
   (with-out-str
     ;; TODO special cases for H and H2
-    (let [mol (remove-atoms-of-element molecule "H")]
-      
-      )))
+    (let [mol (remove-atoms-of-element molecule "H")
+          labels (smiles-canonical-labels mol)
+          start (ffirst (sort-by second labels))]
+      (write-smiles-atom mol start))))

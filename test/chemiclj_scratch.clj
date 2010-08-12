@@ -97,3 +97,17 @@
       labels (smiles/smiles-canonical-labels mol)]
   (graph/depth-first-traversal mol
                                (ffirst (sort-by second labels))))
+
+
+(let [mol (smiles-test/get-molecule
+           "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")
+      labels (smiles/smiles-canonical-labels mol)]
+  (ffirst (sort-by second labels)))
+
+
+(sort-by first
+         (map #(vector ((comp name first) %)
+                       (second %))
+              (let [mol (smiles-test/get-molecule
+                         "cubane")]
+                (smiles/smiles-canonical-labels mol))))
