@@ -76,7 +76,8 @@
               "sildenafil" "CCCc1nn(C)c2c1nc([nH]c2=O)-c1cc(ccc1OCC)S(=O)(=O)N1CCN(C)CC1"
               "capsaicin" "COc1cc(CNC(=O)CCCC\\C=C\\C(C)C)ccc1O"
               "tricky" "[C@@]123[C@H](C(C=C3)(C)C)CC[C@@](C1)(CCC2)C"
-              "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol" "OCC(CC)CCC(CN)CN"}))
+              "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol" "OCC(CC)CCC(CN)CN"
+              "cubane" "C12C3C4C1C5C4C3C25"}))
 
 (defn get-molecule [name]
   (get *molecules* name))
