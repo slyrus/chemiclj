@@ -34,7 +34,8 @@
 (ns smiles-test
   (:use [chemiclj.core]
         [chemiclj.element]
-        [chemiclj.smiles]))
+        [chemiclj.smiles])
+  (:require [shortcut.graph :as graph]))
 
 (read-smiles-string "C")
 (read-smiles-string "CC")
