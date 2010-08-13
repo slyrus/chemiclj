@@ -610,7 +610,7 @@
     (reduce (fn [m atom]
               (assoc m atom (smiles-atomic-invariant full-mol mol atom)))
             {}
-            (sort-by name (atoms mol)))))
+            (atoms mol))))
 
 (defn smiles-atomic-invariant-ranks [mol]
   (let [invariants (smiles-atomic-invariants mol)]
@@ -643,25 +643,21 @@
 ;;; iterations of the canoical labeling algorithm.
 (defn break-ties [ranked-atoms]
   (let [freqs (frequencies (map second ranked-atoms))]
-    (let [lowest (ffirst (sort-by key (filter #(> (val %) 1) freqs)))]
+    (let [lowest (ffirst (filter #(> (val %) 1) freqs))]
       (if lowest
         (first (reduce (fn [[acc lowest] [atom rank]]
                          (if (= rank lowest)
                            [(conj acc {atom (dec (* 2 rank))}) nil]
                            [(conj acc {atom (* 2 rank)}) lowest]))
                        [{} lowest]
-                       (sort-by (comp name first) ranked-atoms)))
+                       ranked-atoms))
         ranked-atoms))))
 
 (defn smiles-canonical-labels [mol]
   (let [ranks (smiles-atomic-invariant-ranks mol)]
     (fixpoint
      (iterate (fn [ranks]
-                (println
-                 (map (comp name first) ranks)
-                 (map second ranks))
                 (let [sums (ranks-and-prime-products mol ranks)]
-                  (println (map second sums))
                   (break-ties (rank-coll-by-second sums))))
               ranks))))
 
