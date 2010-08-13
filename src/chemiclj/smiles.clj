@@ -670,23 +670,40 @@
   (*organic-subset-atoms* atom))
 
 
-(defn write-smiles-atom [mol atom & [bond]]
+(defn- smiles-neighbors [mol atom]
+  (graph/neighbors mol atom))
+
+(defn write-smiles-atom [mol atom bond visited]
   (when bond
     (cond (= (:order bond) 2)
           (print "=")))
-  (let [element (:element atom)]
-    (if (organic-subset? element)
-      (print (:id element))
-      (print "[" (:id element) "]"))
-    (loop [neighbors (graph/neighbors mol atom)]
-      (when (seq neighbors)
-        (let [neighbor (first neighbors)]
-          (if (> (count neighbors) 1)
-            (do (print "(")
-                (write-smiles-atom (remove-bond mol atom neighbor) neighbor (bond? mol atom neighbor))
-                (print ")"))
-            (write-smiles-atom (remove-bond mol atom neighbor) neighbor (bond? mol atom neighbor))))
-        (recur (rest neighbors))))))
+  (let [visited (conj visited atom)]
+    (let [element (:element atom)]
+      (if (organic-subset? element)
+        (print (:id element))
+        (print "[" (:id element) "]"))
+      (loop [neighbors (smiles-neighbors mol atom) visited visited]
+        (if (seq neighbors)
+          (let [neighbor (first neighbors)]
+            (if (visited neighbor)
+              visited
+              (if (> (count neighbors) 1)
+                (do (print "(")
+                    (let [visited (write-smiles-atom
+                                   (remove-bond mol atom neighbor)
+                                   neighbor
+                                   (bond? mol atom neighbor)
+                                   visited)]
+                      (print ")")
+                      (recur (rest neighbors) visited)))
+                (do
+                  (let [visited (write-smiles-atom
+                                 (remove-bond mol atom neighbor)
+                                 neighbor
+                                 (bond? mol atom neighbor)
+                                 visited)]
+                    visited)))))
+          visited)))))
 
 (defn write-smiles-string [molecule]
   (with-out-str
@@ -694,4 +711,4 @@
     (let [mol (remove-atoms-of-element molecule "H")
           labels (smiles-canonical-labels mol)
           start (ffirst (sort-by second labels))]
-      (write-smiles-atom mol start))))
+      (write-smiles-atom mol start nil #{}))))
