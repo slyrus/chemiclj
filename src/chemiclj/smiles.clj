@@ -673,20 +673,51 @@
 (defn- smiles-neighbors [mol atom]
   (graph/neighbors mol atom))
 
+;;; we need to make a first pass through the molecule (in the same
+;;; order as the next pass) to identify the rings such that we can
+;;; emit the proper ring opening symbol in the next pass
+(defn first-pass [mol atom bond visited rings]
+  (let [visited (conj visited atom)
+        element (:element atom)]
+    (loop [neighbors (smiles-neighbors mol atom) mol mol visited visited rings rings]
+      (if (seq neighbors)
+        (let [neighbor (first neighbors)]
+          (if (visited neighbor)
+            (do
+              (if (= neighbor (get rings atom))
+                [(remove-bond mol atom neighbor) visited rings]
+                (do
+                  (println 'found-a-ring! (name neighbor) (name atom))
+                  [(remove-bond mol atom neighbor)
+                   visited
+                   (if (get rings atom)
+                     rings
+                     (conj rings {neighbor atom}))])))
+            (let [[mol visited rings]
+                  (first-pass
+                   (remove-bond mol atom neighbor)
+                   neighbor
+                   (bond? mol atom neighbor)
+                   visited
+                   rings)]
+              (recur (rest neighbors) mol visited rings))))
+        [mol visited rings]))))
+
 (defn write-smiles-atom [mol atom bond visited]
-  (when bond
-    (cond (= (:order bond) 2)
-          (print "=")))
-  (let [visited (conj visited atom)]
-    (let [element (:element atom)]
-      (if (organic-subset? element)
-        (print (:id element))
-        (print "[" (:id element) "]"))
-      (loop [neighbors (smiles-neighbors mol atom) visited visited]
-        (if (seq neighbors)
-          (let [neighbor (first neighbors)]
-            (if (visited neighbor)
-              visited
+  (loop [neighbors (smiles-neighbors mol atom) visited visited]
+    (let [visited (conj visited atom)]
+      (if (seq neighbors)
+        (let [neighbor (first neighbors)]
+          (if (visited neighbor)
+            visited
+            (do
+              (when bond
+                (cond (= (:order bond) 2)
+                      (print "=")))
+              (let [element (:element atom)]
+                (if (organic-subset? element)
+                  (print (:id element))
+                  (print "[" (:id element) "]")))
               (if (> (count neighbors) 1)
                 (do (print "(")
                     (let [visited (write-smiles-atom
@@ -696,19 +727,18 @@
                                    visited)]
                       (print ")")
                       (recur (rest neighbors) visited)))
-                (do
-                  (let [visited (write-smiles-atom
-                                 (remove-bond mol atom neighbor)
-                                 neighbor
-                                 (bond? mol atom neighbor)
-                                 visited)]
-                    visited)))))
-          visited)))))
+                (write-smiles-atom
+                 (remove-bond mol atom neighbor)
+                 neighbor
+                 (bond? mol atom neighbor)
+                 visited)))))
+        visited))))
 
 (defn write-smiles-string [molecule]
-  (with-out-str
-    ;; TODO special cases for H and H2
-    (let [mol (remove-atoms-of-element molecule "H")
-          labels (smiles-canonical-labels mol)
-          start (ffirst (sort-by second labels))]
-      (write-smiles-atom mol start nil #{}))))
+  ;; TODO special cases for H and H2
+  (let [mol (remove-atoms-of-element molecule "H")
+        labels (smiles-canonical-labels mol)
+        start (ffirst (sort-by second labels))]
+    (let [[new-mol _ rings] (first-pass mol start nil #{} {})]
+      (with-out-str
+        (write-smiles-atom mol start nil #{})))))
