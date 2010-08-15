@@ -700,27 +700,32 @@
 
 (defn second-pass [mol atom visited rings open-rings]
   (if (visited atom)
-    [mol visited rings]
+    [mol visited rings open-rings]
     (let [visited (conj visited atom)
           element (:element atom)]
       (print (:id element))
-      (doseq [_ (filter #(= (first %) atom) rings)]
-        (print (first-empty open-rings)))
-      (loop [neighbors (filter (complement visited) (smiles-neighbors mol atom))
-             mol mol visited visited rings rings open-rings open-rings]
-        (if (seq neighbors)
-          (let [neighbor (first neighbors)]
-            (let [[mol visited rings]
-                  (second-pass
-                   (remove-bond mol atom neighbor)
-                   neighbor
-                   visited
-                   (if (visited neighbor)
-                     (conj rings [neighbor atom])
-                     rings)
-                   open-rings)]
-              (recur (rest neighbors) mol visited rings open-rings)))
-          [mol visited rings])))))
+      (let [open-rings
+            (reduce (fn [open-rings _]
+                      (let [ring-num (first-empty open-rings)]
+                        (print ring-num)
+                        (conj open-rings ring-num)))
+                    open-rings
+                    (filter #(= (first %) atom) rings))]
+        (loop [neighbors (filter (complement visited) (smiles-neighbors mol atom))
+               mol mol visited visited rings rings open-rings open-rings]
+          (if (seq neighbors)
+            (let [neighbor (first neighbors)]
+              (let [[mol visited rings open-rings]
+                    (second-pass
+                     (remove-bond mol atom neighbor)
+                     neighbor
+                     visited
+                     (if (visited neighbor)
+                       (conj rings [neighbor atom])
+                       rings)
+                     open-rings)]
+                (recur (rest neighbors) mol visited rings open-rings)))
+            [mol visited rings open-rings]))))))
 
 (defn write-smiles-atom [mol atom bond visited]
   (loop [neighbors (smiles-neighbors mol atom) visited visited]
