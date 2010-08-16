@@ -695,7 +695,7 @@
   (let [x (first (filter (fn [[a b]] (not (= a b)))
                          (map vector
                               (iterate inc 1)
-                              (sort set))))]
+                              (sort (keys set)))))]
     (or (first x) (inc (count set)))))
 
 (defn second-pass [mol atom visited rings open-rings]
@@ -705,21 +705,19 @@
           element (:element atom)]
       (print (:id element))
       (let [open-rings
-            (reduce (fn [open-rings _]
+            (reduce (fn [open-rings ring]
                       (let [ring-num (first-empty open-rings)]
                         (print ring-num)
-                        (conj open-rings ring-num)))
+                        (assoc open-rings ring-num ring)))
                     open-rings
                     (filter #(= (first %) atom) rings))]
-        (print open-rings)
-        ;;; now for the ring closings
-        #_(let [open-rings
-                (reduce (fn [open-rings _]
-                          (let [ring-num (first-empty open-rings)]
-                            (print ring-num)
-                            (conj open-rings ring-num)))
-                        open-rings
-                        (filter #(= (second %) atom) rings))])
+        ;; now for the ring closings
+        (let [open-rings
+              (reduce (fn [open-rings ring-num]
+                        (print ring-num)
+                        (dissoc open-rings ring-num))
+                      open-rings
+                      (sort (map key (filter #(= (second (val %)) atom) open-rings))))])
         (loop [neighbors (filter (complement visited) (smiles-neighbors mol atom))
                mol mol visited visited rings rings open-rings open-rings]
           (if (seq neighbors)
@@ -775,4 +773,4 @@
     (let [[new-mol _ rings] (first-pass mol start #{} #{})]
       (doall (print (map names rings)))
       (with-out-str
-        (second-pass mol start #{} rings #{})))))
+        (second-pass mol start #{} rings {})))))
