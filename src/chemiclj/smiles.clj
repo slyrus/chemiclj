@@ -711,6 +711,15 @@
                         (conj open-rings ring-num)))
                     open-rings
                     (filter #(= (first %) atom) rings))]
+        (print open-rings)
+        ;;; now for the ring closings
+        #_(let [open-rings
+                (reduce (fn [open-rings _]
+                          (let [ring-num (first-empty open-rings)]
+                            (print ring-num)
+                            (conj open-rings ring-num)))
+                        open-rings
+                        (filter #(= (second %) atom) rings))])
         (loop [neighbors (filter (complement visited) (smiles-neighbors mol atom))
                mol mol visited visited rings rings open-rings open-rings]
           (if (seq neighbors)
