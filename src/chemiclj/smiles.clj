@@ -669,9 +669,20 @@
 (defn organic-subset? [atom]
   (*organic-subset-atoms* atom))
 
-(defn- smiles-neighbors [mol labels atom]
+;; the problem here is that we need to use different criteria for
+;; ordering the neighbors if we are in a ring, or not. Or perhaps if
+;; we're about to close a ring. I'm not sure which... The smiles paper
+;; is unclear on this.
+(defn- smiles-neighbors [mol labels atom & [in-ring]]
   (let [bonds (bonds mol atom)]
-    (map first (map #(graph/neighbors % atom) (reverse (sort-by :order bonds))))))
+    (if (or true in-ring)
+      (map first (map #(graph/neighbors % atom)
+                      (sort-by #(vector ((comp - :order) %)
+                                        (labels (first (graph/neighbors % atom))))
+                               bonds)))
+      (map first (map #(graph/neighbors % atom)
+                      (sort-by #(labels (first (graph/neighbors % atom)))
+                               bonds))))))
 
 (defn first-pass [mol labels atom visited rings]
   (let [visited (conj visited atom)
@@ -720,46 +731,47 @@
                     [open-rings #{}]
                     (filter #(= (first %) atom) rings))]
         ;; now for the ring closings
-        (let [open-rings
+        (let [closed-rings
               (reduce (fn [open-rings [ring-num ring]]
                         (let [ring-bond (bond? mol (first ring) (second ring))]
                           (print-bond ring-bond))
                         (print ring-num)
                         (dissoc open-rings ring-num))
                       open-rings
-                      (sort-by key (filter #(= (second (val %)) atom) open-rings)))])
-        (loop [neighbors (filter (complement visited)
-                                 (smiles-neighbors (reduce (fn [mol bond]
-                                                             (remove-bond mol bond))
-                                                           mol
-                                                           ring-bonds)
-                                                   labels
-                                                   atom))
-               mol mol visited visited rings rings open-rings open-rings]
-          (if (seq neighbors)
-            (let [branch (seq (rest neighbors))]
-              (when branch (print "("))
-              (let [neighbor (first neighbors)]
-                (let [[mol visited rings open-rings]
-                      (second-pass
-                       (remove-bond mol atom neighbor)
-                       labels
-                       neighbor
-                       (bond? mol atom neighbor)
-                       visited
-                       (if (visited neighbor)
-                         (conj rings [neighbor atom])
-                         rings)
-                       open-rings)]
-                  (when branch (print ")"))
-                  (recur (rest neighbors) mol visited rings open-rings))))
-            [mol visited rings open-rings]))))))
+                      (sort-by key (filter #(= (second (val %)) atom) open-rings)))]
+          (loop [neighbors (filter (complement visited)
+                                   (smiles-neighbors (reduce (fn [mol bond]
+                                                               (remove-bond mol bond))
+                                                             mol
+                                                             ring-bonds)
+                                                     labels
+                                                     atom))
+                 mol mol visited visited rings rings open-rings open-rings]
+            (if (seq neighbors)
+              (let [branch (seq (rest neighbors))]
+                (when branch (print "("))
+                (let [neighbor (first neighbors)]
+                  (let [[mol visited rings open-rings]
+                        (second-pass
+                         (remove-bond mol atom neighbor)
+                         labels
+                         neighbor
+                         (bond? mol atom neighbor)
+                         visited
+                         (if (visited neighbor)
+                           (conj rings [neighbor atom])
+                           rings)
+                         open-rings)]
+                    (when branch (print ")"))
+                    (recur (rest neighbors) mol visited rings open-rings))))
+              [mol visited rings open-rings])))))))
 
 (defn write-smiles-string [molecule]
   ;; TODO special cases for H and H2
   (let [mol (remove-atoms-of-element molecule "H")
         labels (smiles-canonical-labels mol)
         start (ffirst (sort-by second labels))]
+    (print (map #(list ((comp name key) %) (val %)) labels))
     (let [[new-mol _ rings] (first-pass mol labels start #{} #{})]
       (with-out-str
         (second-pass mol labels start nil #{} rings {})))))
