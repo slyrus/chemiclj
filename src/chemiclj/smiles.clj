@@ -640,7 +640,7 @@
 
 ;;; FIXME! We need to fix this such that we don't sort the atoms by
 ;;; name, which means we need to preserve the order of atoms between
-;;; iterations of the canoical labeling algorithm.
+;;; iterations of the canonical labeling algorithm.
 (defn break-ties [ranked-atoms]
   (let [freqs (frequencies (map second ranked-atoms))]
     (let [lowest (ffirst (filter #(> (val %) 1) freqs))]
@@ -669,20 +669,21 @@
 (defn organic-subset? [atom]
   (*organic-subset-atoms* atom))
 
+(defn- smiles-neighbors [mol labels atom]
+  (let [bonds (bonds mol atom)]
+    (map first (map #(graph/neighbors % atom) (reverse (sort-by :order bonds))))))
 
-(defn- smiles-neighbors [mol atom]
-  (graph/neighbors mol atom))
-
-(defn first-pass [mol atom visited rings]
+(defn first-pass [mol labels atom visited rings]
   (let [visited (conj visited atom)
         element (:element atom)]
-    (loop [neighbors (filter (complement visited) (smiles-neighbors mol atom))
+    (loop [neighbors (filter (complement visited) (smiles-neighbors mol labels atom))
            mol mol visited visited rings rings]
       (if (seq neighbors)
         (let [neighbor (first neighbors)]
           (let [[mol visited rings]
                 (first-pass
                  (remove-bond mol atom neighbor)
+                 labels
                  neighbor
                  visited
                  (if (visited neighbor)
@@ -703,7 +704,7 @@
     (cond (= (:order bond) 2)
           (print "="))))
 
-(defn second-pass [mol atom bond visited rings open-rings]
+(defn second-pass [mol labels atom bond visited rings open-rings]
   (if (visited atom)
     [mol visited rings open-rings]
     (let [visited (conj visited atom)
@@ -732,6 +733,7 @@
                                                              (remove-bond mol bond))
                                                            mol
                                                            ring-bonds)
+                                                   labels
                                                    atom))
                mol mol visited visited rings rings open-rings open-rings]
           (if (seq neighbors)
@@ -741,6 +743,7 @@
                 (let [[mol visited rings open-rings]
                       (second-pass
                        (remove-bond mol atom neighbor)
+                       labels
                        neighbor
                        (bond? mol atom neighbor)
                        visited
@@ -757,6 +760,6 @@
   (let [mol (remove-atoms-of-element molecule "H")
         labels (smiles-canonical-labels mol)
         start (ffirst (sort-by second labels))]
-    (let [[new-mol _ rings] (first-pass mol start #{} #{})]
+    (let [[new-mol _ rings] (first-pass mol labels start #{} #{})]
       (with-out-str
-        (second-pass mol start nil #{} rings {})))))
+        (second-pass mol labels start nil #{} rings {})))))
