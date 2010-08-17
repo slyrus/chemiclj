@@ -718,14 +718,41 @@
     (print "%" number)))
 
 (defn write-bracket-atom [atom]
-  (let [element (:element atom)]
+  (let [element (:element atom)
+        hydrogens (:explicit-hydrogen-count atom)
+        charge (:charge atom)
+        isotope (:isotope atom)]
     (print "[")
+    (when isotope
+      (print isotope))
     (print (:id element))
+    (cond (= hydrogens 1)
+          (print "H")
+          (> hydrogens 1)
+          (do
+            (print "H")
+            (print hydrogens)))
+    (cond (= 1 charge)
+          (print "+")
+          (pos? charge)
+          (dotimes [i charge]
+            (print "+"))
+          (= -1 charge)
+          (print "-")
+          (neg? charge)
+          (dotimes [i (- charge)]
+            (print "-")))
     (print "]")))
 
 (defn write-atom [atom]
-  (let [element (:element atom)]
-    (if (organic-subset? element)
+  (let [element (:element atom)
+        hydrogens (:explicit-hydrogen-count atom)
+        charge (:charge atom)
+        isotope (:isotope atom)]
+    (if (and (organic-subset? element)
+             (nil? hydrogens)
+             (or (nil? charge) (zero? charge))
+             (nil? isotope))
       (print (:id element))
       (write-bracket-atom atom))))
 
@@ -785,9 +812,22 @@
                     (recur (rest neighbors) mol visited rings open-rings ring-count))))
               [mol visited rings open-rings ring-count])))))))
 
+(defn compute-explicit-hydrogens [mol]
+  ;; TODO add explicit hydrogen count here as necessary!
+  mol)
+
+(defn remove-simple-hydrogens [mol]
+  (reduce (fn [mol atom]
+            (if (:isotope atom)
+              mol
+              (remove-atom mol atom)))
+          mol
+          (get-atoms-of-element mol "H")))
+
 (defn write-smiles-string [molecule]
   ;; TODO special cases for H and H2
-  (let [mol (remove-atoms-of-element molecule "H")
+  (let [mol (remove-simple-hydrogens
+             (compute-explicit-hydrogens molecule))
         labels (smiles-canonical-labels mol)
         start (ffirst (sort-by second labels))]
     (let [[new-mol _ rings] (first-pass mol labels start #{} #{})]
