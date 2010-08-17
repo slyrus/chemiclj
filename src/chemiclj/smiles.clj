@@ -231,7 +231,7 @@
                         symbol
                         (str symbol (inc (get-atom-count context symbol)))
                         :isotope isotope
-                        :charge charge
+                        :charge (or charge 0)
                         :aromatic (:aromatic context)
                         :hybridization (:hybridization context)
                         :explicit-hydrogen-count (or hydrogens 0)))
@@ -258,7 +258,7 @@
                    context))))]
          atom))
 
-(defn- add-atom-and-bond [context atom last-atom order]
+(defn- add-atom-and-bond [context atom last-atom order direction]
   (let [{:keys [molecule aromatic]} context]
     (cond
      (= order 1) (add-single-bond
@@ -328,13 +328,14 @@
   (h/for "an atom"
          [atom (h/+ <organic-subset-atom> <bracket-expr>)
           _ (h/alter-context
-             (fn [{:keys [last-atom order aromatic] :as context} atom]
+             (fn [{:keys [last-atom order aromatic direction] :as context} atom]
                (assoc (inc-atom-count context (-> atom :element :id))
                  :molecule
                  (if last-atom
-                   (add-atom-and-bond context atom last-atom order)
+                   (add-atom-and-bond context atom last-atom order direction)
                    (add-atom (:molecule context) atom))
                  :order nil
+                 :direction nil
                  :aromatic nil))
              atom)
           _ (h/alter-context post-process-atom atom)]
@@ -712,6 +713,11 @@
     (cond (= (:order bond) 2)
           (print "="))))
 
+(defn write-ring-number [number]
+  (if (< number 10)
+    (print number)
+    (print "%" number)))
+
 (def *reuse-ring-number* false)
 
 (defn second-pass [mol labels atom bond visited rings open-rings ring-count]
@@ -726,7 +732,7 @@
                       (let [ring-num (if *reuse-ring-number*
                                        (first-empty open-rings)
                                        (inc ring-count))]
-                        (print ring-num)
+                        (write-ring-number ring-num)
                         [(assoc open-rings ring-num ring)
                          (conj ring-bonds (bond? mol (first ring) (second ring)))
                          (inc ring-count)]))
@@ -737,7 +743,7 @@
               (reduce (fn [open-rings [ring-num ring]]
                         (let [ring-bond (bond? mol (first ring) (second ring))]
                           (write-bond ring-bond))
-                        (print ring-num)
+                        (write-ring-number ring-num)
                         (dissoc open-rings ring-num))
                       open-rings
                       (sort-by key (filter #(= (second (val %)) atom) open-rings)))]
