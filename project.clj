@@ -1,5 +1,5 @@
 
-(defproject chemiclj "0.0.0"
+(defproject chemiclj "0.0.1"
   :description "A computational chemistry library in clojure"
   :dependencies [[org.clojure/clojure "1.2.0-RC3"]
                  [org.clojure/clojure-contrib "1.2.0-RC3"]]
