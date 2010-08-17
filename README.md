@@ -42,11 +42,18 @@ SMILES string `CC(C)C(C(=O)O)N`. To read a smiles string, use the
 function `chemiclj.smiles/read-smiles-string`, as in the following
 example:
 
+    user> (require ['chemiclj.smiles :as 'smiles])
+    nil
     user> (def alanine (smiles/read-smiles-string "CC(C)C(C(=O)O)N"))
     #'user/alanine
 
-NOTE: writing SMILES strings is not yet supported. Hopefully this
-feature will appear in the near future.
+and then to write it back out as a SMILES string:
+
+    user> (smiles/write-smiles-string alanine)
+    "CC(C)C(N)C(=O)O"
+
+Writing SMILES strings is still under development, but it should be
+fully supported in the near future.
 
 # Dependencies
 
