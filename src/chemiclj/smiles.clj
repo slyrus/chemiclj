@@ -673,21 +673,18 @@
 ;; ordering the neighbors if we are in a ring, or not. Or perhaps if
 ;; we're about to close a ring. I'm not sure which... The smiles paper
 ;; is unclear on this.
-(defn- smiles-neighbors [mol labels atom & [in-ring]]
+(defn- smiles-neighbors [mol labels atom]
   (let [bonds (bonds mol atom)]
-    (if (or true in-ring)
-      (map first (map #(graph/neighbors % atom)
-                      (sort-by #(vector ((comp - :order) %)
-                                        (labels (first (graph/neighbors % atom))))
-                               bonds)))
-      (map first (map #(graph/neighbors % atom)
-                      (sort-by #(labels (first (graph/neighbors % atom)))
-                               bonds))))))
+    (map first (map #(graph/neighbors % atom)
+                    (sort-by #(vector ((comp - :order) %)
+                                      (labels (first (graph/neighbors % atom))))
+                             bonds)))))
 
 (defn first-pass [mol labels atom visited rings]
   (let [visited (conj visited atom)
         element (:element atom)]
-    (loop [neighbors (filter (complement visited) (smiles-neighbors mol labels atom))
+    (loop [neighbors (filter (complement visited)
+                             (smiles-neighbors mol labels atom))
            mol mol visited visited rings rings]
       (if (seq neighbors)
         (let [neighbor (first neighbors)]
@@ -710,31 +707,36 @@
                               (sort (keys set)))))]
     (or (first x) (inc (count set)))))
 
-(defn print-bond [bond]
+(defn write-bond [bond]
   (when bond
     (cond (= (:order bond) 2)
           (print "="))))
 
-(defn second-pass [mol labels atom bond visited rings open-rings]
+(def *reuse-ring-number* false)
+
+(defn second-pass [mol labels atom bond visited rings open-rings ring-count]
   (if (visited atom)
     [mol visited rings open-rings]
     (let [visited (conj visited atom)
           element (:element atom)]
-      (print-bond bond)
+      (write-bond bond)
       (print (:id element))
-      (let [[open-rings ring-bonds]
-            (reduce (fn [[open-rings ring-bonds] ring]
-                      (let [ring-num (first-empty open-rings)]
+      (let [[open-rings ring-bonds ring-count]
+            (reduce (fn [[open-rings ring-bonds ring-count] ring]
+                      (let [ring-num (if *reuse-ring-number*
+                                       (first-empty open-rings)
+                                       (inc ring-count))]
                         (print ring-num)
                         [(assoc open-rings ring-num ring)
-                         (conj ring-bonds (bond? mol (first ring) (second ring)))]))
-                    [open-rings #{}]
+                         (conj ring-bonds (bond? mol (first ring) (second ring)))
+                         (inc ring-count)]))
+                    [open-rings #{} ring-count]
                     (filter #(= (first %) atom) rings))]
         ;; now for the ring closings
-        (let [closed-rings
+        (let [open-rings
               (reduce (fn [open-rings [ring-num ring]]
                         (let [ring-bond (bond? mol (first ring) (second ring))]
-                          (print-bond ring-bond))
+                          (write-bond ring-bond))
                         (print ring-num)
                         (dissoc open-rings ring-num))
                       open-rings
@@ -746,12 +748,12 @@
                                                              ring-bonds)
                                                      labels
                                                      atom))
-                 mol mol visited visited rings rings open-rings open-rings]
+                 mol mol visited visited rings rings open-rings open-rings ring-count ring-count]
             (if (seq neighbors)
               (let [branch (seq (rest neighbors))]
                 (when branch (print "("))
                 (let [neighbor (first neighbors)]
-                  (let [[mol visited rings open-rings]
+                  (let [[mol visited rings open-rings ring-count]
                         (second-pass
                          (remove-bond mol atom neighbor)
                          labels
@@ -761,17 +763,17 @@
                          (if (visited neighbor)
                            (conj rings [neighbor atom])
                            rings)
-                         open-rings)]
+                         open-rings
+                         ring-count)]
                     (when branch (print ")"))
-                    (recur (rest neighbors) mol visited rings open-rings))))
-              [mol visited rings open-rings])))))))
+                    (recur (rest neighbors) mol visited rings open-rings ring-count))))
+              [mol visited rings open-rings ring-count])))))))
 
 (defn write-smiles-string [molecule]
   ;; TODO special cases for H and H2
   (let [mol (remove-atoms-of-element molecule "H")
         labels (smiles-canonical-labels mol)
         start (ffirst (sort-by second labels))]
-    (print (map #(list ((comp name key) %) (val %)) labels))
     (let [[new-mol _ rings] (first-pass mol labels start #{} #{})]
       (with-out-str
-        (second-pass mol labels start nil #{} rings {})))))
+        (second-pass mol labels start nil #{} rings {} 0)))))
