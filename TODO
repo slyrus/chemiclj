@@ -41,5 +41,11 @@
  DONE bugfix: inappropriate double bond inferrence between two aromatic nitrogens
    where one has three neighbors already (see sildenafil N2=N1).
 
+ DONE BUGFIX: default charge for bracket atoms is nil instead of 0
 
-2. TODO SMILES Writing
+
+2. SMILES Writing
+
+ - @ and @@
+
+ - bracket atoms
