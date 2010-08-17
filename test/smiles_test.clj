@@ -60,7 +60,7 @@
               "l-alanine" "C[C@@H](C(=O)O)N"
               "valine" "CC(C)C(C(=O)O)N"
               "paroxetine" "C1CNCC(C1C2=CC=C(C=C2)F)COC3=CC4=C(C=C3)OCO4"
-              "tamoxifen" "CCC(C1=CC=CC=C1)=C(C2=CC=CC=C2)C3=CC=C(OCCN(C)C)C=C3"
+              "tamoxifen" "CC/C(=C(\\C1=CC=CC=C1)/C2=CC=C(C=C2)OCCN(C)C)/C3=CC=CC=C3"
               "anastrozole" "CC(C)(C#N)C1=CC(=CC(=C1)CN2C=NC=N2)C(C)(C)C#N"
               "acetominophen" "CC(=O)NC1=CC=C(C=C1)O"
               "morphine" "CN1CCC23C4C1CC5=C2C(=C(C=C5)O)OC3C(C=C4)O"
@@ -78,7 +78,9 @@
               "capsaicin" "COc1cc(CNC(=O)CCCC\\C=C\\C(C)C)ccc1O"
               "tricky" "[C@@]123[C@H](C(C=C3)(C)C)CC[C@@](C1)(CCC2)C"
               "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol" "OCC(CC)CCC(CN)CN"
-              "cubane" "C12C3C4C1C5C4C3C25"}))
+              "cubane" "C12C3C4C1C5C4C3C25"
+              "cyclopropane" "C1CC1"
+              "acetone" "CC(C)=O"}))
 
 (defn get-molecule [name]
   (get *molecules* name))
