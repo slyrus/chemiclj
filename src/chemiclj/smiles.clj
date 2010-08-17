@@ -664,11 +664,11 @@
 
 ;;; TODO
 
-(def *organic-subset-atoms*
+(def *organic-subset-elements*
      (set (map element/get-element ["B" "C" "N" "O" "P" "S" "F" "Cl" "Br" "I"])))
 
 (defn organic-subset? [atom]
-  (*organic-subset-atoms* atom))
+  (*organic-subset-elements* atom))
 
 ;; the problem here is that we need to use different criteria for
 ;; ordering the neighbors if we are in a ring, or not. Or perhaps if
@@ -682,8 +682,7 @@
                              bonds)))))
 
 (defn first-pass [mol labels atom visited rings]
-  (let [visited (conj visited atom)
-        element (:element atom)]
+  (let [visited (conj visited atom)]
     (loop [neighbors (filter (complement visited)
                              (smiles-neighbors mol labels atom))
            mol mol visited visited rings rings]
@@ -718,15 +717,26 @@
     (print number)
     (print "%" number)))
 
+(defn write-bracket-atom [atom]
+  (let [element (:element atom)]
+    (print "[")
+    (print (:id element))
+    (print "]")))
+
+(defn write-atom [atom]
+  (let [element (:element atom)]
+    (if (organic-subset? element)
+      (print (:id element))
+      (write-bracket-atom atom))))
+
 (def *reuse-ring-number* false)
 
 (defn second-pass [mol labels atom bond visited rings open-rings ring-count]
   (if (visited atom)
     [mol visited rings open-rings]
-    (let [visited (conj visited atom)
-          element (:element atom)]
+    (let [visited (conj visited atom)]
       (write-bond bond)
-      (print (:id element))
+      (write-atom atom)
       (let [[open-rings ring-bonds ring-count]
             (reduce (fn [[open-rings ring-bonds ring-count] ring]
                       (let [ring-num (if *reuse-ring-number*
