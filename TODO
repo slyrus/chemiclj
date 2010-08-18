@@ -43,6 +43,8 @@
 
  DONE BUGFIX: default charge for bracket atoms is nil instead of 0
 
+ DONE handle chiral configurations in cycles, e.g. "C[C@H]1CCCCO1"
+
 
 2. SMILES Writing
 
