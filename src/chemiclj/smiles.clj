@@ -314,6 +314,16 @@
   (assoc context
     :configurations (fixup-configuration context atom last-atom)))
 
+;; normally, we connect a new atom to the previous atoms
+;; configuration, if any. But if we're closing a ring we also need to
+;; add the current atom to the configurations of the ring opening
+;; atom. Fortunately, that happens to be the new atom and the atom
+;; we're connecting it to is the last-atom, so we can just reverse the
+;; arguments to fixup-configuration and the right thing will happen.
+(defn update-ring-atom-configuration [{:keys [last-atom] :as context} atom]
+  (assoc context
+    :configurations (fixup-configuration context last-atom atom)))
+
 (defn update-last-atom [context atom]
   (assoc context :last-atom atom))
 
@@ -391,16 +401,18 @@
           (except/throwf "SMILES parsing error: %d and %d mismatch for ring bond order"
                          order specified-order))
         (let [mol (add-ring-bond mol atom last-atom (or order specified-order))]
-          [mol (dissoc (:pending-rings context) ring)]))
+          [mol (dissoc (:pending-rings context) ring) atom]))
       (do
-        [mol (conj (:pending-rings context)
-                   {ring {:atom last-atom
-                          :order (bond-symbol-order bond-symbol)}})]))))
+        [mol
+         (conj (:pending-rings context)
+               {ring {:atom last-atom
+                      :order (bond-symbol-order bond-symbol)}})
+         nil]))))
 
 (h/defrule <ringbond>
   (h/label "a ring bond"
            (h/for [context h/<fetch-context>
-                   [mol pending]
+                   [mol pending atom]
                    (h/hook
                     (fn [[ring-num bond-symbol]]
                       (process-ring context ring-num bond-symbol))
@@ -416,11 +428,12 @@
                              (h/cat
                               (h/lex (h/opt <bond>))
                               <decimal-digit>))))
-                   _ (h/alter-context
-                      (fn [context] (assoc context
-                                      :molecule mol
-                                      :pending-rings pending)))]
-                  _)))
+                   context (h/alter-context
+                            (fn [context]
+                              (assoc (update-ring-atom-configuration context atom)
+                                :molecule mol
+                                :pending-rings pending)))]
+                  context)))
 
 (h/defrule <atom-expr>
   (h/label "an atom expression"
