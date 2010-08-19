@@ -1,11 +1,11 @@
 
 1. SMILES Parsing
 
- - double bond configuration (E/Z, up/down)
-
  - deal with dot -- ???
 
  - support wildcards
+
+ - error checking for double bond configurations
 
  HALF-DONE throw an error if there is a conflict with bond orders specified
    at ring opening and closing -- this is done, but probably done incorrectly
@@ -44,6 +44,9 @@
  DONE BUGFIX: default charge for bracket atoms is nil instead of 0
 
  DONE handle chiral configurations in cycles, e.g. "C[C@H]1CCCCO1"
+
+ DONE double bond configuration (E/Z, up/down)
+
 
 
 2. SMILES Writing

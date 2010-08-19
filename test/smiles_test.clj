@@ -80,7 +80,9 @@
               "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol" "OCC(CC)CCC(CN)CN"
               "cubane" "C12C3C4C1C5C4C3C25"
               "cyclopropane" "C1CC1"
-              "acetone" "CC(C)=O"}))
+              "acetone" "CC(C)=O"
+              "E-1,2-difluoroethane" "F/C=C/F"
+              "Z-1,2-difluoroethane" "F\\C=C/F"}))
 
 (defn get-molecule [name]
   (get *molecules* name))

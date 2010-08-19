@@ -92,7 +92,6 @@ SMILES string and compute the mass and exact-mass of the molecule:
     152.14732
     user> (chem/exact-mass vanillin)
     152.04736
-    user> 
 
 # License
 
