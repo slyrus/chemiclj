@@ -189,17 +189,13 @@
             {:hydrogens (or hydrogen-count 1)})
           (h/cat (h/lit \H) (h/opt <decimal-natural-number>))))
 
-(h/defrule <configuration>
-  (h/for [context h/<fetch-context>
-          config (h/+ (h/hook (fn [config]
-                                (make-tetrahedral-atom-configuration
-                                 (:last-atom context) nil nil nil))
-                              (h/cat (h/lex (h/lit \@)) (h/lit \@)))
-                      (h/hook (fn [config]
-                                (make-tetrahedral-atom-configuration
-                                 (:last-atom context) nil nil nil))
-                              (h/lit \@)))]
-         {:configuration config}))
+(h/defrule <orientation>
+  (h/hook (fn [config]
+            {:orientation config})
+          (h/+ (h/chook :clockwise
+                        (h/cat (h/lex (h/lit \@)) (h/lit \@)))
+               (h/chook :counter-clockwise
+                        (h/lit \@)))))
 
 (h/defrule <charge>
   (h/+
@@ -218,24 +214,27 @@
           (h/rep*
            (h/+
             <hydrogen-count>
-            <configuration>
+            <orientation>
             <charge>))))
 
 (h/defrule <bracket-expr>
-  (h/for [[atom configuration]
+  (h/for [[atom orientation]
           (h/hook (fn [[isotope symbol
-                        {:keys #{hydrogens configuration charge}}
+                        {:keys #{hydrogens orientation charge}}
                         class context]]
-                    [(let [symbol (str/capitalize symbol)]
-                       (make-atom
-                        symbol
-                        (str symbol (inc (get-atom-count context symbol)))
-                        :isotope isotope
-                        :charge (or charge 0)
-                        :aromatic (:aromatic context)
-                        :hybridization (:hybridization context)
-                        :explicit-hydrogen-count (or hydrogens 0)))
-                     configuration])
+                    (let [symbol (str/capitalize symbol)
+                          atom (make-atom
+                                symbol
+                                (str symbol (inc (get-atom-count context symbol)))
+                                :isotope isotope
+                                :charge (or charge 0)
+                                :aromatic (:aromatic context)
+                                :hybridization (:hybridization context)
+                                  :explicit-hydrogen-count (or hydrogens 0))]
+                      [atom
+                       (if orientation
+                         (make-tetrahedral-atom-configuration
+                          atom orientation (:last-atom context) nil nil nil))]))
                   (h/label "a bracket expression"
                            (h/circumfix <left-bracket>
                                         (h/cat
@@ -252,30 +251,48 @@
                (let [context (assoc context
                                :aromatic nil
                                :aromatic-atoms (conj (:aromatic-atoms context) atom))]
-                 (if configuration
+                 (if orientation
                    (assoc context :configurations
-                          (assoc (:configurations context) atom configuration))
+                          (assoc (:configurations context) atom orientation))
                    context))))]
          atom))
 
+
 (defn- add-atom-and-bond [context atom last-atom order direction]
-  (let [{:keys [molecule aromatic]} context]
-    (cond
-     (= order 1) (add-single-bond
-                  (add-atom molecule atom)
-                  atom last-atom)
-     (= order 2) (add-double-bond
-                  (add-atom molecule atom)
-                  atom last-atom)
-     (= order 3) (add-triple-bond
-                  (add-atom molecule atom)
-                  atom last-atom)
-     (= order 4) (add-quadruple-bond
-                  (add-atom molecule atom)
-                  atom last-atom)
-     true (add-bond
-           (add-atom (:molecule context) atom)
-           atom last-atom))))
+  (let [mol (:molecule context)]
+    (let [mol
+          (cond (= direction :up)
+                (let [config (make-relative-vertical-configuration atom last-atom)]
+                  (add-configuration
+                   (add-configuration
+                    mol
+                    {last-atom config})
+                   {atom config}))
+                (= direction :down)
+                (let [config (make-relative-vertical-configuration last-atom atom)]
+                  (add-configuration
+                   (add-configuration
+                    mol
+                    {last-atom config})
+                   {atom config}))
+                true mol)]
+      (let [{:keys [molecule aromatic]} context]
+        (cond
+         (= order 1) (add-single-bond
+                      (add-atom molecule atom)
+                      atom last-atom)
+         (= order 2) (add-double-bond
+                      (add-atom molecule atom)
+                      atom last-atom)
+         (= order 3) (add-triple-bond
+                      (add-atom molecule atom)
+                      atom last-atom)
+         (= order 4) (add-quadruple-bond
+                      (add-atom molecule atom)
+                      atom last-atom)
+         true (add-bond
+               (add-atom mol atom)
+               atom last-atom))))))
 
 (defn fixup-configuration [context atom last-atom]
   (if last-atom 
@@ -620,7 +637,7 @@
        hydrogens)))
 
 (defn smiles-atomic-invariants [full-mol]
-  (let [mol (chemiclj.core/remove-atoms-of-element full-mol "H")]
+  (let [mol (remove-atoms-of-element full-mol "H")]
     (reduce (fn [m atom]
               (assoc m atom (smiles-atomic-invariant full-mol mol atom)))
             {}

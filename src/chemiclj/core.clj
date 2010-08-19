@@ -197,10 +197,10 @@
       (add-bond (add-atom mol atm) (make-bond atm attached-to))
       (add-atom mol atm))))
 
-(defrecord TetrahedralAtomConfiguration [w x y z])
+(defrecord TetrahedralAtomConfiguration [center direction w x y z])
 
-(defn make-tetrahedral-atom-configuration [w x y z]
-  (TetrahedralAtomConfiguration. w x y z))
+(defn make-tetrahedral-atom-configuration [center direction w x y z]
+  (TetrahedralAtomConfiguration. center direction w x y z))
 
 (defn get-tetrahedral-configuration-vector [configuration]
   [(:w configuration) (:x configuration) (:y configuration) (:z configuration)])
@@ -219,6 +219,11 @@
         (nil? (:z configuration)) (assoc configuration :z atom)
         true (except/throwf "Too many neighbors for tetrahedral atom %s"
                             atom)))
+
+(defrecord RelativeVerticalConfiguration [top bottom])
+
+(defn make-relative-vertical-configuration [top bottom]
+  (RelativeVerticalConfiguration. top bottom))
 
 (defrecord DoubleBondConfiguration [a b c d])
 
