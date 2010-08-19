@@ -131,7 +131,8 @@
                (assoc mol :_graph (g/remove-edge _graph atom1 atom2)))
   (configurations [mol] _configurations)
   (add-configuration [mol configuration]
-                     (assoc mol :_configurations (conj _configurations configuration)))
+                     (update-in mol [:_configurations (key configuration)]
+                                #(conj % (val configuration))))
 
   PMass
   (mass [mol] (reduce + (map mass (atoms mol))))
@@ -161,13 +162,13 @@
   ([]
      (Molecule. (g/make-graph) nil {}))
   ([atoms atom-pairs-vec]
+     (make-molecule atoms atom-pairs-vec nil))
+  ([atoms atom-pairs-vec name]
      (reduce
       (fn [mol [atom1 atom2]]
         (assoc mol :_graph (g/add-edge (:_graph mol) atom1 atom2 (make-bond atom1 atom2))))
       (Molecule. (g/make-graph atoms) nil {})
-      atom-pairs-vec))
-  ([atoms atom-pairs-vec name]
-     (assoc (make-molecule atoms atom-pairs-vec) :name name)))
+      atom-pairs-vec)))
 
 (defn name-molecule [mol name]
   (conj mol {:_name name}))

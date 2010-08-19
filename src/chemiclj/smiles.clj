@@ -252,8 +252,8 @@
                                :aromatic nil
                                :aromatic-atoms (conj (:aromatic-atoms context) atom))]
                  (if orientation
-                   (assoc context :configurations
-                          (assoc (:configurations context) atom orientation))
+                   (update-in context [:configurations atom]
+                              #(if %1 (conj %1 orientation) (list orientation)))
                    context))))]
          atom))
 
@@ -266,15 +266,15 @@
                   (add-configuration
                    (add-configuration
                     mol
-                    {last-atom config})
-                   {atom config}))
+                    (first {atom config}))
+                   (first {last-atom config})))
                 (= direction :down)
                 (let [config (make-relative-vertical-configuration last-atom atom)]
                   (add-configuration
                    (add-configuration
                     mol
-                    {last-atom config})
-                   {atom config}))
+                    (first {atom config}))
+                   (first {last-atom config})))
                 true mol)]
       (let [{:keys [molecule aromatic]} context]
         (cond
@@ -296,12 +296,17 @@
 
 (defn fixup-configuration [context atom last-atom]
   (if last-atom 
-    (let [configuration (get (:configurations context) last-atom)]
+    (let [configuration (first
+                         (filter #(= (class %1)
+                                     chemiclj.core.TetrahedralAtomConfiguration)
+                                 (get (:configurations context) last-atom)))]
       (if configuration
-        (assoc (:configurations context) last-atom
-               (add-tetrahedral-configuration-atom configuration atom))
-        (:configurations context)))
-    (:configurations context)))
+        (do
+          (update-in context [:configurations last-atom]
+                     (fn [x] (conj (remove #{configuration} x)
+                                   (add-tetrahedral-configuration-atom configuration atom)))))
+        context))
+    context))
 
 (defn context-add-1-hydrogen [context atom]
   (let [mol (:molecule context)
@@ -309,11 +314,8 @@
     (let [context (inc-atom-count
                    (assoc context :molecule
                           (add-bond (add-atom mol hatom) atom hatom))
-                   "H")
-          configurations (fixup-configuration context hatom atom)]
-      (if configurations
-        (assoc context :configurations configurations)
-        context))))
+                   "H")]
+      (fixup-configuration context hatom atom))))
 
 (defn context-add-n-hydrogens [context atom n]
   (loop [context context num n]
@@ -328,8 +330,7 @@
       context)))
 
 (defn update-configuration [{:keys [last-atom] :as context} atom]
-  (assoc context
-    :configurations (fixup-configuration context atom last-atom)))
+  (fixup-configuration context atom last-atom))
 
 ;; normally, we connect a new atom to the previous atoms
 ;; configuration, if any. But if we're closing a ring we also need to
@@ -338,8 +339,7 @@
 ;; we're connecting it to is the last-atom, so we can just reverse the
 ;; arguments to fixup-configuration and the right thing will happen.
 (defn update-ring-atom-configuration [{:keys [last-atom] :as context} atom]
-  (assoc context
-    :configurations (fixup-configuration context last-atom atom)))
+  (fixup-configuration context last-atom atom))
 
 (defn update-last-atom [context atom]
   (assoc context :last-atom atom))
