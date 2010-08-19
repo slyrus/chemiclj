@@ -58,9 +58,8 @@
   (or (get (:atom-counts context) element) 0))
 
 (defn inc-atom-count [context element]
-  (assoc context :atom-counts
-         (assoc (:atom-counts context) element
-                (inc (get-atom-count context element)))))
+  (update-in context [:atom-counts element]
+             #(inc (or % 0))))
 
 (defn str* [objects]
   (apply str objects))
