@@ -121,7 +121,17 @@
 
 (map (fn [[k v]] [(name k) (map (fn [x] (names [(:top x)
                                                 (:bottom x)])) v)])
-     (configurations (smiles/read-smiles-string "Br/C(=C)/I")))
+     (configurations (smiles/read-smiles-string "Br/C(=C\\F)/I")))
+
+(= (set
+    (map (fn [[k v]] [(name k) (map (fn [x] (names [(:top x)
+                                                    (:bottom x)])) v)])
+         (configurations (smiles/read-smiles-string "Br/C(/I)=C/F"))))
+
+   (set
+    (map (fn [[k v]] [(name k) (map (fn [x] (names [(:top x)
+                                                    (:bottom x)])) v)])
+         (configurations (smiles/read-smiles-string "Br/C(=C/F)/I")))))
 
 (map (fn [[k v]] [(name k) (map (fn [x] (names [(:top x)
                                                 (:bottom x)])) v)])
@@ -151,3 +161,19 @@
                                  (filter (comp #{2} :order) (bonds mol))))]
               (filter #(s (first %)) (configurations mol))))))
 
+
+;;; oxytocin
+(map (fn [[k v]]
+       [(name k)
+        (map (fn [y]
+               (map (fn [x]
+                      (if x
+                        (cond (= (class x) chemiclj.core.RelativeVerticalConfiguration)
+                              (names [(:top x) (:bottom x)])
+                              (= (class x) chemiclj.core.TetrahedralAtomConfiguration)
+                              [(name (:center x))
+                               (:direction x)
+                               (map names [(:w x) (:w x) (:w x) (:w x)])])))
+                    y))
+             v)])
+     (configurations (smiles-test/get-molecule "oxytocin")))
