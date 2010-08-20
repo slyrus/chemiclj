@@ -47,7 +47,7 @@
 
  DONE double bond configuration (E/Z, up/down)
 
-
+ DONE BUGFIX: chiral ring bonds don't get recorded in the configuration properly
 
 2. SMILES Writing
 
