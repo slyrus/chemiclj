@@ -111,3 +111,43 @@
               (let [mol (smiles-test/get-molecule
                          "cubane")]
                 (smiles/smiles-canonical-labels mol))))
+
+
+(smiles/read-smiles-string "Br/C(=C/F)I")
+
+(map (fn [[k v]] [(name k) (map (fn [x] (names [(:top x)
+                                                (:bottom x)])) v)])
+     (configurations (smiles/read-smiles-string "F/C=C/F")))
+
+(map (fn [[k v]] [(name k) (map (fn [x] (names [(:top x)
+                                                (:bottom x)])) v)])
+     (configurations (smiles/read-smiles-string "Br/C(=C)/I")))
+
+(map (fn [[k v]] [(name k) (map (fn [x] (names [(:top x)
+                                                (:bottom x)])) v)])
+     (configurations (smiles-test/get-molecule "tamoxifen")))
+
+
+;; find the double bonds in tamoxifen:
+(filter (comp #{2} :order) (bonds (smiles-test/get-molecule "tamoxifen")))
+
+;; get the names of all the atoms that participate in double bonds in tamoxifen:
+(map (comp names atoms)
+     (filter (comp #{2} :order) (bonds (smiles-test/get-molecule "tamoxifen"))))
+
+;; or
+(names
+ (reduce #(into %1 (atoms %2))
+         []
+         (filter (comp #{2} :order) (bonds (smiles-test/get-molecule "tamoxifen")))))
+
+;; now let's get the top atom of each configuration attached to each
+;; atom that participates in a double bond:
+(let [mol (smiles-test/get-molecule "tamoxifen")]
+  (map (partial map (comp name :top))
+       (map second
+            (let [s (set (reduce #(into %1 (atoms %2))
+                                 []
+                                 (filter (comp #{2} :order) (bonds mol))))]
+              (filter #(s (first %)) (configurations mol))))))
+
