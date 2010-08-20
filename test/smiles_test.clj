@@ -82,7 +82,13 @@
               "cyclopropane" "C1CC1"
               "acetone" "CC(C)=O"
               "E-1,2-difluoroethane" "F/C=C/F"
-              "Z-1,2-difluoroethane" "F\\C=C/F"}))
+              "Z-1,2-difluoroethane" "F\\C=C/F"
+
+              ;; chiral ring-closing atom
+              "chiral-cycle-test" "N1C[C@H]1C"
+
+              ;; chiral ring-closing atom
+              "chiral-cycle-test-2" "[H][C@]1(Br)CCC1"})) 
 
 (defn get-molecule [name]
   (get *molecules* name))
