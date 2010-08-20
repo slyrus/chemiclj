@@ -33,9 +33,7 @@
   (:require [chemiclj.element :as element]
             [chemiclj.smiles :as smiles]
             [smiles-test :as smiles-test]
-            [shortcut.graph :as graph]
-            [clojure.contrib.lazy-seqs :as lazy-seqs]
-            [clojure.contrib.def :as def]))
+            [shortcut.graph :as graph]))
 
 (def c1 (make-atom :c "C1"))
 (def h1 (make-atom :h "H1"))
