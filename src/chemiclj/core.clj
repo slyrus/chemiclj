@@ -132,7 +132,7 @@
   (configurations [mol] _configurations)
   (add-configuration [mol configuration]
                      (update-in mol [:_configurations (key configuration)]
-                                #(conj % (val configuration))))
+                                #(into % (val configuration))))
 
   PMass
   (mass [mol] (reduce + (map mass (atoms mol))))
@@ -225,7 +225,7 @@
   (reduce (fn [m [k v]]
             (if (= v old)
               (assoc m k new)
-              (assoc m k v)))
+              m))
           m
           m))
 
@@ -233,7 +233,7 @@
   (reduce (fn [m [k v]]
             (if (= v old)
               (assoc m k new)
-              (assoc m k v)))
+              m))
           configuration
           configuration))
 

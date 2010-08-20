@@ -264,15 +264,15 @@
                   (add-configuration
                    (add-configuration
                     mol
-                    (first {atom config}))
-                   (first {last-atom config})))
+                    (first {atom [config]}))
+                   (first {last-atom [config]})))
                 (= direction :down)
                 (let [config (make-relative-vertical-configuration last-atom atom)]
                   (add-configuration
                    (add-configuration
                     mol
-                    (first {atom config}))
-                   (first {last-atom config})))
+                    (first {atom [config]}))
+                   (first {last-atom [config]})))
                 true mol)]
       (let [{:keys [molecule aromatic]} context]
         (cond
