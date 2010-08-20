@@ -221,6 +221,22 @@
         true (except/throwf "Too many neighbors for tetrahedral atom %s"
                             atom)))
 
+(defn replace-val [m old new]
+  (reduce (fn [m [k v]]
+            (if (= v old)
+              (assoc m k new)
+              (assoc m k v)))
+          m
+          m))
+
+(defn replace-tetrahedral-configuration-atom [configuration old new]
+  (reduce (fn [m [k v]]
+            (if (= v old)
+              (assoc m k new)
+              (assoc m k v)))
+          configuration
+          configuration))
+
 (defrecord RelativeVerticalConfiguration [top bottom])
 
 (defn make-relative-vertical-configuration [top bottom]

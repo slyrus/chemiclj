@@ -256,7 +256,6 @@
                    context))))]
          atom))
 
-
 (defn- add-atom-and-bond [context atom last-atom order direction]
   (let [mol (:molecule context)]
     (let [mol
@@ -300,10 +299,9 @@
                                      chemiclj.core.TetrahedralAtomConfiguration)
                                  (get (:configurations context) last-atom)))]
       (if configuration
-        (do
-          (update-in context [:configurations last-atom]
-                     (fn [x] (conj (remove #{configuration} x)
-                                   (add-tetrahedral-configuration-atom configuration atom)))))
+        (update-in context [:configurations last-atom]
+                   (fn [x] (conj (remove #{configuration} x)
+                                 (add-tetrahedral-configuration-atom configuration atom))))
         context))
     context))
 
@@ -337,8 +335,10 @@
 ;; atom. Fortunately, that happens to be the new atom and the atom
 ;; we're connecting it to is the last-atom, so we can just reverse the
 ;; arguments to fixup-configuration and the right thing will happen.
+;;
+;; Unless of course it was the ring opening that was chiral... hmm...
 (defn update-ring-atom-configuration [{:keys [last-atom] :as context} atom]
-  (fixup-configuration context last-atom atom))
+  (fixup-configuration context atom last-atom))
 
 (defn update-last-atom [context atom]
   (assoc context :last-atom atom))
@@ -417,18 +417,48 @@
           (except/throwf "SMILES parsing error: %d and %d mismatch for ring bond order"
                          order specified-order))
         (let [mol (add-ring-bond mol atom last-atom (or order specified-order))]
-          [mol (dissoc (:pending-rings context) ring) atom]))
+          [(let [configuration (first
+                                (filter #(= (class %1)
+                                            chemiclj.core.TetrahedralAtomConfiguration)
+                                        (get (:configurations context) atom)))]
+             (if configuration
+               (do
+                 (update-in
+                  context [:configurations atom]
+                  (fn [x] (conj (remove #{configuration} x)
+                                (replace-tetrahedral-configuration-atom
+                                 configuration
+                                 ring last-atom)))))
+               context))
+           mol (dissoc (:pending-rings context) ring) atom]))
       (do
-        [mol
+        [(let [configuration (first
+                              (filter #(= (class %1)
+                                          chemiclj.core.TetrahedralAtomConfiguration)
+                                      (get (:configurations context) last-atom)))]
+           (if configuration
+             (update-in
+              context [:configurations last-atom]
+              (fn [x] (conj (remove #{configuration} x)
+                            (add-tetrahedral-configuration-atom configuration ring))))
+             context))
+         mol
          (conj (:pending-rings context)
                {ring {:atom last-atom
                       :order (bond-symbol-order bond-symbol)}})
          nil]))))
 
+;;; FIXME Now this is broken. We should not call
+;;; update-ring-atom-configuration for ring openings!!! Well, no,
+;;; that's not really the problem. The problem is what to do with
+;;; chiral ring opening bonds??
+;;;
+;;; FIXME: this context/hook stuff is a big giant mess. please clean
+;;; this up.
 (h/defrule <ringbond>
   (h/label "a ring bond"
            (h/for [context h/<fetch-context>
-                   [mol pending atom]
+                   [context2 mol pending atom]
                    (h/hook
                     (fn [[ring-num bond-symbol]]
                       (process-ring context ring-num bond-symbol))
@@ -446,7 +476,7 @@
                               <decimal-digit>))))
                    context (h/alter-context
                             (fn [context]
-                              (assoc (update-ring-atom-configuration context atom)
+                              (assoc (update-ring-atom-configuration context2 atom)
                                 :molecule mol
                                 :pending-rings pending)))]
                   context)))
@@ -593,7 +623,6 @@
 ;;; 5. rank the product of the primes using the previous ranks to
 ;;;    break ties
 
-
 ;;; I _think_ the SMILES spec requires us to use 1 for negative
 ;;; charges and 0 otherwise.
 (defn charge-sgn [num] (if (neg? num) 1 0))
@@ -666,7 +695,6 @@
   (zipmap
    (map first coll)
    (map inc (rank-by second coll))))
-
 
 ;;; FIXME! We need to fix this such that we don't sort the atoms by
 ;;; name, which means we need to preserve the order of atoms between
