@@ -112,7 +112,6 @@
                          "cubane")]
                 (smiles/smiles-canonical-labels mol))))
 
-
 (smiles/read-smiles-string "Br/C(=C/F)I")
 
 (map (fn [[k v]] [(name k) (map (fn [x] (names [(:top x)
@@ -165,15 +164,61 @@
 ;;; oxytocin
 (map (fn [[k v]]
        [(name k)
-        (map (fn [y]
-               (map (fn [x]
-                      (if x
-                        (cond (= (class x) chemiclj.core.RelativeVerticalConfiguration)
-                              (names [(:top x) (:bottom x)])
-                              (= (class x) chemiclj.core.TetrahedralAtomConfiguration)
-                              [(name (:center x))
-                               (:direction x)
-                               (map names [(:w x) (:w x) (:w x) (:w x)])])))
-                    y))
+        (map (fn [x]
+               (cond (= (class x) chemiclj.core.RelativeVerticalConfiguration)
+                     (names [(:top x) (:bottom x)])
+                     (= (class x) chemiclj.core.TetrahedralAtomConfiguration)
+                     [(name (:center x))
+                      (:direction x)
+                      [(name (:w x))
+                       (name (:x x))
+                       (if (:y x) (name (:y x)) nil)
+                       (if (:z x) (name (:z x)) nil)]]))
              v)])
      (configurations (smiles-test/get-molecule "oxytocin")))
+
+;;;
+(map (fn [[k v]]
+       [(name k)
+        (map (fn [x]
+               (cond (= (class x) chemiclj.core.RelativeVerticalConfiguration)
+                     (names [(:top x) (:bottom x)])
+                     (= (class x) chemiclj.core.TetrahedralAtomConfiguration)
+                     [(name (:center x))
+                      (:direction x)
+                      [(name (:w x))
+                       (name (:x x))
+                       (if (:y x) (name (:y x)) nil)
+                       (if (:z x) (name (:z x)) nil)]]))
+             v)])
+     (configurations (smiles/read-smiles-string "C[C@H](Br)I")))
+
+(map (fn [[k v]]
+       [(name k)
+        (map (fn [x]
+               (cond (= (class x) chemiclj.core.RelativeVerticalConfiguration)
+                     (names [(:top x) (:bottom x)])
+                     (= (class x) chemiclj.core.TetrahedralAtomConfiguration)
+                     [(name (:center x))
+                      (:direction x)
+                      [(name (:w x))
+                       (name (:x x))
+                       (if (:y x) (name (:y x)) nil)
+                       (if (:z x) (name (:z x)) nil)]]))
+             v)])
+     (configurations (smiles/read-smiles-string "N1C[C@H]1C")))
+
+(map (fn [[k v]]
+       [(name k)
+        (map (fn [x]
+               (cond (= (class x) chemiclj.core.RelativeVerticalConfiguration)
+                     (names [(:top x) (:bottom x)])
+                     (= (class x) chemiclj.core.TetrahedralAtomConfiguration)
+                     [(name (:center x))
+                      (:direction x)
+                      [(name (:w x))
+                       (name (:x x))
+                       (if (:y x) (name (:y x)) nil)
+                       (if (:z x) (name (:z x)) nil)]]))
+             v)])
+     (configurations (smiles/read-smiles-string "[H][C@]1(Br)CCC1")))
