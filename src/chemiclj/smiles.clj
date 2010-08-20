@@ -217,7 +217,7 @@
             <charge>))))
 
 (h/defrule <bracket-expr>
-  (h/for [[atom orientation]
+  (h/for [[atom configuration]
           (h/hook (fn [[isotope symbol
                         {:keys #{hydrogens orientation charge}}
                         class context]]
@@ -229,7 +229,7 @@
                                 :charge (or charge 0)
                                 :aromatic (:aromatic context)
                                 :hybridization (:hybridization context)
-                                  :explicit-hydrogen-count (or hydrogens 0))]
+                                :explicit-hydrogen-count (or hydrogens 0))]
                       [atom
                        (if orientation
                          (make-tetrahedral-atom-configuration
@@ -250,9 +250,9 @@
                (let [context (assoc context
                                :aromatic nil
                                :aromatic-atoms (conj (:aromatic-atoms context) atom))]
-                 (if orientation
+                 (if configuration
                    (update-in context [:configurations atom]
-                              #(if %1 (conj %1 orientation) (list orientation)))
+                              #(if %1 (conj %1 configuration) (list configuration)))
                    context))))]
          atom))
 
