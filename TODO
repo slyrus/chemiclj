@@ -7,6 +7,10 @@
 
  - error checking for double bond configurations
 
+ - support configurations for bonds at opening and closing of rings
+
+ - support %xx two-digit ring symbols
+
  HALF-DONE throw an error if there is a conflict with bond orders specified
    at ring opening and closing -- this is done, but probably done incorrectly
 
@@ -57,4 +61,4 @@
 
  - uggh... writing up/down double-bond configurations
 
- 
+ - write disconnected molecules ([Na+].[Cl-] being the simple example)
