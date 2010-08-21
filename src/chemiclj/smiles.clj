@@ -442,12 +442,9 @@
                              {ring {:atom last-atom
                                     :order (bond-symbol-order bond-symbol)}})))))
 
-;;; FIXME: this context/hook stuff is a big giant mess. please clean
-;;; this up.
 (h/defrule <ringbond>
   (h/label "a ring bond"
-           (h/for [context h/<fetch-context>
-                   [ring-num bond-symbol]
+           (h/for [[ring-num bond-symbol]
                    (h/+
                     (h/hook (fn [[bond _ digit1 digit2]]
                               (when (and digit1 digit2)
