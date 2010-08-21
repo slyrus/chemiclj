@@ -32,6 +32,7 @@
   (:use [chemiclj.core])
   (:require [chemiclj.element :as element]
             [chemiclj.smiles :as smiles]
+            [chemiclj.smiles.write :as write]
             [smiles-test :as smiles-test]
             [shortcut.graph :as graph]))
 
@@ -65,22 +66,22 @@
 ;;; scratch for writing SMILES strings
 
 (let [mol (smiles-test/get-molecule "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
-  (smiles/smiles-atomic-invariants mol))
+  (write/smiles-atomic-invariants mol))
 
 (let [mol (smiles-test/get-molecule "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
-  (smiles/rank-by second (smiles/smiles-atomic-invariants mol)))
+  (write/rank-by second (write/smiles-atomic-invariants mol)))
 
 (reduce #(assoc %1 ((comp name first) %2) (second %2))
                  {}
                  (let [mol (smiles-test/get-molecule
                             "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
-                   (smiles/smiles-atomic-invariants mol)))
+                   (write/smiles-atomic-invariants mol)))
 
 (reduce #(assoc %1 ((comp name first) %2) (second %2))
                  {}
                  (let [mol (smiles-test/get-molecule
                             "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
-                   (smiles/smiles-atomic-invariant-ranks mol)))
+                   (write/smiles-atomic-invariant-ranks mol)))
 
 ;;;
 
@@ -89,17 +90,17 @@
                        ((comp inc second) %))
               (let [mol (smiles-test/get-molecule
                          "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")]
-                (smiles/smiles-canonical-labels mol))))
+                (write/smiles-canonical-labels mol))))
 
 (let [mol (smiles-test/get-molecule "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")
-      labels (smiles/smiles-canonical-labels mol)]
+      labels (write/smiles-canonical-labels mol)]
   (graph/depth-first-traversal mol
                                (ffirst (sort-by second labels))))
 
 
 (let [mol (smiles-test/get-molecule
            "6-amino-2-ethyl-5-(aminomethyl)-1-hexanol")
-      labels (smiles/smiles-canonical-labels mol)]
+      labels (write/smiles-canonical-labels mol)]
   (ffirst (sort-by second labels)))
 
 
@@ -108,7 +109,7 @@
                        (second %))
               (let [mol (smiles-test/get-molecule
                          "cubane")]
-                (smiles/smiles-canonical-labels mol))))
+                (write/smiles-canonical-labels mol))))
 
 (smiles/read-smiles-string "Br/C(=C/F)I")
 
