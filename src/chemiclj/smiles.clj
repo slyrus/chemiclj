@@ -411,38 +411,36 @@
                  (not (= order specified-order)))
           (except/throwf "SMILES parsing error: %d and %d mismatch for ring bond order"
                          order specified-order))
-        (let [mol (add-ring-bond mol atom last-atom (or order specified-order))]
-          [(fixup-configuration
-            (let [configuration (first
-                                 (filter #(= (class %1)
-                                             chemiclj.core.TetrahedralAtomConfiguration)
-                                         (get (:configurations context) atom)))]
-              (if configuration
-                (update-in
-                 context [:configurations atom]
-                 (fn [x] (conj (remove #{configuration} x)
-                               (replace-tetrahedral-configuration-atom
-                                configuration
-                                ring last-atom))))
-                context))
-            atom last-atom)
-           mol
-           (dissoc (:pending-rings context) ring)]))
-      (do
-        [(let [configuration (first
-                              (filter #(= (class %1)
-                                          chemiclj.core.TetrahedralAtomConfiguration)
-                                      (get (:configurations context) last-atom)))]
-           (if configuration
-             (update-in
-              context [:configurations last-atom]
-              (fn [x] (conj (remove #{configuration} x)
-                            (add-tetrahedral-configuration-atom configuration ring))))
-             context))
-         mol
-         (conj (:pending-rings context)
-               {ring {:atom last-atom
-                      :order (bond-symbol-order bond-symbol)}})]))))
+        (assoc (fixup-configuration
+                (let [configuration (first
+                                     (filter #(= (class %1)
+                                                 chemiclj.core.TetrahedralAtomConfiguration)
+                                             (get (:configurations context) atom)))]
+                  (if configuration
+                    (update-in
+                     context [:configurations atom]
+                     (fn [x] (conj (remove #{configuration} x)
+                                   (replace-tetrahedral-configuration-atom
+                                    configuration
+                                    ring last-atom))))
+                    context))
+                atom last-atom)
+          :molecule (add-ring-bond mol atom last-atom (or order specified-order))
+          :pending-rings (dissoc (:pending-rings context) ring)))
+      (assoc (let [configuration (first
+                                  (filter #(= (class %1)
+                                              chemiclj.core.TetrahedralAtomConfiguration)
+                                          (get (:configurations context) last-atom)))]
+               (if configuration
+                 (update-in
+                  context [:configurations last-atom]
+                  (fn [x] (conj (remove #{configuration} x)
+                                (add-tetrahedral-configuration-atom configuration ring))))
+                 context))
+        :molecule mol
+        :pending-rings (conj (:pending-rings context)
+                             {ring {:atom last-atom
+                                    :order (bond-symbol-order bond-symbol)}})))))
 
 ;;; FIXME: this context/hook stuff is a big giant mess. please clean
 ;;; this up.
@@ -464,11 +462,7 @@
                              <decimal-digit>)))
                    context (h/alter-context
                             (fn [context]
-                              (let [[context2 mol pending]
-                                    (process-ring context ring-num bond-symbol)]
-                                (assoc context
-                                  :molecule mol
-                                  :pending-rings pending))))]
+                              (process-ring context ring-num bond-symbol)))]
                   context)))
 
 (h/defrule <atom-expr>
