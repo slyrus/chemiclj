@@ -30,7 +30,6 @@
 (ns chemiclj.core
   (:require [chemiclj.element :as element]
             [shortcut.graph :as g]
-            [clojure.string :as string]
             [clojure.contrib.def :as d]
             [clojure.contrib [except :as except]]))
 
