@@ -448,27 +448,26 @@
 (h/defrule <ringbond>
   (h/label "a ring bond"
            (h/for [context h/<fetch-context>
-                   [context2 mol pending atom]
-                   (h/hook
-                    (fn [[ring-num bond-symbol]]
-                      (process-ring context ring-num bond-symbol))
-                    (h/+
-                     (h/hook (fn [[bond _ digit1 digit2]]
-                               (when (and digit1 digit2)
-                                 [(+ (* 10 digit1) digit2) bond]))
-                             (h/cat
-                              (h/lex (h/opt <bond>)) (h/lit \%)
-                              <decimal-digit> <decimal-digit>))
-                     (h/hook (fn [[bond digit :as x]]
-                               [digit bond])
-                             (h/cat
-                              (h/lex (h/opt <bond>))
-                              <decimal-digit>))))
+                   [ring-num bond-symbol]
+                   (h/+
+                    (h/hook (fn [[bond _ digit1 digit2]]
+                              (when (and digit1 digit2)
+                                [(+ (* 10 digit1) digit2) bond]))
+                            (h/cat
+                             (h/lex (h/opt <bond>)) (h/lit \%)
+                             <decimal-digit> <decimal-digit>))
+                    (h/hook (fn [[bond digit :as x]]
+                              [digit bond])
+                            (h/cat
+                             (h/lex (h/opt <bond>))
+                             <decimal-digit>)))
                    context (h/alter-context
                             (fn [context]
-                              (assoc (fixup-configuration context atom (:last-atom context))
-                                :molecule mol
-                                :pending-rings pending)))]
+                              (let [[context2 mol pending atom]
+                                    (process-ring context ring-num bond-symbol)]
+                                (assoc (fixup-configuration context atom (:last-atom context))
+                                  :molecule mol
+                                  :pending-rings pending))))]
                   context)))
 
 (h/defrule <atom-expr>
