@@ -400,6 +400,12 @@
 (defn- bond-symbol-order [symbol]
   (get {\- 1 \= 2 \# 3 \$ 4} symbol))
 
+(defn- get-context-tetrahedral-configuration [context atom]
+  (first
+   (filter #(= (class %1)
+               chemiclj.core.TetrahedralAtomConfiguration)
+           (get (:configurations context) atom))))
+
 (defn- process-ring [context ring bond-symbol]
   (let [pending (get (:pending-rings context) ring)
         mol (:molecule context)
@@ -412,10 +418,7 @@
           (except/throwf "SMILES parsing error: %d and %d mismatch for ring bond order"
                          order specified-order))
         (assoc (fixup-configuration
-                (let [configuration (first
-                                     (filter #(= (class %1)
-                                                 chemiclj.core.TetrahedralAtomConfiguration)
-                                             (get (:configurations context) atom)))]
+                (let [configuration (get-context-tetrahedral-configuration context atom)]
                   (if configuration
                     (update-in
                      context [:configurations atom]
@@ -427,10 +430,7 @@
                 atom last-atom)
           :molecule (add-ring-bond mol atom last-atom (or order specified-order))
           :pending-rings (dissoc (:pending-rings context) ring)))
-      (assoc (let [configuration (first
-                                  (filter #(= (class %1)
-                                              chemiclj.core.TetrahedralAtomConfiguration)
-                                          (get (:configurations context) last-atom)))]
+      (assoc (let [configuration (get-context-tetrahedral-configuration context last-atom)]
                (if configuration
                  (update-in
                   context [:configurations last-atom]
@@ -460,9 +460,7 @@
                             (h/cat
                              (h/lex (h/opt <bond>))
                              <decimal-digit>)))
-                   context (h/alter-context
-                            (fn [context]
-                              (process-ring context ring-num bond-symbol)))]
+                   context (h/alter-context process-ring ring-num bond-symbol)]
                   context)))
 
 (h/defrule <atom-expr>
