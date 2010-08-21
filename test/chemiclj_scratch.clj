@@ -134,7 +134,6 @@
                                                 (:bottom x)])) v)])
      (configurations (smiles-test/get-molecule "tamoxifen")))
 
-
 ;; find the double bonds in tamoxifen:
 (filter (comp #{2} :order) (bonds (smiles-test/get-molecule "tamoxifen")))
 
@@ -208,3 +207,22 @@
                       (names [(:w x) (:x x) (:y x) (:z x)])]))
              v)])
      (configurations (smiles/read-smiles-string "[H][C@]1(Br)CCC1")))
+
+;;; names of each non-H atom and its neighbors:
+(let [mol (smiles-test/get-molecule "cubane")]
+  (map (fn [a]
+     [(name a) (names (neighbors mol a))])
+       (atoms (remove-atoms-of-element mol "H"))))
+
+(let [mol (smiles-test/get-molecule "serotonin")]
+  (map (fn [a]
+     [(name a) (names (neighbors mol a))])
+       (atoms (remove-atoms-of-element mol "H"))))
+
+
+(map (comp names atoms)
+     (filter (comp #{2} :order) (bonds (smiles-test/get-molecule "tropone"))))
+
+
+(map (comp names atoms) (bonds (smiles/read-smiles-string "[Na+].[O-]c1ccccc1")))
+(map (comp names atoms) (bonds (smiles/read-smiles-string "c1cc([O-].[Na+])ccc1")))

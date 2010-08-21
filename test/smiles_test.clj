@@ -68,6 +68,7 @@
               "dicyclohexyl" "C1CCCCC1C2CCCCC2"
               "spiro[5.5]undecane" "C12(CCCCC1)CCCCC2"
               "benzene" "c1ccccc1"
+              "tropone" "O=c1cccccc1"
               "indane" "c1ccc2CCCc2c1"
               "furan" "c1occc1"
               "fluoroform" "C(F)(F)F"
@@ -84,11 +85,14 @@
               "E-1,2-difluoroethane" "F/C=C/F"
               "Z-1,2-difluoroethane" "F\\C=C/F"
 
+              "biphenyl" "c1ccccc1-c2ccccc2"
+
               ;; chiral ring-closing atom
               "chiral-cycle-test" "N1C[C@H]1C"
 
               ;; chiral ring-closing atom
-              "chiral-cycle-test-2" "[H][C@]1(Br)CCC1"})) 
+              "chiral-cycle-test-2" "[H][C@]1(Br)CCC1"
+              "serotonin" "NCCc1c[nH]c2ccc(O)cc12"})) 
 
 (defn get-molecule [name]
   (get *molecules* name))
