@@ -335,17 +335,6 @@
 (defn update-configuration [{:keys [last-atom] :as context} atom]
   (fixup-configuration context atom last-atom))
 
-;; normally, we connect a new atom to the previous atoms
-;; configuration, if any. But if we're closing a ring we also need to
-;; add the current atom to the configurations of the ring opening
-;; atom. Fortunately, that happens to be the new atom and the atom
-;; we're connecting it to is the last-atom, so we can just reverse the
-;; arguments to fixup-configuration and the right thing will happen.
-;;
-;; Unless of course it was the ring opening that was chiral... hmm...
-(defn update-ring-atom-configuration [{:keys [last-atom] :as context} atom]
-  (fixup-configuration context atom last-atom))
-
 (defn update-last-atom [context atom]
   (assoc context :last-atom atom))
 
@@ -454,11 +443,6 @@
                       :order (bond-symbol-order bond-symbol)}})
          nil]))))
 
-;;; FIXME Now this is broken. We should not call
-;;; update-ring-atom-configuration for ring openings!!! Well, no,
-;;; that's not really the problem. The problem is what to do with
-;;; chiral ring opening bonds??
-;;;
 ;;; FIXME: this context/hook stuff is a big giant mess. please clean
 ;;; this up.
 (h/defrule <ringbond>
@@ -482,7 +466,7 @@
                               <decimal-digit>))))
                    context (h/alter-context
                             (fn [context]
-                              (assoc (update-ring-atom-configuration context2 atom)
+                              (assoc (fixup-configuration context atom (:last-atom context))
                                 :molecule mol
                                 :pending-rings pending)))]
                   context)))
