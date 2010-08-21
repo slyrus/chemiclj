@@ -170,7 +170,11 @@
            bond-symbol (h/lit \\)]
           bond-symbol)))
 
-(h/defrule <dot> (h/lit \.))
+;; hackery: use order 0 for disconnected atoms
+(h/defrule <dot>
+  (h/for [_ (h/alter-context (fn [context] (assoc context :order 0)))
+          _ (h/lit \.)]
+         _))
 
 (h/defrule <decimal-digit> (h/radix-digit 10))
 
@@ -276,6 +280,8 @@
                 true mol)]
       (let [{:keys [molecule aromatic]} context]
         (cond
+         ;; hack use order 0 for disconnected atoms
+         (= order 0) (add-atom molecule atom)
          (= order 1) (add-single-bond
                       (add-atom molecule atom)
                       atom last-atom)
@@ -767,7 +773,9 @@
 (defn write-bond [bond]
   (when bond
     (cond (= (:order bond) 2)
-          (print "="))))
+          (print "="))
+    (cond (= (:order bond) 3)
+          (print "#"))))
 
 (defn write-ring-number [number]
   (if (< number 10)
