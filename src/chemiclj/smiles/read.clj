@@ -495,8 +495,9 @@
       (filter #(not (= (:hybridization (first (neighbors % atom))) :sp2)) bvec))))
 
 (defn- available-valence [mol atom]
-  (- (-> atom :element element/get-normal-valences first)
-     (count (neighbors mol atom))))
+  (+ (- (-> atom :element element/get-normal-valences first)
+        (count (neighbors mol atom)))
+     (:charge atom)))
 
 (defn- calculate-aromatic-bond-max-valence [mol bond]
   (let [[atom1 atom2] (atoms bond)]
