@@ -28,7 +28,7 @@
 ;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 (ns chemiclj.molecule
-  (:use [chemiclj core atom bond])
+  (:use [chemiclj [core atom bond]])
   (:require [shortcut.graph :as g]
             [clojure.contrib.def :as d]
             [clojure.contrib [except :as except]]))
@@ -105,50 +105,4 @@
     (if attached-to
       (add-bond (add-atom mol atm) (make-bond atm attached-to))
       (add-atom mol atm))))
-
-(defrecord TetrahedralAtomConfiguration [center direction w x y z])
-
-(defn make-tetrahedral-atom-configuration [center direction w x y z]
-  (TetrahedralAtomConfiguration. center direction w x y z))
-
-(defn get-tetrahedral-configuration-vector [configuration]
-  [(:w configuration) (:x configuration) (:y configuration) (:z configuration)])
-
-(defn set-tetrahedral-configuration-vector [configuration v]
-  (assoc configuration
-    :w (nth v 0)
-    :x (nth v 1)
-    :y (nth v 2)
-    :z (nth v 3)))
-
-(defn add-tetrahedral-configuration-atom [configuration atom]
-  (cond (nil? (:w configuration)) (assoc configuration :w atom)
-        (nil? (:x configuration)) (assoc configuration :x atom)
-        (nil? (:y configuration)) (assoc configuration :y atom)
-        (nil? (:z configuration)) (assoc configuration :z atom)
-        true (except/throwf "Too many neighbors for tetrahedral atom %s"
-                            atom)))
-
-(defn replace-val [m old new]
-  (reduce (fn [m [k v]]
-            (if (= v old)
-              (assoc m k new)
-              m))
-          m
-          m))
-
-(defn replace-tetrahedral-configuration-atom [configuration old new]
-  (reduce (fn [m [k v]]
-            (if (= v old)
-              (assoc m k new)
-              m))
-          configuration
-          configuration))
-
-(defrecord RelativeVerticalConfiguration [top bottom])
-
-(defn make-relative-vertical-configuration [top bottom]
-  (RelativeVerticalConfiguration. top bottom))
-
-(defrecord DoubleBondConfiguration [a b c d])
 

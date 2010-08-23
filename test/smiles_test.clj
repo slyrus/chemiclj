@@ -32,7 +32,7 @@
 ;;; (in-ns 'smiles-test)
 
 (ns smiles-test
-  (:use [chemiclj core molecule element smiles])
+  (:use [chemiclj core smiles])
   (:require [shortcut.graph :as graph]))
 
 (read-smiles-string "C")
