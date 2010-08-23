@@ -31,9 +31,6 @@
   (:use [chemiclj.core])
   (:require [chemiclj.element :as element]
             [shortcut.graph :as graph]
-            [edu.arizona.fnparse [hound :as h] [core :as c]]
-            [clojure.string :as str]
-            [clojure.contrib [except :as except]]
             [clojure.contrib.lazy-seqs :as lazy-seqs]
             [clojure.contrib.def :as def]))
 
@@ -119,9 +116,6 @@
    (map first coll)
    (map inc (rank-by second coll))))
 
-;;; FIXME! We need to fix this such that we don't sort the atoms by
-;;; name, which means we need to preserve the order of atoms between
-;;; iterations of the canonical labeling algorithm.
 (defn break-ties [ranked-atoms]
   (let [freqs (frequencies (map second ranked-atoms))]
     (let [lowest (ffirst (filter #(> (val %) 1) freqs))]
@@ -141,8 +135,6 @@
                 (let [sums (ranks-and-prime-products mol ranks)]
                   (break-ties (rank-coll-by-second sums))))
               ranks))))
-
-;;; TODO
 
 (def *organic-subset-elements*
      (set (map element/get-element ["B" "C" "N" "O" "P" "S" "F" "Cl" "Br" "I"])))
