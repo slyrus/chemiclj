@@ -28,37 +28,18 @@
 ;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 (ns chemiclj.molecule
-  (:use [chemiclj mass atom-container atom bond])
-  (:require [chemiclj.element :as element]
-            [chemiclj.bond :as bond]
-            [shortcut.graph :as g]
+  (:use [chemiclj core atom bond])
+  (:require [shortcut.graph :as g]
             [clojure.contrib.def :as d]
             [clojure.contrib [except :as except]]))
-
-(defprotocol PMolecule
-  (add-atom [mol atom])
-  (remove-atom [mol atom])
-  (bonds [mol] [mol atom])
-  (bond? [mol atom1 atom2])
-  (add-bond [mol bond] [mol atom1 atom2])
-  (remove-bond [mol bond] [mol atom1 atom2])
-  (configurations [mol])
-  (add-configuration [mol configuration]))
-
-(defn get-atom [mol atom]
-  (cond (= (type atom) java.lang.String)
-        (when-let [res (filter #(= (name %) atom) (atoms mol))]
-          (first res))
-        true
-        (get (atoms mol) atom)))
 
 ;;;
 ;;; Molecule record and related functions
 (defrecord Molecule [_graph _name _configurations]
-  PAtomContainer
+  chemiclj.core.PAtomContainer
   (atoms [mol] (g/nodes _graph))
 
-  PMolecule
+  chemiclj.core.PMolecule
   (add-atom [mol atom]
             (assoc mol :_graph (g/add-node _graph atom)))
   (remove-atom [mol atom]
@@ -102,29 +83,6 @@
      (assoc counts (:element atom) (inc (or (get counts (:element atom)) 0))))
    {}
    (shortcut.graph/breadth-first-traversal (:_graph mol) (first (atoms mol)))))
-
-(defn molecular-formula [mol]
-  (apply str
-         (map #(str (:id (first %)) (second %))
-              (sort-by #(:id (first %)) (count-elements mol)))))
-
-(defn make-molecule
-  ([]
-     (Molecule. (g/make-graph) nil {}))
-  ([atoms atom-pairs-vec]
-     (make-molecule atoms atom-pairs-vec nil))
-  ([atoms atom-pairs-vec name]
-     (reduce
-      (fn [mol [atom1 atom2]]
-        (assoc mol :_graph (g/add-edge (:_graph mol) atom1 atom2 (make-bond atom1 atom2))))
-      (Molecule. (g/make-graph atoms) nil {})
-      atom-pairs-vec)))
-
-(defn name-molecule [mol name]
-  (conj mol {:_name name}))
-
-(defn names [seq]
-  (map name seq))
 
 ;;; should these be protocol methods???
 (defn add-single-bond [mol atom1 atom2]
@@ -193,14 +151,4 @@
   (RelativeVerticalConfiguration. top bottom))
 
 (defrecord DoubleBondConfiguration [a b c d])
-
-(defn get-atoms-of-element [mol elmnt]
-  (let [elmnt (element/get-element elmnt)]
-    (filter #(= (:element %) elmnt) (atoms mol))))
-
-(defn remove-atoms-of-element [mol element]
-  (reduce (fn [mol atom]
-            (remove-atom mol atom))
-          mol
-          (get-atoms-of-element mol element)))
 

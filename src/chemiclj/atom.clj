@@ -29,17 +29,13 @@
 
 
 (ns chemiclj.atom
-  (:use [chemiclj.mass])
   (:require [chemiclj.element :as element]))
-
-(defprotocol PAtomContainer
-  (atoms [obj]))
 
 ;;;
 ;;; Atom record and related functions
 (defrecord Atom [_name element isotope chirality charge
                  hybridization aromatic explicit-hydrogen-count]
-  chemiclj.mass.PMass
+  chemiclj.core.PMass
   (mass [atm] (-> atm :element :mass))
   (exact-mass [atm]
               (if (:isotope atm)
@@ -48,12 +44,4 @@
 
   clojure.lang.Named
   (getName [atm] _name))
-
-(defn make-atom [element name & {:keys [isotope chirality charge
-                                        hybridization aromatic
-                                        explicit-hydrogen-count]
-                                 :or {charge 0}}]
-  (Atom. name (element/get-element element)
-         isotope chirality charge hybridization
-         aromatic explicit-hydrogen-count))
 

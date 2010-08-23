@@ -163,9 +163,9 @@
 (map (fn [[k v]]
        [(name k)
         (map (fn [x]
-               (cond (= (class x) chemiclj.core.RelativeVerticalConfiguration)
+               (cond (= (class x) chemiclj.molecule.RelativeVerticalConfiguration)
                      (names [(:top x) (:bottom x)])
-                     (= (class x) chemiclj.core.TetrahedralAtomConfiguration)
+                     (= (class x) chemiclj.molecule.TetrahedralAtomConfiguration)
                      [(name (:center x))
                       (:direction x)
                       (names [(:w x) (:x x) (:y x) (:z x)])]))
@@ -176,9 +176,9 @@
 (map (fn [[k v]]
        [(name k)
         (map (fn [x]
-               (cond (= (class x) chemiclj.core.RelativeVerticalConfiguration)
+               (cond (= (class x) chemiclj.molecule.RelativeVerticalConfiguration)
                      (names [(:top x) (:bottom x)])
-                     (= (class x) chemiclj.core.TetrahedralAtomConfiguration)
+                     (= (class x) chemiclj.molecule.TetrahedralAtomConfiguration)
                      [(name (:center x))
                       (:direction x)
                       (names [(:w x) (:x x) (:y x) (:z x)])]))
@@ -188,9 +188,9 @@
 (map (fn [[k v]]
        [(name k)
         (map (fn [x]
-               (cond (= (class x) chemiclj.core.RelativeVerticalConfiguration)
+               (cond (= (class x) chemiclj.molecule.RelativeVerticalConfiguration)
                      (names [(:top x) (:bottom x)])
-                     (= (class x) chemiclj.core.TetrahedralAtomConfiguration)
+                     (= (class x) chemiclj.molecule.TetrahedralAtomConfiguration)
                      [(name (:center x))
                       (:direction x)
                       (names [(:w x) (:x x) (:y x) (:z x)])]))
@@ -200,9 +200,9 @@
 (map (fn [[k v]]
        [(name k)
         (map (fn [x]
-               (cond (= (class x) chemiclj.core.RelativeVerticalConfiguration)
+               (cond (= (class x) chemiclj.molecule.RelativeVerticalConfiguration)
                      (names [(:top x) (:bottom x)])
-                     (= (class x) chemiclj.core.TetrahedralAtomConfiguration)
+                     (= (class x) chemiclj.molecule.TetrahedralAtomConfiguration)
                      [(name (:center x))
                       (:direction x)
                       (names [(:w x) (:x x) (:y x) (:z x)])]))

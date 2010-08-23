@@ -29,13 +29,13 @@
 
 
 (ns chemiclj.bond
-  (:use [chemiclj.atom])
+  (:use [chemiclj core atom])
   (:require [shortcut.graph :as g]))
 
 ;;;
 ;;; Bond record and related functions
 (defrecord Bond [_nodes type order direction]
-  PAtomContainer
+  chemiclj.core.PAtomContainer
   (atoms [bond] _nodes)
 
   g/NodeSet
@@ -46,7 +46,4 @@
   g/Edge
   (g/left [bond] (first _nodes))
   (g/right [bond] (second _nodes)))
-
-(defn make-bond [atom1 atom2 & {:keys [type order direction]}]
-  (Bond. [atom1 atom2] type order direction))
 
