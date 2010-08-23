@@ -33,9 +33,8 @@
             [shortcut.graph :as graph]
             [edu.arizona.fnparse [hound :as h] [core :as c]]
             [clojure.string :as str]
-            [clojure.contrib [except :as except]]
-            [clojure.contrib.lazy-seqs :as lazy-seqs]
-            [clojure.contrib.def :as def]))
+            [clojure.contrib [except :as except]]))
+
 
 (defrecord SMILESContext
   [molecule
