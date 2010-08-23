@@ -68,6 +68,7 @@
               "dicyclohexyl" "C1CCCCC1C2CCCCC2"
               "spiro[5.5]undecane" "C12(CCCCC1)CCCCC2"
               "benzene" "c1ccccc1"
+              "pyridine" "n1ccccc1"
               "tropone" "O=c1cccccc1"
               "indane" "c1ccc2CCCc2c1"
               "furan" "c1occc1"
