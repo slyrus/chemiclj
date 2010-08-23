@@ -1,4 +1,4 @@
-;;; file: chemiclj/core.clj
+;;; file: chemiclj/mass.clj
 ;;;
 ;;; Copyright (c) 2010 Cyrus Harmon (ch-lisp@bobobeach.com) All rights
 ;;; reserved.
@@ -27,8 +27,11 @@
 ;;; NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-(ns chemiclj.core
-  (:require [clojure.contrib.def :as d]))
 
-(d/defalias neighbors g/neighbors)
+(ns chemiclj.mass
+  (:require [chemiclj.element :as element]))
+
+(defprotocol PMass
+  (mass [mol])
+  (exact-mass [mol]))
 

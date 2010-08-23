@@ -1,4 +1,4 @@
-;;; file: chemiclj/core.clj
+;;; file: chemiclj/bond.clj
 ;;;
 ;;; Copyright (c) 2010 Cyrus Harmon (ch-lisp@bobobeach.com) All rights
 ;;; reserved.
@@ -27,8 +27,26 @@
 ;;; NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-(ns chemiclj.core
-  (:require [clojure.contrib.def :as d]))
 
-(d/defalias neighbors g/neighbors)
+(ns chemiclj.bond
+  (:use [chemiclj.atom])
+  (:require [shortcut.graph :as g]))
+
+;;;
+;;; Bond record and related functions
+(defrecord Bond [_nodes type order direction]
+  PAtomContainer
+  (atoms [bond] _nodes)
+
+  g/NodeSet
+  (g/nodes [bond] _nodes)
+  (g/node? [bond node] (some #{node} _nodes))
+  (g/neighbors [bond node] (remove #{node} _nodes))
+
+  g/Edge
+  (g/left [bond] (first _nodes))
+  (g/right [bond] (second _nodes)))
+
+(defn make-bond [atom1 atom2 & {:keys [type order direction]}]
+  (Bond. [atom1 atom2] type order direction))
 

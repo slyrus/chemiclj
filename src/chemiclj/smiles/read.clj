@@ -28,7 +28,7 @@
 ;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 (ns chemiclj.smiles.read
-  (:use [chemiclj.core])
+  (:use [chemiclj core atom bond molecule])
   (:require [chemiclj.element :as element]
             [shortcut.graph :as graph]
             [edu.arizona.fnparse [hound :as h] [core :as c]]
@@ -296,7 +296,7 @@
   (if last-atom 
     (let [configuration (first
                          (filter #(= (class %1)
-                                     chemiclj.core.TetrahedralAtomConfiguration)
+                                     chemiclj.molecule.TetrahedralAtomConfiguration)
                                  (get (:configurations context) last-atom)))]
       (if configuration
         (update-in context [:configurations last-atom]
@@ -397,7 +397,7 @@
 (defn- get-context-tetrahedral-configuration [context atom]
   (first
    (filter #(= (class %1)
-               chemiclj.core.TetrahedralAtomConfiguration)
+               chemiclj.molecule.TetrahedralAtomConfiguration)
            (get (:configurations context) atom))))
 
 (defn- process-ring [context ring bond-symbol]
