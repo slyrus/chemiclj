@@ -30,8 +30,7 @@
 
 (ns chemiclj-scratch
   (:use [chemiclj core atom bond molecule])
-  (:require [chemiclj.element :as element]
-            [chemiclj.configuration :as configuration]
+  (:require [chemiclj.configuration :as configuration]
             [chemiclj.smiles :as smiles]
             [chemiclj.smiles.write :as write]
             [smiles-test :as smiles-test]
