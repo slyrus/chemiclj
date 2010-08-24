@@ -28,7 +28,7 @@
 ;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 (ns chemiclj.molecule
-  (:use [chemiclj [core atom bond]])
+  (:use [chemiclj protocol atom bond])
   (:require [shortcut.graph :as g]
             [clojure.contrib.def :as d]
             [clojure.contrib [except :as except]]))
@@ -36,10 +36,16 @@
 ;;;
 ;;; Molecule record and related functions
 (defrecord Molecule [_graph _name _configurations]
-  chemiclj.core.PAtomContainer
+  PAtomContainer
   (atoms [mol] (g/nodes _graph))
-
-  chemiclj.core.PMolecule
+  (get-atom [mol atom]
+            (cond (= (type atom) java.lang.String)
+                  (when-let [res (filter #(= (name %) atom) (atoms mol))]
+                    (first res))
+                  true
+                  (get (atoms mol) atom)))
+  
+  PMolecule
   (add-atom [mol atom]
             (assoc mol :_graph (g/add-node _graph atom)))
   (remove-atom [mol atom]
@@ -105,4 +111,19 @@
     (if attached-to
       (add-bond (add-atom mol atm) (make-bond atm attached-to))
       (add-atom mol atm))))
+
+(defn make-molecule
+  ([]
+     (chemiclj.molecule.Molecule. (g/make-graph) nil {}))
+  ([atoms atom-pairs-vec]
+     (make-molecule atoms atom-pairs-vec nil))
+  ([atoms atom-pairs-vec name]
+     (reduce
+      (fn [mol [atom1 atom2]]
+        (assoc mol :_graph (g/add-edge (:_graph mol) atom1 atom2 (make-bond atom1 atom2))))
+      (chemiclj.molecule.Molecule. (g/make-graph atoms) nil {})
+      atom-pairs-vec)))
+
+(defn name-molecule [mol name]
+  (conj mol {:_name name}))
 

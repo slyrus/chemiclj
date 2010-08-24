@@ -28,7 +28,7 @@
 ;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 (ns chemiclj.element
-  (:use [chemiclj.core])
+  (:use [chemiclj.protocol])
   (:require [clojure.string :as string]
             [clojure.xml :as xml]
             [clojure.zip :as zip]
@@ -86,7 +86,7 @@ appears first."
 
 (defrecord Element [atomic-number id name group period mass
                     electronegativity max-bond-order]
-  chemiclj.core.PElement
+  PElement
   (isotopes [element]
             (reduce (fn [v x] (assoc v (:number x) x))
                     (hash-map)
