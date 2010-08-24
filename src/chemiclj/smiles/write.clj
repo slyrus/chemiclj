@@ -28,7 +28,7 @@
 ;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 (ns chemiclj.smiles.write
-  (:use [chemiclj core atom bond molecule])
+  (:use [chemiclj core element atom bond molecule])
   (:require [chemiclj.element :as element]
             [shortcut.graph :as graph]
             [clojure.contrib.lazy-seqs :as lazy-seqs]

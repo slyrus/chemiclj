@@ -29,7 +29,7 @@
 
 
 (ns chemiclj.atom
-  (:use [chemiclj.protocol])
+  (:use [chemiclj.core])
   (:require [chemiclj.element :as element]))
 
 ;;;

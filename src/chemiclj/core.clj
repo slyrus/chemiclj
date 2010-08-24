@@ -28,49 +28,26 @@
 ;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-;;;
-;;; CORE NAMESPACE STARTS HERE!!!!
-;;;
-(ns chemiclj.core
-  (:use [chemiclj element atom bond molecule])
-  (:require [chemiclj.protocol :as protocol]
-            [clojure.contrib.def :as d]
-            [shortcut.graph :as g]))
+(ns chemiclj.core)
+  
+(defprotocol PElement
+  (isotopes [obj]))
 
-(d/defalias neighbors g/neighbors)
+(defprotocol PMass
+  (mass [mol])
+  (exact-mass [mol]))
 
-(d/defalias isotopes protocol/isotopes)
+(defprotocol PAtomContainer
+  (atoms [obj])
+  (get-atom [obj id]))
 
-(d/defalias mass protocol/mass)
-(d/defalias exact-mass protocol/exact-mass)
-
-(d/defalias atoms protocol/atoms)
-(d/defalias get-atom protocol/get-atom)
-
-(d/defalias add-atom protocol/add-atom)
-(d/defalias remove-atom protocol/remove-atom)
-(d/defalias bonds protocol/bonds)
-(d/defalias bond? protocol/bond?)
-(d/defalias add-bond protocol/add-bond)
-(d/defalias remove-bond protocol/remove-bond)
-(d/defalias configurations protocol/configurations)
-(d/defalias add-configuration protocol/add-configuration)
-
-(defn names [seq]
-  (map name seq))
-
-(defn molecular-formula [mol]
-  (apply str
-         (map #(str (:id (first %)) (second %))
-              (sort-by #(:id (first %)) (count-elements mol)))))
-
-(defn get-atoms-of-element [mol elmnt]
-  (let [elmnt (get-element elmnt)]
-    (filter #(= (:element %) elmnt) (atoms mol))))
-
-(defn remove-atoms-of-element [mol element]
-  (reduce (fn [mol atom]
-            (remove-atom mol atom))
-          mol
-          (get-atoms-of-element mol element)))
+(defprotocol PMolecule
+  (add-atom [mol atom])
+  (remove-atom [mol atom])
+  (bonds [mol] [mol atom])
+  (bond? [mol atom1 atom2])
+  (add-bond [mol bond] [mol atom1 atom2])
+  (remove-bond [mol bond] [mol atom1 atom2])
+  (configurations [mol])
+  (add-configuration [mol configuration]))
 

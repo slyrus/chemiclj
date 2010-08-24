@@ -28,7 +28,6 @@
 ;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 (ns chemiclj.smiles
-  (:use [chemiclj.core])
   (:require [chemiclj.smiles.read :as read]
             [chemiclj.smiles.write :as write]
             [clojure.contrib.def :as d]))

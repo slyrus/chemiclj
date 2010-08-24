@@ -28,10 +28,12 @@
 ;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 (ns chemiclj.molecule
-  (:use [chemiclj protocol atom bond])
+  (:use [chemiclj core element atom bond])
   (:require [shortcut.graph :as g]
             [clojure.contrib.def :as d]
             [clojure.contrib [except :as except]]))
+
+(d/defalias neighbors g/neighbors)
 
 ;;;
 ;;; Molecule record and related functions
@@ -126,4 +128,22 @@
 
 (defn name-molecule [mol name]
   (conj mol {:_name name}))
+
+(defn names [seq]
+  (map name seq))
+
+(defn molecular-formula [mol]
+  (apply str
+         (map #(str (:id (first %)) (second %))
+              (sort-by #(:id (first %)) (count-elements mol)))))
+
+(defn get-atoms-of-element [mol element]
+  (let [element (get-element element)]
+    (filter #(= (:element %) element) (atoms mol))))
+
+(defn remove-atoms-of-element [mol element]
+  (reduce (fn [mol atom]
+            (remove-atom mol atom))
+          mol
+          (get-atoms-of-element mol element)))
 

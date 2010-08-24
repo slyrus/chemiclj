@@ -29,7 +29,7 @@
 
 
 (ns chemiclj.bond
-  (:use [chemiclj protocol])
+  (:use [chemiclj.core])
   (:require [shortcut.graph :as g]))
 
 ;;;

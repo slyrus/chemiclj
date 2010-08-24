@@ -29,7 +29,7 @@
 
 
 (ns chemiclj-scratch
-  (:use [chemiclj.core])
+  (:use [chemiclj core atom bond molecule])
   (:require [chemiclj.element :as element]
             [chemiclj.configuration :as configuration]
             [chemiclj.smiles :as smiles]
