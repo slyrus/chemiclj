@@ -28,7 +28,7 @@
 ;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 (ns chemiclj.molecule
-  (:use [chemiclj core element atom bond])
+  (:use [chemiclj core element bond])
   (:require [shortcut.graph :as g]
             [clojure.contrib.def :as d]
             [clojure.contrib [except :as except]]))
@@ -114,7 +114,7 @@
       (add-bond (add-atom mol atm) (make-bond atm attached-to))
       (add-atom mol atm))))
 
-(defn make-molecule
+(defn* chemiclj.core/make-molecule
   ([]
      (chemiclj.molecule.Molecule. (g/make-graph) nil {}))
   ([atoms atom-pairs-vec]
@@ -126,24 +126,24 @@
       (chemiclj.molecule.Molecule. (g/make-graph atoms) nil {})
       atom-pairs-vec)))
 
-(defn name-molecule [mol name]
+(defn* chemiclj.core/name-molecule [mol name]
   (conj mol {:_name name}))
 
 (defn names [seq]
   (map name seq))
 
-(defn molecular-formula [mol]
+(defn* chemiclj.core/molecular-formula [mol]
   (apply str
          (map #(str (:id (first %)) (second %))
               (sort-by #(:id (first %)) (count-elements mol)))))
 
-(defn get-atoms-of-element [mol element]
+(defn* chemiclj.core/get-atoms-of-element [mol element]
   (let [element (get-element element)]
     (filter #(= (:element %) element) (atoms mol))))
 
-(defn remove-atoms-of-element [mol element]
+(defn* chemiclj.core/remove-atoms-of-element [mol element]
   (reduce (fn [mol atom]
             (remove-atom mol atom))
           mol
-          (get-atoms-of-element mol element)))
+          (chemiclj.core/get-atoms-of-element mol element)))
 

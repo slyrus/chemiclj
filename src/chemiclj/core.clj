@@ -51,3 +51,11 @@
   (configurations [mol])
   (add-configuration [mol configuration]))
 
+(defmacro defn* [fn-name & rest]
+  `(intern (if ~(namespace fn-name)
+             (symbol ~(namespace fn-name))
+             (ns-name *ns*))
+           (symbol ~(name fn-name)) (fn ~(symbol (name fn-name)) ~@rest)))
+
+(load "atom")
+(load "molecule")

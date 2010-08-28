@@ -46,10 +46,10 @@
   clojure.lang.Named
   (getName [atm] _name))
 
-(defn make-atom [element name & {:keys [isotope chirality charge
-                                        hybridization aromatic
-                                        explicit-hydrogen-count]
-                                 :or {charge 0}}]
+(defn* chemiclj.core/make-atom [element name & {:keys [isotope chirality charge
+                                                       hybridization aromatic
+                                                       explicit-hydrogen-count]
+                                                :or {charge 0}}]
   (Atom. name (element/get-element element)
          isotope chirality charge hybridization
          aromatic explicit-hydrogen-count))
