@@ -293,17 +293,15 @@
                atom last-atom))))))
 
 (defn fixup-configuration [context atom last-atom]
-  (if last-atom 
-    (let [configuration (first
-                         (filter #(= (class %1)
-                                     chemiclj.core.TetrahedralAtomConfiguration)
-                                 (get (:configurations context) last-atom)))]
-      (if configuration
-        (update-in context [:configurations last-atom]
-                   (fn [x] (conj (remove #{configuration} x)
-                                 (add-tetrahedral-configuration-atom configuration atom))))
-        context))
-    context))
+  (let [configuration (first
+                       (filter #(= (class %1)
+                                   chemiclj.core.TetrahedralAtomConfiguration)
+                               (get (:configurations context) last-atom)))]
+    (if configuration
+      (update-in context [:configurations last-atom]
+                 (fn [x] (conj (remove #{configuration} x)
+                               (add-tetrahedral-configuration-atom configuration atom))))
+      context)))
 
 (defn context-add-1-hydrogen [context atom]
   (let [mol (:molecule context)
@@ -327,7 +325,9 @@
       context)))
 
 (defn update-configuration [{:keys [last-atom] :as context} atom]
-  (fixup-configuration context atom last-atom))
+  (if last-atom
+    (fixup-configuration context atom last-atom)
+    context))
 
 (defn update-last-atom [context atom]
   (assoc context :last-atom atom))
@@ -401,42 +401,46 @@
            (get (:configurations context) atom))))
 
 (h/defmaker process-ring [ring bond-symbol]
-  (h/alter-context 
-   (fn [context]
-     (let [pending (get (:pending-rings context) ring)
-           mol (:molecule context)
-           last-atom (:last-atom context)]
-       (if pending
-         (let [{:keys #{atom order}} pending
-               specified-order (bond-symbol-order bond-symbol)]
-           (if (and (and order specified-order)
-                    (not (= order specified-order)))
-             (except/throwf "SMILES parsing error: %d and %d mismatch for ring bond order"
-                            order specified-order))
-           (assoc (fixup-configuration
-                   (let [configuration (get-context-tetrahedral-configuration context atom)]
-                     (if configuration
-                       (update-in
-                        context [:configurations atom]
-                        (fn [x] (conj (remove #{configuration} x)
-                                      (replace-tetrahedral-configuration-atom
-                                       configuration
-                                       ring last-atom))))
-                       context))
-                   atom last-atom)
-             :molecule (add-ring-bond mol atom last-atom (or order specified-order))
-             :pending-rings (dissoc (:pending-rings context) ring)))
-         (assoc (let [configuration (get-context-tetrahedral-configuration context last-atom)]
-                  (if configuration
-                    (update-in
-                     context [:configurations last-atom]
-                     (fn [x] (conj (remove #{configuration} x)
-                                   (add-tetrahedral-configuration-atom configuration ring))))
-                    context))
-           :molecule mol
-           :pending-rings (conj (:pending-rings context)
-                                {ring {:atom last-atom
-                                       :order (bond-symbol-order bond-symbol)}})))))))
+  (h/for [context h/<fetch-context>
+          _ (let [pending (get (:pending-rings context) ring)
+                  mol (:molecule context)
+                  last-atom (:last-atom context)]
+              (if pending
+                (let [{:keys #{atom order}} pending
+                      specified-order (bond-symbol-order bond-symbol)]
+                  (when (and (and order specified-order)
+                             (not (= order specified-order)))
+                    (except/throwf "SMILES parsing error: %d and %d mismatch for ring bond order"
+                                   order specified-order))
+                  (h/alter-context 
+                   (fn [context]
+                     (assoc (fixup-configuration
+                             (let [configuration (get-context-tetrahedral-configuration context atom)]
+                               (if configuration
+                                 (update-in
+                                  context [:configurations atom]
+                                  (fn [x] (conj (remove #{configuration} x)
+                                                (replace-tetrahedral-configuration-atom
+                                                 configuration
+                                                 ring last-atom))))
+                                 context))
+                             atom last-atom)
+                       :molecule (add-ring-bond mol atom last-atom (or order specified-order))
+                       :pending-rings (dissoc (:pending-rings context) ring)))))
+                (h/alter-context 
+                 (fn [context]
+                   (assoc (let [configuration (get-context-tetrahedral-configuration context last-atom)]
+                            (if configuration
+                              (update-in
+                               context [:configurations last-atom]
+                               (fn [x] (conj (remove #{configuration} x)
+                                             (add-tetrahedral-configuration-atom configuration ring))))
+                              context))
+                     :molecule mol
+                     :pending-rings (conj (:pending-rings context)
+                                          {ring {:atom last-atom
+                                                 :order (bond-symbol-order bond-symbol)}}))))))]
+         _))
 
 (h/defrule <ringbond>
   (h/label "a ring bond"
