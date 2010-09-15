@@ -152,13 +152,13 @@
   (h/+
    (h/for [order (h/+ <single-bond> <double-bond> <triple-bond> <quadruple-bond>)
            _ (h/alter-context (fn [context] (assoc context :order order)))]
-          order)
-   (h/for [direction (h/+ <up-bond> <down-bond>)
-           _ (h/alter-context (fn [context] (assoc context :direction direction)))]
-          direction)
+          [order nil nil])
    (h/for [aromatic <aromatic-bond>
            _ (h/alter-context (fn [context] (assoc context :aromatic aromatic)))]
-          aromatic)))
+          [nil aromatic nil])
+   (h/for [direction (h/+ <up-bond> <down-bond>)
+           _ (h/alter-context (fn [context] (assoc context :direction direction)))]
+          [nil nil direction])))
 
 ;; hackery: use order 0 for disconnected atoms
 (h/defrule <dot>
@@ -387,27 +387,24 @@
    (= order 4) (add-quadruple-bond mol atom last-atom)
    true (add-bond mol atom last-atom)))
 
-(defn- bond-symbol-order [symbol]
-  (get {\- 1 \= 2 \# 3 \$ 4} symbol))
-
 (defn- get-context-tetrahedral-configuration [context atom]
   (first
    (filter #(= (class %1)
                chemiclj.core.TetrahedralAtomConfiguration)
            (get (:configurations context) atom))))
 
-(h/defmaker process-ring [ring bond-symbol]
+;;; FIXME: we don't process ring-closure aromatic bonds!
+(h/defmaker process-ring [ring specified-order]
   (h/for [context h/<fetch-context>
           _ (let [pending (get (:pending-rings context) ring)
                   mol (:molecule context)
                   last-atom (:last-atom context)]
               (if pending
-                (let [{:keys #{atom order}} pending
-                      specified-order (bond-symbol-order bond-symbol)]
-                  (when (and (and order specified-order)
-                             (not (= order specified-order)))
+                (let [{:keys #{atom pending-order}} pending]
+                  (when (and (and pending-order specified-order)
+                             (not (= pending-order specified-order)))
                     (except/throwf "SMILES parsing error: %d and %d mismatch for ring bond order"
-                                   order specified-order))
+                                   pending-order specified-order))
                   (h/alter-context 
                    (fn [context]
                      (assoc (fixup-configuration
@@ -421,7 +418,7 @@
                                                  ring last-atom))))
                                  context))
                              atom last-atom)
-                       :molecule (add-ring-bond mol atom last-atom (or order specified-order))
+                       :molecule (add-ring-bond mol atom last-atom (or pending-order specified-order))
                        :pending-rings (dissoc (:pending-rings context) ring)))))
                 (h/alter-context 
                  (fn [context]
@@ -435,12 +432,12 @@
                      :molecule mol
                      :pending-rings (conj (:pending-rings context)
                                           {ring {:atom last-atom
-                                                 :order (bond-symbol-order bond-symbol)}}))))))]
+                                                 :order specified-order}}))))))]
          _))
 
 (h/defrule <ringbond>
   (h/label "a ring bond"
-           (h/for [[ring-num bond-symbol]
+           (h/for [[ring-num [order _ _]]
                    (h/+
                     (h/hook (fn [[bond _ digit1 digit2]]
                               (when (and digit1 digit2)
@@ -453,7 +450,7 @@
                             (h/cat
                              (h/lex (h/opt <bond>))
                              <decimal-digit>)))
-                   _ (process-ring ring-num bond-symbol)]
+                   _ (process-ring ring-num order)]
                   _)))
 
 (h/defrule <atom-expr>
