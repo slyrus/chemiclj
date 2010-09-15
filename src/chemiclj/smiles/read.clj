@@ -432,7 +432,7 @@
                      :molecule mol
                      :pending-rings (conj (:pending-rings context)
                                           {ring {:atom last-atom
-                                                 :order specified-order}}))))))]
+                                                 :pending-order specified-order}}))))))]
          _))
 
 (h/defrule <ringbond>
