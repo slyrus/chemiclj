@@ -140,29 +140,25 @@
                           :hybridization :sp2))))]
          atom))
 
+(h/defrule <single-bond> (h/chook 1 (h/lit \-)))
+(h/defrule <double-bond> (h/chook 2 (h/lit \=)))
+(h/defrule <triple-bond> (h/chook 3 (h/lit \#)))
+(h/defrule <quadruple-bond> (h/chook 4 (h/lit \$)))
+(h/defrule <aromatic-bond> (h/chook true (h/lit \:)))
+(h/defrule <up-bond> (h/chook :up (h/lit \/)))
+(h/defrule <down-bond> (h/chook :down (h/lit \\)))
+
 (h/defrule <bond>
   (h/+
-   (h/for [_ (h/alter-context (fn [context] (assoc context :order 1)))
-           bond-symbol (h/lit \-)]
-          bond-symbol)
-   (h/for [_ (h/alter-context (fn [context] (assoc context :order 2)))
-           bond-symbol (h/lit \=)]
-          bond-symbol)
-   (h/for [_ (h/alter-context (fn [context] (assoc context :order 3)))
-           bond-symbol (h/lit \#)]
-          bond-symbol)
-   (h/for [_ (h/alter-context (fn [context] (assoc context :order 4)))
-           bond-symbol (h/lit \$)]
-          bond-symbol)
-   (h/for [_ (h/alter-context (fn [context] (assoc context :aromatic true)))
-           bond-symbol (h/lit \:)]
-          bond-symbol)
-   (h/for [_ (h/alter-context (fn [context] (assoc context :direction :up)))
-           bond-symbol (h/lit \/)]
-          bond-symbol)
-   (h/for [_ (h/alter-context (fn [context] (assoc context :direction :down)))
-           bond-symbol (h/lit \\)]
-          bond-symbol)))
+   (h/for [order (h/+ <single-bond> <double-bond> <triple-bond> <quadruple-bond>)
+           _ (h/alter-context (fn [context] (assoc context :order order)))]
+          order)
+   (h/for [direction (h/+ <up-bond> <down-bond>)
+           _ (h/alter-context (fn [context] (assoc context :direction direction)))]
+          direction)
+   (h/for [aromatic <aromatic-bond>
+           _ (h/alter-context (fn [context] (assoc context :aromatic aromatic)))]
+          aromatic)))
 
 ;; hackery: use order 0 for disconnected atoms
 (h/defrule <dot>
@@ -362,13 +358,17 @@
 
 (declare <chain>)
 
+(h/defrule <bond-or-dot>
+  (h/label "a bond or dot"
+           (h/+ <bond> <dot>)))
+
 (h/defrule <branch>
   (h/for "a branch"
          [{:keys [last-atom order]} h/<fetch-context>
           branch (h/cat
                   (h/circumfix (h/lit \()
                                (h/cat
-                                (h/opt (h/+ <bond> <dot>))
+                                (h/opt <bond-or-dot>)
                                 <chain>)
                                (h/lit \))))
           _ (h/alter-context
@@ -378,10 +378,6 @@
                  :order order)))]
          branch))
 
-(h/defrule <bond-or-dot>
-  (h/label "a bond or dot"
-           (h/+ <bond>
-                <dot>)))
 
 (defn- add-ring-bond [mol atom last-atom order]
   (cond
@@ -450,8 +446,8 @@
                               (when (and digit1 digit2)
                                 [(+ (* 10 digit1) digit2) bond]))
                             (h/cat
-                             (h/lex (h/opt <bond>)) (h/lit \%)
-                             <decimal-digit> <decimal-digit>))
+                             (h/lex (h/opt <bond>))
+                             (h/lit \%) <decimal-digit> <decimal-digit>))
                     (h/hook (fn [[bond digit :as x]]
                               [digit bond])
                             (h/cat
