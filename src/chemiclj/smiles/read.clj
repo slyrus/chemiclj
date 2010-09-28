@@ -48,6 +48,8 @@
    direction
    configurations])
 
+(defrecord BondContext [order aromatic? direction])
+
 (defn get-atom-count [context element]
   (or (get (:atom-counts context) element) 0))
 
@@ -152,19 +154,19 @@
   (h/+
    (h/for [order (h/+ <single-bond> <double-bond> <triple-bond> <quadruple-bond>)
            _ (h/alter-context (fn [context] (assoc context :order order)))]
-          [order nil nil])
+          (BondContext. order nil nil))
    (h/for [aromatic <aromatic-bond>
            _ (h/alter-context (fn [context] (assoc context :aromatic aromatic)))]
-          [nil aromatic nil])
+          (BondContext. nil aromatic nil))
    (h/for [direction (h/+ <up-bond> <down-bond>)
            _ (h/alter-context (fn [context] (assoc context :direction direction)))]
-          [nil nil direction])))
+          (BondContext. nil nil direction))))
 
 ;; hackery: use order 0 for disconnected atoms
 (h/defrule <dot>
   (h/for [_ (h/alter-context (fn [context] (assoc context :order 0)))
           _ (h/lit \.)]
-         _))
+         (BondContext. 0 nil nil)))
 
 (h/defrule <decimal-digit> (h/radix-digit 10))
 
@@ -241,6 +243,7 @@
                                         <right-bracket>)))
           _ (h/alter-context
              (fn [context]
+               ;; FIXME! Why do we update :aromatic and :aromatic-atoms here?
                (let [context (assoc context
                                :aromatic nil
                                :aromatic-atoms (conj (:aromatic-atoms context) atom))]
@@ -437,7 +440,7 @@
 
 (h/defrule <ringbond>
   (h/label "a ring bond"
-           (h/for [[ring-num [order _ _]]
+           (h/for [[ring-num {:keys #{order}}]
                    (h/+
                     (h/hook (fn [[bond _ digit1 digit2]]
                               (when (and digit1 digit2)
