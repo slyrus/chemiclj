@@ -103,3 +103,22 @@
 (read-smiles-string "N[C@](Br)(O)C")
 (read-smiles-string "N[C@@](Br)(C)O")
 
+;;; these four should all yield the same molecule
+(assert (= (count (set (map mass
+                            [(read-smiles-string "C1=CC=CC=C1")
+                             (read-smiles-string "C1C=CC=CC=1")
+                             (read-smiles-string "C=1C=CC=CC1")
+                             (read-smiles-string "C=1C=CC=CC=1")])))
+           1))
+
+(assert
+ (=
+  (count
+   (set
+    (map
+     #(read-smiles-string (write-smiles-string (read-smiles-string %)))
+     ["C1=CC=CC=C1"
+      "C1C=CC=CC=1"
+      "C=1C=CC=CC1"
+      "C=1C=CC=CC=1"])))
+  1))
