@@ -48,6 +48,8 @@
    direction
    configurations])
 
+(defrecord BondContext [order aromatic? direction])
+
 (defn get-atom-count [context element]
   (or (get (:atom-counts context) element) 0))
 
@@ -140,35 +142,31 @@
                           :hybridization :sp2))))]
          atom))
 
+(h/defrule <single-bond> (h/chook 1 (h/lit \-)))
+(h/defrule <double-bond> (h/chook 2 (h/lit \=)))
+(h/defrule <triple-bond> (h/chook 3 (h/lit \#)))
+(h/defrule <quadruple-bond> (h/chook 4 (h/lit \$)))
+(h/defrule <aromatic-bond> (h/chook true (h/lit \:)))
+(h/defrule <up-bond> (h/chook :up (h/lit \/)))
+(h/defrule <down-bond> (h/chook :down (h/lit \\)))
+
 (h/defrule <bond>
   (h/+
-   (h/for [_ (h/alter-context (fn [context] (assoc context :order 1)))
-           bond-symbol (h/lit \-)]
-          bond-symbol)
-   (h/for [_ (h/alter-context (fn [context] (assoc context :order 2)))
-           bond-symbol (h/lit \=)]
-          bond-symbol)
-   (h/for [_ (h/alter-context (fn [context] (assoc context :order 3)))
-           bond-symbol (h/lit \#)]
-          bond-symbol)
-   (h/for [_ (h/alter-context (fn [context] (assoc context :order 4)))
-           bond-symbol (h/lit \$)]
-          bond-symbol)
-   (h/for [_ (h/alter-context (fn [context] (assoc context :aromatic true)))
-           bond-symbol (h/lit \:)]
-          bond-symbol)
-   (h/for [_ (h/alter-context (fn [context] (assoc context :direction :up)))
-           bond-symbol (h/lit \/)]
-          bond-symbol)
-   (h/for [_ (h/alter-context (fn [context] (assoc context :direction :down)))
-           bond-symbol (h/lit \\)]
-          bond-symbol)))
+   (h/for [order (h/+ <single-bond> <double-bond> <triple-bond> <quadruple-bond>)
+           _ (h/alter-context (fn [context] (assoc context :order order)))]
+          (BondContext. order nil nil))
+   (h/for [aromatic <aromatic-bond>
+           _ (h/alter-context (fn [context] (assoc context :aromatic aromatic)))]
+          (BondContext. nil aromatic nil))
+   (h/for [direction (h/+ <up-bond> <down-bond>)
+           _ (h/alter-context (fn [context] (assoc context :direction direction)))]
+          (BondContext. nil nil direction))))
 
 ;; hackery: use order 0 for disconnected atoms
 (h/defrule <dot>
   (h/for [_ (h/alter-context (fn [context] (assoc context :order 0)))
           _ (h/lit \.)]
-         _))
+         (BondContext. 0 nil nil)))
 
 (h/defrule <decimal-digit> (h/radix-digit 10))
 
@@ -245,6 +243,7 @@
                                         <right-bracket>)))
           _ (h/alter-context
              (fn [context]
+               ;; FIXME! Why do we update :aromatic and :aromatic-atoms here?
                (let [context (assoc context
                                :aromatic nil
                                :aromatic-atoms (conj (:aromatic-atoms context) atom))]
@@ -293,17 +292,16 @@
                atom last-atom))))))
 
 (defn fixup-configuration [context atom last-atom]
-  (if last-atom 
-    (let [configuration (first
-                         (filter #(= (class %1)
-                                     chemiclj.configuration.TetrahedralAtomConfiguration)
-                                 (get (:configurations context) last-atom)))]
-      (if configuration
-        (update-in context [:configurations last-atom]
-                   (fn [x] (conj (remove #{configuration} x)
-                                 (add-tetrahedral-configuration-atom configuration atom))))
-        context))
-    context))
+  (let [configuration (first
+                       (filter #(= (class %1)
+                                   chemiclj.configuration.TetrahedralAtomConfiguration)
+                               (get (:configurations context) last-atom)))]
+    (if configuration
+      (update-in context [:configurations last-atom]
+                 (fn [x] (conj (remove #{configuration} x)
+                               (add-tetrahedral-configuration-atom configuration atom))))
+      context))
+  context)
 
 (defn context-add-1-hydrogen [context atom]
   (let [mol (:molecule context)
@@ -327,7 +325,9 @@
       context)))
 
 (defn update-configuration [{:keys [last-atom] :as context} atom]
-  (fixup-configuration context atom last-atom))
+  (if last-atom
+    (fixup-configuration context atom last-atom)
+    context))
 
 (defn update-last-atom [context atom]
   (assoc context :last-atom atom))
@@ -362,13 +362,17 @@
 
 (declare <chain>)
 
+(h/defrule <bond-or-dot>
+  (h/label "a bond or dot"
+           (h/+ <bond> <dot>)))
+
 (h/defrule <branch>
   (h/for "a branch"
          [{:keys [last-atom order]} h/<fetch-context>
           branch (h/cat
                   (h/circumfix (h/lit \()
                                (h/cat
-                                (h/opt (h/+ <bond> <dot>))
+                                (h/opt <bond-or-dot>)
                                 <chain>)
                                (h/lit \))))
           _ (h/alter-context
@@ -378,10 +382,6 @@
                  :order order)))]
          branch))
 
-(h/defrule <bond-or-dot>
-  (h/label "a bond or dot"
-           (h/+ <bond>
-                <dot>)))
 
 (defn- add-ring-bond [mol atom last-atom order]
   (cond
@@ -391,68 +391,71 @@
    (= order 4) (add-quadruple-bond mol atom last-atom)
    true (add-bond mol atom last-atom)))
 
-(defn- bond-symbol-order [symbol]
-  (get {\- 1 \= 2 \# 3 \$ 4} symbol))
-
 (defn- get-context-tetrahedral-configuration [context atom]
   (first
    (filter #(= (class %1)
                chemiclj.configuration.TetrahedralAtomConfiguration)
            (get (:configurations context) atom))))
 
-(defn- process-ring [context ring bond-symbol]
-  (let [pending (get (:pending-rings context) ring)
-        mol (:molecule context)
-        last-atom (:last-atom context)]
-    (if pending
-      (let [{:keys #{atom order}} pending
-            specified-order (bond-symbol-order bond-symbol)]
-        (if (and (and order specified-order)
-                 (not (= order specified-order)))
-          (except/throwf "SMILES parsing error: %d and %d mismatch for ring bond order"
-                         order specified-order))
-        (assoc (fixup-configuration
-                (let [configuration (get-context-tetrahedral-configuration context atom)]
-                  (if configuration
-                    (update-in
-                     context [:configurations atom]
-                     (fn [x] (conj (remove #{configuration} x)
-                                   (replace-tetrahedral-configuration-atom
-                                    configuration
-                                    ring last-atom))))
-                    context))
-                atom last-atom)
-          :molecule (add-ring-bond mol atom last-atom (or order specified-order))
-          :pending-rings (dissoc (:pending-rings context) ring)))
-      (assoc (let [configuration (get-context-tetrahedral-configuration context last-atom)]
-               (if configuration
-                 (update-in
-                  context [:configurations last-atom]
-                  (fn [x] (conj (remove #{configuration} x)
-                                (add-tetrahedral-configuration-atom configuration ring))))
-                 context))
-        :molecule mol
-        :pending-rings (conj (:pending-rings context)
-                             {ring {:atom last-atom
-                                    :order (bond-symbol-order bond-symbol)}})))))
+;;; FIXME: we don't process ring-closure aromatic bonds!
+(h/defmaker process-ring [ring specified-order]
+  (h/for [context h/<fetch-context>
+          _ (let [pending (get (:pending-rings context) ring)
+                  mol (:molecule context)
+                  last-atom (:last-atom context)]
+              (if pending
+                (let [{:keys #{atom pending-order}} pending]
+                  (when (and (and pending-order specified-order)
+                             (not (= pending-order specified-order)))
+                    (except/throwf "SMILES parsing error: %d and %d mismatch for ring bond order"
+                                   pending-order specified-order))
+                  (h/alter-context 
+                   (fn [context]
+                     (assoc (fixup-configuration
+                             (let [configuration (get-context-tetrahedral-configuration context atom)]
+                               (if configuration
+                                 (update-in
+                                  context [:configurations atom]
+                                  (fn [x] (conj (remove #{configuration} x)
+                                                (replace-tetrahedral-configuration-atom
+                                                 configuration
+                                                 ring last-atom))))
+                                 context))
+                             atom last-atom)
+                       :molecule (add-ring-bond mol atom last-atom (or pending-order specified-order))
+                       :pending-rings (dissoc (:pending-rings context) ring)))))
+                (h/alter-context 
+                 (fn [context]
+                   (assoc (let [configuration (get-context-tetrahedral-configuration context last-atom)]
+                            (if configuration
+                              (update-in
+                               context [:configurations last-atom]
+                               (fn [x] (conj (remove #{configuration} x)
+                                             (add-tetrahedral-configuration-atom configuration ring))))
+                              context))
+                     :molecule mol
+                     :pending-rings (conj (:pending-rings context)
+                                          {ring {:atom last-atom
+                                                 :pending-order specified-order}}))))))]
+         _))
 
 (h/defrule <ringbond>
   (h/label "a ring bond"
-           (h/for [[ring-num bond-symbol]
+           (h/for [[ring-num {:keys #{order}}]
                    (h/+
                     (h/hook (fn [[bond _ digit1 digit2]]
                               (when (and digit1 digit2)
                                 [(+ (* 10 digit1) digit2) bond]))
                             (h/cat
-                             (h/lex (h/opt <bond>)) (h/lit \%)
-                             <decimal-digit> <decimal-digit>))
+                             (h/lex (h/opt <bond>))
+                             (h/lit \%) <decimal-digit> <decimal-digit>))
                     (h/hook (fn [[bond digit :as x]]
                               [digit bond])
                             (h/cat
                              (h/lex (h/opt <bond>))
                              <decimal-digit>)))
-                   context (h/alter-context process-ring ring-num bond-symbol)]
-                  context)))
+                   _ (process-ring ring-num order)]
+                  _)))
 
 (h/defrule <atom-expr>
   (h/label "an atom expression"
@@ -463,11 +466,7 @@
              ;; the end of a molecule. Not sure this is allowed, but
              ;; it exists in the wild.
              _ (h/rep* <branch>)
-             _ (h/rep*
-                (h/for
-                 [context h/<fetch-context>
-                  ringbond <ringbond>]
-                 ringbond))
+             _ (h/rep* <ringbond>)
              _ (h/alter-context
                 (fn [context] (dissoc context :order)))
              _ (h/rep* <branch>)
